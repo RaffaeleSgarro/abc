@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.zybnet.abc.fragments.Cover;
+import com.zybnet.abc.fragments.TimeTable;
 
 public class AbbecedarioActivity extends FragmentActivity {
 	
@@ -27,13 +28,14 @@ public class AbbecedarioActivity extends FragmentActivity {
 		
 		@Override
 		public int getCount() {
-			return 1;
+			return 2;
 		}
 		
 		@Override
 		public Fragment getItem(int index) {
 			switch (index) {
 			case 0: return new Cover();
+			case 1: return new TimeTable(6, 6); // TODO configurable
 			default: throw new RuntimeException("No such index " + index);
 			}
 		}
