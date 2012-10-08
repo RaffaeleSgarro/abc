@@ -1,7 +1,7 @@
 package com.zybnet.abc.view;
 
 import android.content.Context;
-import android.graphics.Canvas;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -11,33 +11,27 @@ import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 
 public class TableLayout extends LinearLayout {
-
-	private volatile boolean drawChildren;
 	
 	public TableLayout(Context context) {
 		super(context);
+		setVisibility(View.INVISIBLE);
 	}
 	
 	@Override
 	public void onWindowFocusChanged(boolean has) {
-		if (has) {	
-			startAnimation();
+		if (has) {
+			getHandler().postDelayed(new Runnable() {
+				public void run() {
+					startAnimation();
+				}
+			}, 1000); // the animation is sloppy when the application loads. wait some time
 		}
 	}
 	
-	@Override
-	public void dispatchDraw(Canvas c) {
-		if (!drawChildren)
-			return;
-		
-		super.dispatchDraw(c);
-	}
-	
-	
 	private void startAnimation() {
 		// add listener to set drawChildren to true
+		setVisibility(View.VISIBLE);
 		long startTimeMillis = AnimationUtils.currentAnimationTimeMillis();
-		drawChildren = true;
 		for (int i = 0; i < getChildCount(); i++) {
 			ViewGroup row = (ViewGroup) getChildAt(i);
 			int rowCount = row.getChildCount();
@@ -49,6 +43,8 @@ public class TableLayout extends LinearLayout {
 				animation.setDuration(1000);
 				animation.setStartTime(startTimeMillis + (rowCount * i + j) * 40);
 				cell.setAnimation(animation);
+				Log.v("abc", "start at: " + animation.getStartTime());
+				
 			}
 		}
 		
