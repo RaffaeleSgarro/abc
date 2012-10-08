@@ -10,10 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
+import com.zybnet.abc.R;
 import com.zybnet.abc.view.Cell;
 import com.zybnet.abc.view.TableLayout;
 
@@ -21,36 +25,28 @@ public class TimeTable extends Fragment {
 
 	private int rows, columns;
 	private View.OnClickListener listener;
-	private LinearLayout root;
+	private FrameLayout root;
+	private TableLayout table;
+	private RelativeLayout detail;
 	
 	public TimeTable(int rows, int columns) {
 		this.rows = rows;
 		this.columns = columns;
-		listener = new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				final int rows = TimeTable.this.rows;
-				final int cols = TimeTable.this.columns;
-				AnimationSet set = new AnimationSet(true);
-				set.setDuration(1000);
-				set.addAnimation(new ScaleAnimation(1, rows, 1, cols));
-				set.addAnimation(new AlphaAnimation(1, 0));
-				int[] location = new int[2];
-				view.getLocationOnScreen(location);
-				
-				set.addAnimation(new TranslateAnimation(0, -location[0] * rows, 0, -location[1] * cols));
-				root.startAnimation(set);
-			}
-		};
+		listener = new ListenerImpl();
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
+		root = new FrameLayout(this.getActivity());
 		Activity mActivity = getActivity();
+		detail = (RelativeLayout) mActivity.getLayoutInflater().inflate(R.layout.cell_detail, root, false);
+		detail.setVisibility(View.INVISIBLE);
+		root.addView(detail);
+		
 		final int FILL = ViewGroup.LayoutParams.FILL_PARENT;
-		LinearLayout root = new TableLayout(mActivity);
-		root.setLayoutParams( new ViewGroup.LayoutParams(FILL, FILL));
-		root.setOrientation(LinearLayout.VERTICAL);
+		table = new TableLayout(mActivity);
+		table.setLayoutParams( new ViewGroup.LayoutParams(FILL, FILL));
+		table.setOrientation(LinearLayout.VERTICAL);
 		
 		LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(FILL, FILL, 1f/rows);
 		LinearLayout.LayoutParams cellParams = new LinearLayout.LayoutParams(FILL, FILL, 1f/columns);
@@ -73,10 +69,38 @@ public class TimeTable extends Fragment {
 				cell.setOnClickListener(listener);
 				row.addView(cell, cellParams);
 			}
-			root.addView(row, rowParams);
+			table.addView(row, rowParams);
 		}
-		this.root = root;
+		root.addView(table);
 		return root;
+	}
+	
+	private class ListenerImpl implements View.OnClickListener {
+		@Override
+		public void onClick(View view) {
+			final int rows = TimeTable.this.rows;
+			final int cols = TimeTable.this.columns;
+			AnimationSet set = new AnimationSet(true);
+			set.setDuration(1000);
+			set.addAnimation(new ScaleAnimation(1, rows, 1, cols));
+			set.addAnimation(new AlphaAnimation(1, 0));
+			int[] location = new int[2];
+			view.getLocationOnScreen(location);	
+			set.addAnimation(new TranslateAnimation(0, -location[0] * rows, 0, -location[1] * cols));
+			set.setFillAfter(true);
+			
+			// TODO prepare detail
+			AnimationSet dSet = new AnimationSet(true);
+			dSet.addAnimation(new AlphaAnimation(0, 1));
+			dSet.addAnimation(new TranslateAnimation(0, 0, - detail.getHeight(), 0));
+			dSet.setStartTime(AnimationUtils.currentAnimationTimeMillis());
+			dSet.setStartOffset(500);
+			dSet.setDuration(1000);
+			root.bringChildToFront(detail);
+			detail.startAnimation(dSet);
+			detail.setVisibility(View.VISIBLE);
+			table.startAnimation(set);
+		}
 	}
 	
 }
