@@ -38,11 +38,38 @@ public class TimeTable extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
 		root = new FrameLayout(this.getActivity());
+		
 		Activity mActivity = getActivity();
+		
+		// Setup detail view
 		detail = (RelativeLayout) mActivity.getLayoutInflater().inflate(R.layout.cell_detail, root, false);
 		detail.setVisibility(View.INVISIBLE);
+		detail.findViewById(R.id.discard).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View button) {
+				root.bringChildToFront(table);
+				AnimationSet a1 = new AnimationSet(true);
+				a1.addAnimation(new AlphaAnimation(1, 0));
+				a1.addAnimation(new TranslateAnimation(0, 0, 0, -detail.getHeight()));
+				a1.setDuration(500);
+				a1.setFillAfter(true);
+				detail.startAnimation(a1);
+				
+				AnimationSet a2 = new AnimationSet(true);
+				a2.setDuration(500);
+				long start = AnimationUtils.currentAnimationTimeMillis();
+				a2.setStartTime(start);
+				a2.setStartOffset(250);
+				a2.addAnimation(new AlphaAnimation(0, 1));
+				a2.addAnimation(new ScaleAnimation(rows, 1, columns, 1));
+				a2.addAnimation(new TranslateAnimation(_x, 0, _y, 0));
+				table.setAnimation(a2);
+			}
+		});
 		root.addView(detail);
 		
+		// Setup the timetable view
 		final int FILL = ViewGroup.LayoutParams.FILL_PARENT;
 		table = new TableLayout(mActivity);
 		table.setLayoutParams( new ViewGroup.LayoutParams(FILL, FILL));
@@ -75,6 +102,9 @@ public class TimeTable extends Fragment {
 		return root;
 	}
 	
+	private int _x; 
+	private int _y;
+	
 	private class ListenerImpl implements View.OnClickListener {
 		@Override
 		public void onClick(View view) {
@@ -85,8 +115,10 @@ public class TimeTable extends Fragment {
 			set.addAnimation(new ScaleAnimation(1, rows, 1, cols));
 			set.addAnimation(new AlphaAnimation(1, 0));
 			int[] location = new int[2];
-			view.getLocationOnScreen(location);	
-			set.addAnimation(new TranslateAnimation(0, -location[0] * rows, 0, -location[1] * cols));
+			view.getLocationOnScreen(location);
+			_x = -location[0] * rows;
+			_y = -location[1] * cols;
+			set.addAnimation(new TranslateAnimation(0, _x, 0, _y));
 			set.setFillAfter(true);
 			
 			// TODO prepare detail
@@ -94,8 +126,8 @@ public class TimeTable extends Fragment {
 			dSet.addAnimation(new AlphaAnimation(0, 1));
 			dSet.addAnimation(new TranslateAnimation(0, 0, - detail.getHeight(), 0));
 			dSet.setStartTime(AnimationUtils.currentAnimationTimeMillis());
-			dSet.setStartOffset(500);
-			dSet.setDuration(1000);
+			dSet.setStartOffset(250);
+			dSet.setDuration(500);
 			root.bringChildToFront(detail);
 			detail.startAnimation(dSet);
 			detail.setVisibility(View.VISIBLE);

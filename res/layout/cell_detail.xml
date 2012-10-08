@@ -21,14 +21,14 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/save"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:text="Save" />
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/discard"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
