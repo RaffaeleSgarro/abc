@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.zybnet.abc.fragments.Cover;
 import com.zybnet.abc.fragments.Exams;
 import com.zybnet.abc.fragments.TimeTable;
 
