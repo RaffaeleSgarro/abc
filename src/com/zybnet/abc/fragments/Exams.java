@@ -1,17 +1,17 @@
 package com.zybnet.abc.fragments;
 
-import com.zybnet.abc.R;
-
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.widget.ArrayAdapter;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.zybnet.abc.view.ExamsListView;
 
 public class Exams extends ListFragment {
 	
 	@Override
-	public void onCreate(Bundle params) {
-		super.onCreate(params);
-		String[] exams = {"Lorem", "Ipsum", "Dolor", "Sit Amen"};
-		setListAdapter(new ArrayAdapter<String>(getActivity(), R.layout.exam, R.id.name, exams));
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle params) {
+		return new ExamsListView(getActivity());
 	}
 }
