@@ -16,6 +16,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.view.Cell;
@@ -23,15 +24,21 @@ import com.zybnet.abc.view.TableLayout;
 
 public class TimeTable extends Fragment {
 
-	private int rows, columns;
+	private int rows = 7, columns = 6;
 	private View.OnClickListener listener;
 	private FrameLayout root;
 	private TableLayout table;
 	private RelativeLayout detail;
+	private TextView detail_title;
 	
 	public TimeTable(int rows, int columns) {
+		super();
 		this.rows = rows;
 		this.columns = columns;
+		// TODO remove and read from preferences
+	}
+	
+	public TimeTable() {
 		listener = new ListenerImpl();
 	}
 	
@@ -44,6 +51,7 @@ public class TimeTable extends Fragment {
 		// Setup detail view
 		detail = (RelativeLayout) mActivity.getLayoutInflater().inflate(R.layout.cell_detail, root, false);
 		detail.setVisibility(View.INVISIBLE);
+		detail_title = (TextView) detail.findViewById(R.id.title);
 		detail.findViewById(R.id.discard).setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -94,7 +102,7 @@ public class TimeTable extends Fragment {
 				cell.setTextColor(grey);
 				cell.setGravity(Gravity.CENTER);
 				cell.setOnClickListener(listener);
-				row.addView(cell, cellParams);
+				cell.insertAt(row, cellParams, i, j);
 			}
 			table.addView(row, rowParams);
 		}
@@ -102,26 +110,33 @@ public class TimeTable extends Fragment {
 		return root;
 	}
 	
+	// These variable describe the "selected" cell and are
+	// read by detail
 	private int _x; 
 	private int _y;
+	private int _selected_row;
+	private int _selected_col;
 	
 	private class ListenerImpl implements View.OnClickListener {
 		@Override
 		public void onClick(View view) {
-			final int rows = TimeTable.this.rows;
-			final int cols = TimeTable.this.columns;
 			AnimationSet set = new AnimationSet(true);
 			set.setDuration(1000);
-			set.addAnimation(new ScaleAnimation(1, rows, 1, cols));
+			set.addAnimation(new ScaleAnimation(1, rows, 1, columns));
 			set.addAnimation(new AlphaAnimation(1, 0));
 			int[] location = new int[2];
 			view.getLocationOnScreen(location);
 			_x = -location[0] * rows;
-			_y = -location[1] * cols;
+			_y = -location[1] * columns;
 			set.addAnimation(new TranslateAnimation(0, _x, 0, _y));
 			set.setFillAfter(true);
 			
 			// TODO prepare detail
+			Cell cell = (Cell) view;
+			_selected_row = cell.getRow();
+			_selected_col = cell.getColumn();
+			detail_title.setText(cell.toString());
+			
 			AnimationSet dSet = new AnimationSet(true);
 			dSet.addAnimation(new AlphaAnimation(0, 1));
 			dSet.addAnimation(new TranslateAnimation(0, 0, - detail.getHeight(), 0));
