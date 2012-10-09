@@ -5,7 +5,7 @@ com.zybnet.abc.model: POJO
 The database is entirely loaded in memory at startup
 
 The central node in the database is the Slot (* is optional):
- - subject REQUIRED
+ - subject_id
  - start (defaults to 8:00 + 1hr * column)
  - end (defaults to start + 1hr)
  - row (for displaying purposes)
