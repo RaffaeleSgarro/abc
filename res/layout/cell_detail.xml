@@ -7,14 +7,14 @@
     android:background="#000000" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Monday, 4th cell"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
+        android:id="@+id/buttons"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -36,51 +36,58 @@
     </LinearLayout>
 
     <ScrollView
-        android:id="@+id/scrollView1"
+        android:id="@+id/contents_wrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout1"
-        android:layout_below="@+id/textView1"
+        android:layout_above="@+id/buttons"
+        android:layout_below="@+id/title"
         android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
         android:paddingLeft="10dp"
         android:paddingRight="10dp" >
 
         <LinearLayout
+            android:id="@+id/contents"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
             <TextView 
+                android:id="@+id/subject"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 style="@style/PaddedText"
                 android:text="Applied Pyhisics"/>
             <include layout="@layout/separator" />
             <TextView 
+                android:id="@+id/time"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 style="@style/PaddedText"
                 android:text="8:00 - 10:00"/>
             <include layout="@layout/separator" />
             <TextView 
+                android:id="@+id/room"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 style="@style/PaddedText"
                 android:text="Room 14"/>
             <include layout="@layout/separator" />
             <TextView 
+                android:id="@+id/teacher"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 style="@style/PaddedText"
                 android:text="Prof. Einstein, Albert"/>
             <include layout="@layout/separator" />
             <TextView 
+                android:id="@+id/homework"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 style="@style/PaddedText"
                 android:text="Homework"/>
             <include layout="@layout/separator" />
             <TextView 
+                android:id="@+id/marks"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 style="@style/PaddedText"
