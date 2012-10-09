@@ -38,7 +38,7 @@ public class Compact extends Fragment {
 		
 		// Setup detail view
 		detail = (RelativeLayout) mActivity.getLayoutInflater().inflate(
-				R.layout.cell_detail, root, false);
+				R.layout.slot_detail, root, false);
 		detail.setVisibility(View.INVISIBLE);
 		detail_title = (TextView) detail.findViewById(R.id.title);
 		detail.findViewById(R.id.discard).setOnClickListener(new BaseButtonsListener());
