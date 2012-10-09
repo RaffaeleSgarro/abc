@@ -1,4 +1,4 @@
-package com.zybnet.abc.fragments;
+package com.zybnet.abc.fragment;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -24,19 +24,13 @@ import com.zybnet.abc.view.TableLayout;
 
 public class TimeTable extends Fragment {
 
+	// TODO read from preferences
 	private int rows = 7, columns = 6;
 	private View.OnClickListener listener;
 	private FrameLayout root;
 	private TableLayout table;
 	private RelativeLayout detail;
 	private TextView detail_title;
-	
-	public TimeTable(int rows, int columns) {
-		super();
-		this.rows = rows;
-		this.columns = columns;
-		// TODO remove and read from preferences
-	}
 	
 	public TimeTable() {
 		listener = new ListenerImpl();
