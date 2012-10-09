@@ -78,7 +78,7 @@ public class Compact extends Fragment {
 			_y = -location[1] * table.cols();
 			set.addAnimation(new TranslateAnimation(0, _x, 0, _y));
 			set.setFillAfter(true);
-			table.startAnimation(set);
+			table.setAnimation(set);
 			
 			// TODO prepare detail
 			SlotView cell = (SlotView) view;
