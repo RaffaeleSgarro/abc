@@ -1,0 +1,52 @@
+com.zybnet.abc: main activity, Log code
+com.zybnet.abc.view
+com.zybnet.abc.model: POJO
+
+The database is entirely loaded in memory at startup
+
+The central node in the database is the Slot (* is optional):
+ - subject REQUIRED
+ - start (defaults to 8:00 + 1hr * column)
+ - end (defaults to start + 1hr)
+ - row (for displaying purposes)
+ - column (for displaying purposes)
+ - where * (defaults to "Nowhere")
+ - teacher * (defaults to "Nobody")
+
+Other entities involved:
+ - Teacher (is a phone contact)
+ - Subject
+   - name
+   - name_short (for displaying in UI)
+   - default_teacher (copied to slot)
+   - default_room (copied to slot)
+ - Test
+   - description
+   - date
+   - score
+ - Homework
+   - description
+   - due
+
+The application requires CRUD UI for: Subject, Homework and Test. Teacher is
+a phone contact, thus UI is managed by the system.
+
+Slot fields are set by:
+ - the program (row, column)
+ - the user (start, end, where)
+ - references to other entities (subject, teacher)
+The layout for Slot doesn't display row and column (a title is derived from
+these pieces of data). All of the other fields are contained in a vertical
+layout. When the user clicks an item, a transition brings the user to either:
+ - an edit form (start-end, where) with two buttons OK and Back
+ - a ListView with entities (subject, teacher). Below the ListView there are
+   two buttons for "New" and "Back". Clicking selects the item, long clicking
+   brings the user to the "Edit" interface (this is advertised below the title)
+
+To be concise we define an `EntityView<Entity>`. `Entity` is the base class
+for domain objects (Subject, Test, Homework). This view can be used to
+ - list items and creating new ones (Test, Homework)
+ - pick items (Teacher)
+The difference is only that items in the former list are not selectable (there
+is no OnClickListener, only long clicks for editing are observed)
+
