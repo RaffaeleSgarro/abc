@@ -6,17 +6,18 @@ import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class Cell extends TextView {
+public class SlotView extends TextView {
 
 	private int row = -1, column = -1;
 	
-	public Cell(Context ctx, CharSequence text, int background) {
+	public SlotView(Context ctx, CharSequence text, int background) {
 		this(ctx);
 		setText(text);
 		setBackgroundColor(background);
+		setClickable(true);
 	}
 	
-	public Cell(Context context) {
+	public SlotView(Context context) {
 		super(context);
 	}
 	
