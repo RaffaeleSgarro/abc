@@ -19,7 +19,7 @@ Other entities involved:
    - name
    - name_short (for displaying in UI)
    - default_teacher (copied to slot)
-   - default_room (copied to slot)
+   - default_where (copied to slot)
  - Test
    - description
    - date
@@ -43,8 +43,7 @@ layout. When the user clicks an item, a transition brings the user to either:
    two buttons for "New" and "Back". Clicking selects the item, long clicking
    brings the user to the "Edit" interface (this is advertised below the title)
 
-To be concise we define an `EntityView<Entity>`. `Entity` is the base class
-for domain objects (Subject, Test, Homework). This view can be used to
+To be concise we define an `EntityView`. This view can be used to
  - list items and creating new ones (Test, Homework)
  - pick items (Teacher)
 The difference is only that items in the former list are not selectable (there
