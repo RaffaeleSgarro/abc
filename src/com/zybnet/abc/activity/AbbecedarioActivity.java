@@ -59,7 +59,7 @@ public class AbbecedarioActivity extends FragmentActivity {
     	}
     }
     
-    private Fragment getTableFragment() {
+    public Fragment getTableFragment() {
     	return 	getSupportFragmentManager().findFragmentByTag(
     			(findViewById(R.id.root) == null) ? TABLE_FRAGMENT : COMPACT_FRAGMENT);
     }

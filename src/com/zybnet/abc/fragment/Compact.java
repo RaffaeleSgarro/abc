@@ -40,8 +40,6 @@ public class Compact extends Fragment {
 				R.layout.slot_detail, root, false);
 		detail.setVisibility(View.INVISIBLE);
 		detail_title = (TextView) detail.findViewById(R.id.title);
-		// TODO register on the back nav arrow
-		//detail.findViewById(R.id.discard).setOnClickListener(new BaseButtonsListener());
 		
 		root.addView(detail);
 
@@ -95,6 +93,8 @@ public class Compact extends Fragment {
 			root.bringChildToFront(detail);
 			detail.startAnimation(dSet);
 			detail.setVisibility(View.VISIBLE);
+			
+			getActivity().findViewById(R.id.actionbar_back).setOnClickListener(new BaseButtonsListener());
 		}
 	}
 	
@@ -119,6 +119,9 @@ public class Compact extends Fragment {
 			a2.addAnimation(new ScaleAnimation(table.rows(), 1, table.cols(), 1));
 			a2.addAnimation(new TranslateAnimation(_x, 0, _y, 0));
 			table.startAnimation(a2);
+			
+			// stop listening
+			getActivity().findViewById(R.id.actionbar_back).setOnClickListener(null);
 		}
 	} 
 	

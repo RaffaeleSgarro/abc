@@ -6,6 +6,8 @@ import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.zybnet.abc.model.Slot;
+
 public class SlotView extends TextView {
 
 	private int row = -1, column = -1;
@@ -34,5 +36,10 @@ public class SlotView extends TextView {
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.DAY_OF_WEEK, getColumn() + 1);
 		return String.format("%tA, hour %d", c, getRow() + 1);
+	}
+	
+	public Slot getSlot() {
+		// TODO
+		return new Slot();
 	}
 }
