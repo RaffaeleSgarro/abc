@@ -13,6 +13,12 @@ INSERT INTO slot (subject_id, row, column) VALUES (1, 1, 0);
 
 INSERT INTO slot (subject_id, row, column) VALUES (2, 1, 1);
 
+INSERT INTO slot (subject_id, row, column) VALUES (4, 2, 1);
+
+INSERT INTO slot (subject_id, row, column) VALUES (2, 1, 2);
+
+INSERT INTO slot (subject_id, row, column) VALUES (2, 2, 2);
+
 INSERT INTO slot (subject_id, row, column) VALUES (2, 2, 3);
 
 INSERT INTO slot (subject_id, row, column) VALUES (2, 4, 3);
@@ -23,11 +29,17 @@ INSERT INTO slot (subject_id, row, column) VALUES (3, 5, 3);
 
 INSERT INTO slot (subject_id, row, column) VALUES (4, 3, 2);
 
+INSERT INTO slot (subject_id, row, column) VALUES (4, 2, 0);
+
 INSERT INTO slot (subject_id, row, column) VALUES (4, 3, 0);
 
 INSERT INTO slot (subject_id, row, column) VALUES (3, 2, 5);
 
 INSERT INTO slot (subject_id, row, column) VALUES (3, 2, 4);
+
+INSERT INTO slot (subject_id, row, column) VALUES (4, 1, 4);
+
+INSERT INTO slot (subject_id, row, column) VALUES (1, 1, 5);
 
 
 INSERT INTO homework (subject_id, description, due) VALUES (1, 'Boring task #1', '2012-10-21');
