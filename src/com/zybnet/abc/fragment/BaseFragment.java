@@ -3,7 +3,7 @@ package com.zybnet.abc.fragment;
 import android.support.v4.app.Fragment;
 
 import com.zybnet.abc.activity.AbbecedarioActivity;
-import com.zybnet.abc.view.TimeTable;
+import com.zybnet.abc.view.TableView;
 
 public class BaseFragment extends Fragment {
 	
@@ -18,7 +18,7 @@ public class BaseFragment extends Fragment {
 		return (AbbecedarioActivity) getActivity();
 	}
 	
-	public TimeTable getTableView() {
-		return (TimeTable) abc().getTableFragment().getView().findViewById(TimeTable.ID);
+	public TableView getTableView() {
+		return (TableView) abc().getTableFragment().getView().findViewById(TableView.ID);
 	}
 }

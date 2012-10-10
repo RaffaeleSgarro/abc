@@ -10,14 +10,14 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.zybnet.abc.R;
-import com.zybnet.abc.fragment.Compact;
-import com.zybnet.abc.fragment.Slot;
-import com.zybnet.abc.fragment.Table;
+import com.zybnet.abc.fragment.CompactFragment;
+import com.zybnet.abc.fragment.LeftFragment;
+import com.zybnet.abc.fragment.RightFragment;
 import com.zybnet.abc.utils.Database;
 import com.zybnet.abc.utils.FixturesDatabase;
 import com.zybnet.abc.utils.L;
 import com.zybnet.abc.utils.SQLiteCursorLoader;
-import com.zybnet.abc.view.TimeTable;
+import com.zybnet.abc.view.TableView;
 
 public class AbbecedarioActivity extends FragmentActivity {
 	
@@ -32,10 +32,10 @@ public class AbbecedarioActivity extends FragmentActivity {
         setContentView(R.layout.main);
     	
         if (findViewById(R.id.root) != null) {
-        	addFragmentMaybe(Compact.class, R.id.root, COMPACT_FRAGMENT);
+        	addFragmentMaybe(CompactFragment.class, R.id.root, COMPACT_FRAGMENT);
         } else {
-        	addFragmentMaybe(Table.class, R.id.right, TABLE_FRAGMENT);
-        	addFragmentMaybe(Slot.class, R.id.left, SLOT_FRAGMENT);
+        	addFragmentMaybe(RightFragment.class, R.id.right, TABLE_FRAGMENT);
+        	addFragmentMaybe(LeftFragment.class, R.id.left, SLOT_FRAGMENT);
         }
         
         getSupportLoaderManager().initLoader(LOADER_SLOTS, null, new CursorLoaderCallbacks());
@@ -80,7 +80,7 @@ public class AbbecedarioActivity extends FragmentActivity {
     	@Override
     	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
     		Fragment tableFragment = getTableFragment();
-    		TimeTable table = (TimeTable) tableFragment.getView().findViewById(TimeTable.ID);
+    		TableView table = (TableView) tableFragment.getView().findViewById(TableView.ID);
     		if (!cursor.isBeforeFirst())
     			cursor.moveToPosition(-1);
     		table.setCursor(cursor);

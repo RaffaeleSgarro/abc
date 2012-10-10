@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.zybnet.abc.R;
 
-public class Slot extends Fragment {
+public class LeftFragment extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {

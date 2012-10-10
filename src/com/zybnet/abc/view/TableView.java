@@ -16,7 +16,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 
-public class TimeTable extends LinearLayout {
+public class TableView extends LinearLayout {
 	
 	public final static int ID = 0x923032f;
 	
@@ -33,7 +33,7 @@ public class TimeTable extends LinearLayout {
 		bgColors[1][1] = Color.parseColor("#ffe5ff"); // pink
 	}
 	
-	public TimeTable(Context context) {
+	public TableView(Context context) {
 		super(context);
 		setVisibility(View.INVISIBLE);
 		setId(ID);

@@ -16,17 +16,17 @@ import android.widget.TextView;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.view.SlotView;
-import com.zybnet.abc.view.TimeTable;
+import com.zybnet.abc.view.TableView;
 
-public class Compact extends Fragment {
+public class CompactFragment extends Fragment {
 	
 	// TODO read from preferences
 	private FrameLayout root;
-	private TimeTable table;
+	private TableView table;
 	private ViewGroup detail;
 	private TextView detail_title;
 	
-	public Compact() {
+	public CompactFragment() {
 		super();
 	}
 
@@ -44,7 +44,7 @@ public class Compact extends Fragment {
 		root.addView(detail);
 
 		// Setup the timetable view
-		table = new TimeTable(mActivity);
+		table = new TableView(mActivity);
 		table.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
 		table.setSlotListener(new SlotListener());
 		

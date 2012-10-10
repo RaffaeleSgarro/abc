@@ -16,9 +16,9 @@ import com.zybnet.abc.R;
 import com.zybnet.abc.utils.AnimationListenerStub;
 import com.zybnet.abc.utils.SlotDetailHelper;
 import com.zybnet.abc.view.SlotView;
-import com.zybnet.abc.view.TimeTable;
+import com.zybnet.abc.view.TableView;
 
-public class Table extends BaseFragment {
+public class RightFragment extends BaseFragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle params) {
@@ -26,7 +26,7 @@ public class Table extends BaseFragment {
 		FrameLayout root = new FrameLayout(mActivity);
 		
 		// Setup the timetable view
-		TimeTable table = new TimeTable(mActivity);
+		TableView table = new TableView(mActivity);
 		table.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
 		table.setSlotListener(new SlotListener());
 				
