@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.zybnet.abc.R;
 
-public class Database extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private Context context;
 	
@@ -20,11 +20,11 @@ public class Database extends SQLiteOpenHelper {
 	 * so data is not persistent.
 	 * 
 	 */
-	public Database(Context ctx) {
+	public DatabaseHelper(Context ctx) {
 		this(ctx, null, null, 1);
 	}
 	
-	public Database(Context context, String name, CursorFactory factory, int version) {
+	public DatabaseHelper(Context context, String name, CursorFactory factory, int version) {
 		super(context, name, factory, version);
 		this.context = context;
 	}

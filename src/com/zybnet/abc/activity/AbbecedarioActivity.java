@@ -1,6 +1,7 @@
 package com.zybnet.abc.activity;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,8 +14,8 @@ import com.zybnet.abc.R;
 import com.zybnet.abc.fragment.CompactFragment;
 import com.zybnet.abc.fragment.LeftFragment;
 import com.zybnet.abc.fragment.RightFragment;
-import com.zybnet.abc.utils.Database;
-import com.zybnet.abc.utils.FixturesDatabase;
+import com.zybnet.abc.utils.DatabaseHelper;
+import com.zybnet.abc.utils.FixturesDatabaseHelper;
 import com.zybnet.abc.utils.L;
 import com.zybnet.abc.utils.SQLiteCursorLoader;
 import com.zybnet.abc.view.TableView;
@@ -22,9 +23,13 @@ import com.zybnet.abc.view.TableView;
 public class AbbecedarioActivity extends FragmentActivity {
 	
 	private final int LOADER_SLOTS = 1;
+	
 	private final String TABLE_FRAGMENT = "table";
 	private final String COMPACT_FRAGMENT = "compact";
 	private final String SLOT_FRAGMENT = "slot";
+	
+	private SQLiteOpenHelper dbHelper;
+	private SQLiteLoaderCallbacks callbacks;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,7 +43,21 @@ public class AbbecedarioActivity extends FragmentActivity {
         	addFragmentMaybe(LeftFragment.class, R.id.left, SLOT_FRAGMENT);
         }
         
-        getSupportLoaderManager().initLoader(LOADER_SLOTS, null, new CursorLoaderCallbacks());
+        // TODO this is not persistent
+        dbHelper = new FixturesDatabaseHelper(this);
+        callbacks = new SQLiteLoaderCallbacks();
+        
+        getSupportLoaderManager().initLoader(LOADER_SLOTS, null, callbacks);
+    }
+    
+    @Override
+    public void onStop() {
+    	super.onStop();
+    	if (getSupportLoaderManager().hasRunningLoaders()) {
+    		callbacks.setPendingCloseHelper();
+    	} else {
+    		dbHelper.close();
+    	}
     }
     
     /*
@@ -64,11 +83,17 @@ public class AbbecedarioActivity extends FragmentActivity {
     			(findViewById(R.id.root) == null) ? TABLE_FRAGMENT : COMPACT_FRAGMENT);
     }
     
-    public class CursorLoaderCallbacks implements LoaderCallbacks<Cursor> {
+    private class SQLiteLoaderCallbacks implements LoaderCallbacks<Cursor> {
 
+    	private boolean pendingCloseHelper = false;
+    	
+    	public void setPendingCloseHelper() {
+    		pendingCloseHelper = true;
+    	}
+    	
     	@Override
     	public Loader<Cursor> onCreateLoader(int requestId, Bundle params) {
-    		Database helper = new FixturesDatabase(AbbecedarioActivity.this, null, null, 1);
+    		DatabaseHelper helper = new FixturesDatabaseHelper(AbbecedarioActivity.this, null, null, 1);
     		SQLiteCursorLoader loader = new SQLiteCursorLoader(
     				AbbecedarioActivity.this, helper,
     				"SELECT slot._id, slot.day, slot.ord, slot.subject_id," +
@@ -79,6 +104,12 @@ public class AbbecedarioActivity extends FragmentActivity {
 
     	@Override
     	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    		// Close everything and return
+    		if (pendingCloseHelper) {
+    			cursor.close();
+    			dbHelper.close();
+    			return;
+    		}
     		Fragment tableFragment = getTableFragment();
     		TableView table = (TableView) tableFragment.getView().findViewById(TableView.ID);
     		if (!cursor.isBeforeFirst())
