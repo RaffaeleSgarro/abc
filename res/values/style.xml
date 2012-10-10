@@ -9,4 +9,12 @@
         <item name="android:paddingTop">10dp</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
     </style>
+    <style name="ActionBarButton">
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:background">@null</item>
+    </style>
 </resources>

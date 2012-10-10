@@ -12,7 +12,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zybnet.abc.R;
@@ -24,7 +23,7 @@ public class Compact extends Fragment {
 	// TODO read from preferences
 	private FrameLayout root;
 	private TimeTable table;
-	private RelativeLayout detail;
+	private ViewGroup detail;
 	private TextView detail_title;
 	
 	public Compact() {
@@ -37,11 +36,12 @@ public class Compact extends Fragment {
 		root = new FrameLayout(mActivity);
 		
 		// Setup detail view
-		detail = (RelativeLayout) mActivity.getLayoutInflater().inflate(
+		detail = (ViewGroup) mActivity.getLayoutInflater().inflate(
 				R.layout.slot_detail, root, false);
 		detail.setVisibility(View.INVISIBLE);
 		detail_title = (TextView) detail.findViewById(R.id.title);
-		detail.findViewById(R.id.discard).setOnClickListener(new BaseButtonsListener());
+		// TODO register on the back nav arrow
+		//detail.findViewById(R.id.discard).setOnClickListener(new BaseButtonsListener());
 		
 		root.addView(detail);
 
