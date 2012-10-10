@@ -1,6 +1,8 @@
 package com.zybnet.abc.view;
 
+import static android.view.ViewGroup.LayoutParams.FILL_PARENT;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
@@ -11,13 +13,12 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 
-import static android.view.ViewGroup.LayoutParams.FILL_PARENT;
-
 public class TimeTable extends LinearLayout {
+	
+	public final static int ID = 0x923032f;
 	
 	private int rows = -1, columns = -1;
 	private static int[][] bgColors = new int[2][2];
-	private boolean fired = false;
 	private View.OnClickListener slotListener;
 	
 	static {
@@ -30,21 +31,20 @@ public class TimeTable extends LinearLayout {
 	public TimeTable(Context context) {
 		super(context);
 		setVisibility(View.INVISIBLE);
+		setId(ID);
 	}
 	
-	@Override
-	public void onWindowFocusChanged(boolean focus) {
-		if (focus && !fired) {
-			fired = true;
-			getHandler().postDelayed(new Runnable() {
-				public void run() {
-					// TODO read from database
-					setVisibility(View.VISIBLE); // !IMPORTANT
-					fillSlots();
-					startAnimation();
-				}
-			}, 1000); // Simulate loading from db
+	public void setCursor(Cursor cursor) {
+		setVisibility(View.VISIBLE);
+		fillSlots();
+		while (cursor.moveToNext()) {
+			int row = cursor.getInt(1);
+			int col = cursor.getInt(2);
+			
+			String text = cursor.getString(3);
+			getSlot(row, col).setText(text);
 		}
+		startAnimation();
 	}
 	
 	private void startAnimation() {
@@ -103,7 +103,7 @@ public class TimeTable extends LinearLayout {
 			LinearLayout row = new LinearLayout(getContext());
 			row.setOrientation(LinearLayout.HORIZONTAL); // default, but anyway
 			for (int j = 0; j < cols(); j++) {
-				SlotView cell = new SlotView(getContext(), "FOO", bgColors[i % 2][j % 2]);
+				SlotView cell = new SlotView(getContext(), "", bgColors[i % 2][j % 2]);
 				cell.setTextColor(grey);
 				cell.setGravity(Gravity.CENTER);
 				cell.insertAt(row, cellParams, i, j);

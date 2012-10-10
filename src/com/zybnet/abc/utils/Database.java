@@ -21,7 +21,7 @@ public class Database extends SQLiteOpenHelper {
 	}
 
 	@Override
-	public void onCreate(SQLiteDatabase db) {
+	public void onCreate(SQLiteDatabase db) {	
 		try {
 			runScript(db, R.raw.schema);
 		} catch (IOException e) {
@@ -34,19 +34,26 @@ public class Database extends SQLiteOpenHelper {
 		throw new UnsupportedOperationException();
 	}
 	
+	// IMPORTANT! Statements must be separated by and empty line
+	// The last statement must be terminated by a newline, too
+	// so likely the fill will end with a newline
 	protected void runScript(SQLiteDatabase db, int resourceId) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(
-				context.getResources().openRawResource(R.raw.schema)));
+				context.getResources().openRawResource(resourceId)));
 		
 		StringBuilder builder = new StringBuilder();
 		String line = null;
 		
 		while ((line = in.readLine() )!= null) {
+			if (line.trim().length() == 0 && builder.length() > 2 && builder.charAt(builder.length() - 2) == ';') {
+				db.execSQL(builder.toString());
+				builder = new StringBuilder();
+				continue;
+			}
 			builder.append(line);
 			builder.append('\n');
 		}
 		
-		db.execSQL(builder.toString());
 	}
 
 }

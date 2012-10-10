@@ -14,15 +14,12 @@ public class FixturesDatabase extends Database {
 	}
 	
 	@Override
-	public void onOpen(SQLiteDatabase db) {
-		if (db.isReadOnly())
-			throw new IllegalArgumentException("Database is read-only");
-		
+	public void onCreate(SQLiteDatabase db) {
+		super.onCreate(db);
 		try {
 			runScript(db, R.raw.fixtures);
 		} catch (Exception e) {
 			L.og(e);
 		}
 	}
-
 }
