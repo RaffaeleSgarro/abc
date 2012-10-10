@@ -7,39 +7,39 @@ INSERT INTO subject (_id, name, name_short) VALUES (3, 'Mathematical Techniques 
 INSERT INTO subject (_id, name, name_short) VALUES (4, 'Fundamentals of computer Engineering', 'ENGI');
 
 
-INSERT INTO slot (subject_id, row, column) VALUES (1, 0, 0);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (1, 1, 1);
 
-INSERT INTO slot (subject_id, row, column) VALUES (1, 1, 0);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (1, 2, 1);
 
-INSERT INTO slot (subject_id, row, column) VALUES (2, 1, 1);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (2, 2, 2);
 
-INSERT INTO slot (subject_id, row, column) VALUES (4, 2, 1);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (4, 3, 2);
 
-INSERT INTO slot (subject_id, row, column) VALUES (2, 1, 2);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (2, 2, 3);
 
-INSERT INTO slot (subject_id, row, column) VALUES (2, 2, 2);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (2, 3, 3);
 
-INSERT INTO slot (subject_id, row, column) VALUES (2, 2, 3);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (2, 3, 4);
 
-INSERT INTO slot (subject_id, row, column) VALUES (2, 4, 3);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (2, 5, 4);
 
-INSERT INTO slot (subject_id, row, column) VALUES (4, 2, 4);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (4, 3, 5);
 
-INSERT INTO slot (subject_id, row, column) VALUES (3, 5, 3);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (3, 6, 4);
 
-INSERT INTO slot (subject_id, row, column) VALUES (4, 3, 2);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (4, 4, 3);
 
-INSERT INTO slot (subject_id, row, column) VALUES (4, 2, 0);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (4, 3, 1);
 
-INSERT INTO slot (subject_id, row, column) VALUES (4, 3, 0);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (4, 4, 1);
 
-INSERT INTO slot (subject_id, row, column) VALUES (3, 2, 5);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (3, 3, 5);
 
-INSERT INTO slot (subject_id, row, column) VALUES (3, 2, 4);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (3, 4, 5);
 
-INSERT INTO slot (subject_id, row, column) VALUES (4, 1, 4);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (4, 2, 4);
 
-INSERT INTO slot (subject_id, row, column) VALUES (1, 1, 5);
+INSERT INTO slot ("subject_id", "ord", "day") VALUES (1, 2, 5);
 
 
 INSERT INTO homework (subject_id, description, due) VALUES (1, 'Boring task #1', '2012-10-21');

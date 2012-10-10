@@ -37,7 +37,9 @@ public class AbbecedarioActivity extends FragmentActivity {
     		Database helper = new FixturesDatabase(AbbecedarioActivity.this, null, null, 1);
     		SQLiteCursorLoader loader = new SQLiteCursorLoader(
     				AbbecedarioActivity.this, helper,
-    				"SELECT slot._id, row, column, name_short FROM slot JOIN subject on slot.subject_id = subject._id", null);
+    				"SELECT slot._id, slot.day, slot.ord, slot.subject_id," +
+    				"  subject.name_short AS subject_name_short" +
+    				" FROM slot JOIN subject on slot.subject_id = subject._id", null);
     		return loader;
     	}
 

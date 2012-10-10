@@ -1,10 +1,10 @@
 CREATE TABLE "slot" (
 	"_id" INT PRIMARY KEY,
 	"subject_id" INT DEFAULT -1,
-	"start" DATETIME,
-	"end" DATETIME,
-	"row" INT NOT NULL,
-	"column" INT NOT NULL,
+	"start" DATETIME NOT NULL DEFAULT '08:00',
+	"end" DATETIME NOT NULL DEFAULT '09:00',
+	"day" INT NOT NULL,
+	"ord" INT NOT NULL,
 	"where" TEXT DEFAULTS 'Nowhere',
 	"teacher" TEXT DEFAULTS 'Nobody',
 	
