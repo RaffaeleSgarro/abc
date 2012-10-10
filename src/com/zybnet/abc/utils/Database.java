@@ -15,6 +15,15 @@ public class Database extends SQLiteOpenHelper {
 
 	private Context context;
 	
+	/*
+	 * Returns the default database. For now, it's an in-memory db
+	 * so data is not persistent.
+	 * 
+	 */
+	public Database(Context ctx) {
+		this(ctx, null, null, 1);
+	}
+	
 	public Database(Context context, String name, CursorFactory factory, int version) {
 		super(context, name, factory, version);
 		this.context = context;
