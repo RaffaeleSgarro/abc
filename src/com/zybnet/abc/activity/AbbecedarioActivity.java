@@ -44,6 +44,8 @@ public class AbbecedarioActivity extends FragmentActivity {
     	@Override
     	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
     		TimeTable table = (TimeTable) findViewById(TimeTable.ID);
+    		if (!cursor.isBeforeFirst())
+    			cursor.moveToPosition(-1);
     		table.setCursor(cursor);
     	}
 
