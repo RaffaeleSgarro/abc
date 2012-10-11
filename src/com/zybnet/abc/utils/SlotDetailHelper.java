@@ -1,7 +1,5 @@
 package com.zybnet.abc.utils;
 
-import java.util.Calendar;
-
 import android.app.Activity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -31,9 +29,8 @@ public class SlotDetailHelper {
 	}
 	
 	public void fillView(Slot slot) {
-		Calendar c = Calendar.getInstance();
-		c.set(Calendar.DAY_OF_WEEK, slot.day);
-		setText(R.id.title, U.uppercaseFirstChar(String.format("%tA, slot %d", c, slot.ord)));
+		setText(R.id.title, U.uppercaseFirstChar(String.format("%tA, slot %d",
+				U.getLocalizedDayOfTheWeek(slot.day), slot.ord)));
 		setText(R.id.subject, slot.subject_name);
 		setText(R.id.teacher, slot.teacher);
 		setText(R.id.time, String.format("%tR - %tR", slot.start, slot.end));

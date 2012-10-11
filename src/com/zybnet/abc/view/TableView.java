@@ -2,9 +2,6 @@ package com.zybnet.abc.view;
 
 import static android.view.ViewGroup.LayoutParams.FILL_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-
-import java.util.Calendar;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -21,6 +18,8 @@ import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.zybnet.abc.utils.U;
 
 /*
  * This class is a RelativeLayout with three children
@@ -200,14 +199,13 @@ public class TableView extends RelativeLayout {
 	private void setupChildren() {
 		RelativeLayout.LayoutParams p;
 		LinearLayout.LayoutParams p2;
-		Calendar c = Calendar.getInstance();
 		
 		// h is horizontal decoration, for days
 		LinearLayout h = ll(DAYS_DECORATION_ID, LinearLayout.HORIZONTAL);
 		for (int i = 0; i < cols(); i++) {
 			p2 = new LinearLayout.LayoutParams(FILL_PARENT, WRAP_CONTENT, 1f/cols());
-			c.set(Calendar.DAY_OF_WEEK, columnToDay(i));
-			h.addView(createHeader(String.format("%ta", c).toUpperCase()), p2);
+			h.addView(createHeader(String.format("%ta",
+					U.getLocalizedDayOfTheWeek(columnToDay(i))).toUpperCase()), p2);
 		}
 		p = new RelativeLayout.LayoutParams(FILL_PARENT, decorateDays ? WRAP_CONTENT: 0);
 		p.addRule(ALIGN_PARENT_TOP);

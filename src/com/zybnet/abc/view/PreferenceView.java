@@ -1,7 +1,5 @@
 package com.zybnet.abc.view;
 
-import java.util.Calendar;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -24,7 +22,6 @@ public class PreferenceView extends ScrollView {
 	}
 	
 	private void setupDays() {
-		Calendar c = Calendar.getInstance();
 		TextView[] views = new TextView[7];
 		views[0] = (TextView) findViewById(R.id.day_1);
 		views[1] = (TextView) findViewById(R.id.day_2);
@@ -35,10 +32,9 @@ public class PreferenceView extends ScrollView {
 		views[6] = (TextView) findViewById(R.id.day_7);
 		
 		for (int i = 0;  i < views.length; i++ ) {
-			c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek() + i);
 			TextView tv = views[i];
-			tv.setText(U.uppercaseFirstChar(String.format("%tA", c)));
-			//tv.setPadding(tv.getPaddingLeft() + 10, 10, 10, 10);
+			tv.setText(U.uppercaseFirstChar(String.format("%tA",
+					U.getLocalizedDayOfTheWeek(i + 1))));
 		}
 	}
 	

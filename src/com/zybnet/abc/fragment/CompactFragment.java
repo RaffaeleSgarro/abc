@@ -13,7 +13,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 
 import com.zybnet.abc.R;
-import com.zybnet.abc.utils.L;
 import com.zybnet.abc.utils.SlotDetailHelper;
 import com.zybnet.abc.view.PreferenceView;
 import com.zybnet.abc.view.SlotView;
