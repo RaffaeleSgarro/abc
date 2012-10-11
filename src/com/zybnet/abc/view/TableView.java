@@ -91,7 +91,7 @@ public class TableView extends RelativeLayout {
 		int ord_index = cursor.getColumnIndex("ord");
 		int subject = cursor.getColumnIndex("subject_name_short");
 		
-		String[][] slots = new String[displayedSlotsPerDay][columnsToDays.size()];
+		String[][] slots = new String[rows()][cols()];
 		
 		while (cursor.moveToNext()) {
 			// Remember 1-based
