@@ -1,6 +1,10 @@
 package com.zybnet.abc.view;
 
 import static android.view.ViewGroup.LayoutParams.FILL_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+
+import java.util.Calendar;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -15,22 +19,46 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-public class TableView extends LinearLayout {
+/*
+ * This class is a RelativeLayout with three children
+ *  
+ *   1. days decoration
+ *   2. ords decoration
+ *   3. table
+ *   
+ * The table is a LinearLayout in vertical orientation
+ * 
+ */
+public class TableView extends RelativeLayout {
 	
 	public final static int ID = 0x923032f;
 	
-	private static int[][] bgColors = new int[2][2];
+	public static int[][] BG_COLORS = new int[2][2];
+	
+	public static final int DARK_GREY;
+	
 	private ProxyListener slotListener = new ProxyListener();
 	
 	private SparseIntArray columnsToDays = new SparseIntArray();
 	private int displayedSlotsPerDay;
 	
+	private boolean decorateDays;
+	private boolean decorateOrds;
+	
+	public static final int DAYS_DECORATION_ID = 29843;
+	public static final int ORDS_DECORATION_ID = 92373;
+	public static final int TABLE_ID = 25912;
+	
 	static {
-		bgColors[0][0] = Color.parseColor("#e5e5e5"); // grey
-		bgColors[0][1] = Color.rgb(255, 255, 255); // white
-		bgColors[1][0] = Color.parseColor("#e5cbe5"); // purple
-		bgColors[1][1] = Color.parseColor("#ffe5ff"); // pink
+		BG_COLORS[0][0] = Color.parseColor("#e5e5e5"); // grey
+		BG_COLORS[0][1] = Color.rgb(255, 255, 255); // white
+		BG_COLORS[1][0] = Color.parseColor("#e5cbe5"); // purple
+		BG_COLORS[1][1] = Color.parseColor("#ffe5ff"); // pink
+		
+		DARK_GREY = Color.parseColor("#555555"); // for text
 	}
 	
 	public TableView(Context context) {
@@ -45,6 +73,10 @@ public class TableView extends LinearLayout {
 			}
 		}
 		displayedSlotsPerDay = prefs.getInt("slots_per_day", 6);
+		decorateDays = prefs.getBoolean("decorate_days", true);
+		decorateOrds = prefs.getBoolean("decorate_ords", true);
+		
+		setupChildren();
 	}
 	
 	/*
@@ -78,8 +110,9 @@ public class TableView extends LinearLayout {
 	
 	private void startAnimation() {
 		long startTimeMillis = AnimationUtils.currentAnimationTimeMillis();
-		for (int i = 0; i < getChildCount(); i++) {
-			ViewGroup row = (ViewGroup) getChildAt(i);
+		ViewGroup table = (ViewGroup) findViewById(TABLE_ID);
+		for (int i = 0; i < table.getChildCount(); i++) {
+			ViewGroup row = (ViewGroup) table.getChildAt(i);
 			int rowCount = row.getChildCount();
 			for (int j = 0; j < rowCount; j++) {
 				View cell = row.getChildAt(j);
@@ -164,28 +197,81 @@ public class TableView extends LinearLayout {
 		return columnsToDays.size();
 	}
 	
+	private void setupChildren() {
+		RelativeLayout.LayoutParams p;
+		LinearLayout.LayoutParams p2;
+		Calendar c = Calendar.getInstance();
+		
+		// h is horizontal decoration, for days
+		LinearLayout h = ll(DAYS_DECORATION_ID, LinearLayout.HORIZONTAL);
+		for (int i = 0; i < cols(); i++) {
+			p2 = new LinearLayout.LayoutParams(FILL_PARENT, WRAP_CONTENT, 1f/cols());
+			c.set(Calendar.DAY_OF_WEEK, columnToDay(i));
+			h.addView(createHeader(String.format("%ta", c).toUpperCase()), p2);
+		}
+		p = new RelativeLayout.LayoutParams(FILL_PARENT, decorateDays ? WRAP_CONTENT: 0);
+		p.addRule(ALIGN_PARENT_TOP);
+		p.addRule(ALIGN_PARENT_LEFT);
+		p.addRule(ALIGN_PARENT_RIGHT);
+		addView(h, p);
+		
+		// v is the ords decoration, the vertical one
+		LinearLayout v = ll(ORDS_DECORATION_ID, LinearLayout.VERTICAL);
+		for (int i = 0; i < rows(); i++) {
+			p2 = new LinearLayout.LayoutParams(WRAP_CONTENT, FILL_PARENT, 1f/rows());
+			View hv = createHeader(Integer.toString(i + 1));
+			hv.setPadding(3, 0, 3, 0);
+			v.addView(hv, p2);
+		}
+		p = new RelativeLayout.LayoutParams(decorateOrds ? WRAP_CONTENT : 0, FILL_PARENT);
+		p.addRule(ALIGN_BOTTOM);
+		p.addRule(ALIGN_LEFT);
+		p.addRule(BELOW, DAYS_DECORATION_ID);
+		addView(v, p);
+		
+		v.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+		h.setPadding(v.getMeasuredWidth(), 0, 0, 0);
+		
+		LinearLayout t = ll(TABLE_ID, LinearLayout.VERTICAL);
+		p = new RelativeLayout.LayoutParams(FILL_PARENT, FILL_PARENT);
+		p.addRule(BELOW, DAYS_DECORATION_ID);
+		p.addRule(RIGHT_OF, ORDS_DECORATION_ID);
+		addView(t, p);
+	}
+	
+	private TextView createHeader(String text) {
+		TextView tv = new TextView(getContext());
+		tv.setText(text);
+		tv.setGravity(Gravity.CENTER);
+		tv.setTextColor(Color.WHITE);
+		return tv;
+	}
+	
+	private LinearLayout ll(int id, int orientation) {
+		LinearLayout ll = new LinearLayout(getContext());
+		ll.setId(id);
+		ll.setOrientation(orientation);
+		return ll;
+	}
+	
 	private void fillSlots(String[][] slots) {
-		setOrientation(LinearLayout.VERTICAL);
-
 		LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
 				FILL_PARENT, FILL_PARENT, 1f / rows());
 		LinearLayout.LayoutParams cellParams = new LinearLayout.LayoutParams(
 				FILL_PARENT, FILL_PARENT, 1f / cols());
 		
-		final int grey = Color.parseColor("#555555"); // for text
-
 		for (int i = 0; i < slots.length; i++) {
 			LinearLayout row = new LinearLayout(getContext());
 			String[] slots_row = slots[i];
 			row.setOrientation(LinearLayout.HORIZONTAL); // default, but anyway
 			for (int j = 0; j < slots_row.length; j++) {
-				SlotView cell = new SlotView(getContext(), slots_row[j], bgColors[i % 2][j % 2]);
-				cell.setTextColor(grey);
+				SlotView cell = new SlotView(getContext(), slots_row[j], BG_COLORS[i % 2][j % 2]);
+				cell.setTextColor(DARK_GREY);
 				cell.setGravity(Gravity.CENTER);
 				cell.insertAt(row, cellParams, i, j);
 				cell.setOnClickListener(slotListener);
 			}
-			addView(row, rowParams);
+			((ViewGroup) findViewById(TABLE_ID)).addView(row, rowParams);
 		}
 	}
 	
