@@ -127,4 +127,7 @@ public class AbbecedarioActivity extends FragmentActivity {
     	return (TableView) getTableFragment().getView().findViewById(TableView.ID);
     }
 
+    public DatabaseHelper db() {
+    	return dbHelper;
+    }
 }

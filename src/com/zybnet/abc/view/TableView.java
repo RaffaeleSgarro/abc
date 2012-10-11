@@ -144,8 +144,16 @@ public class TableView extends LinearLayout {
 	 * is not enabled in the preferences
 	 * 
 	 */
-	private int dayToColumn(int day) {
+	public int dayToColumn(int day) {
 		return columnsToDays.indexOfValue(day);
+	}
+	
+	/*
+	 * Take a 0-based column index and returns the
+	 * 1-based day if it's show, 0 otherwise
+	 */
+	public int columnToDay(int column) {
+		return columnsToDays.get(column);
 	}
 	
 	public int rows() {

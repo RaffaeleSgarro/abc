@@ -5,8 +5,9 @@ CREATE TABLE "slot" (
 	"end" DATETIME NOT NULL DEFAULT '09:00',
 	"day" INT NOT NULL,
 	"ord" INT NOT NULL,
-	"where" TEXT DEFAULTS 'Nowhere',
-	"teacher" TEXT DEFAULTS 'Nobody',
+	"compact_name" TEXT,
+	"where" TEXT DEFAULT 'Nowhere',
+	"teacher" TEXT DEFAULT 'Nobody',
 	
 	FOREIGN KEY ("subject_id") REFERENCES "subject" ("_id") ON DELETE SET DEFAULT ON UPDATE CASCADE
 );

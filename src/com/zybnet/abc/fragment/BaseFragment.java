@@ -3,6 +3,7 @@ package com.zybnet.abc.fragment;
 import android.support.v4.app.Fragment;
 
 import com.zybnet.abc.activity.AbbecedarioActivity;
+import com.zybnet.abc.utils.DatabaseHelper;
 import com.zybnet.abc.view.TableView;
 
 public class BaseFragment extends Fragment {
@@ -20,5 +21,9 @@ public class BaseFragment extends Fragment {
 	
 	public TableView getTableView() {
 		return abc().getTableView();
+	}
+	
+	public DatabaseHelper db() {
+		return abc().db();
 	}
 }

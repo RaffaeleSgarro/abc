@@ -1,12 +1,8 @@
 package com.zybnet.abc.view;
 
-import java.util.Calendar;
-
 import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.zybnet.abc.model.Slot;
 
 public class SlotView extends TextView {
 
@@ -29,17 +25,11 @@ public class SlotView extends TextView {
 		this.column = column;
 	}
 	
+	/*
+	 * returns the position in the table. This IS NOT the
+	 * slot's day/ord value
+	 */
 	public int getRow() {return row;}
 	public int getColumn() {return column;}
-
-	public String toString() {
-		Calendar c = Calendar.getInstance();
-		c.set(Calendar.DAY_OF_WEEK, getColumn() + 1);
-		return String.format("%tA, hour %d", c, getRow() + 1);
-	}
 	
-	public Slot getSlot() {
-		// TODO
-		return new Slot();
-	}
 }

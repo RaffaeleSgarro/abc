@@ -1,12 +1,16 @@
 package com.zybnet.abc.utils;
 
+import java.util.Calendar;
+
 import android.app.Activity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.zybnet.abc.R;
+import com.zybnet.abc.fragment.BaseFragment;
 import com.zybnet.abc.model.Slot;
+import com.zybnet.abc.view.SlotView;
 
 public class SlotDetailHelper {
 	
@@ -18,9 +22,24 @@ public class SlotDetailHelper {
 		view = (ViewGroup) activity.getLayoutInflater().inflate(R.layout.slot_detail, root, false);
 	}
 	
+	public void fillView(SlotView slotView, BaseFragment ctx) {
+		Slot slot = ctx.db().getSlot(ctx.getTableView().columnToDay(
+				slotView.getColumn()),
+				slotView.getRow()
+		);
+		fillView(slot);
+	}
+	
 	public void fillView(Slot slot) {
-		setText(R.id.title, String.format("%s, slot %d", slot.toString(), slot.ord));
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.DAY_OF_WEEK, slot.day);
+		String baseTitle = String.format("%tA, slot %d", c, slot.ord);
+		setText(R.id.title, Character.toUpperCase(baseTitle.charAt(0)) + baseTitle.substring(1));
 		setText(R.id.subject, slot.subject_name);
+		setText(R.id.teacher, slot.teacher);
+		setText(R.id.time, String.format("%tR - %tR", slot.start, slot.end));
+		setText(R.id.room, slot.where);
+		// TODO what about listeners?
 	}
 
 	public ViewGroup getView() {

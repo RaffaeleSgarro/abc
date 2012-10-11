@@ -45,7 +45,7 @@ public class RightFragment extends BaseFragment {
 			final ViewGroup leftPane = (ViewGroup) abc().findViewById(R.id.left);
 			
 			SlotDetailHelper helper = new SlotDetailHelper(abc());
-			helper.fillView(slotView.getSlot());
+			helper.fillView(slotView, RightFragment.this);
 			
 			final View oldChild = leftPane.getChildAt(0);
 			final View newChild = helper.getView();

@@ -2,7 +2,6 @@ package com.zybnet.abc.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +11,18 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.zybnet.abc.R;
+import com.zybnet.abc.utils.SlotDetailHelper;
 import com.zybnet.abc.view.SlotView;
 import com.zybnet.abc.view.TableView;
 
-public class CompactFragment extends Fragment {
+public class CompactFragment extends BaseFragment {
 	
 	// TODO read from preferences
 	private FrameLayout root;
 	private TableView table;
-	private ViewGroup detail;
-	private TextView detail_title;
+	private SlotDetailHelper detail;
 	
 	public CompactFragment() {
 		super();
@@ -36,12 +34,10 @@ public class CompactFragment extends Fragment {
 		root = new FrameLayout(mActivity);
 		
 		// Setup detail view
-		detail = (ViewGroup) mActivity.getLayoutInflater().inflate(
-				R.layout.slot_detail, root, false);
-		detail.setVisibility(View.INVISIBLE);
-		detail_title = (TextView) detail.findViewById(R.id.title);
+		detail = new SlotDetailHelper(getActivity());
+		detail.getView().setVisibility(View.INVISIBLE);
 		
-		root.addView(detail);
+		root.addView(detail.getView());
 
 		// Setup the timetable view
 		table = new TableView(mActivity);
@@ -57,8 +53,6 @@ public class CompactFragment extends Fragment {
 	// read by detail
 	private int _x;
 	private int _y;
-	private int _selected_row;
-	private int _selected_col;
 
 	/*
 	 * Set as the slot listener for the time table. Performs the zooming
@@ -80,19 +74,18 @@ public class CompactFragment extends Fragment {
 			
 			// TODO prepare detail
 			SlotView cell = (SlotView) view;
-			_selected_row = cell.getRow();
-			_selected_col = cell.getColumn();
-			detail_title.setText(cell.toString());
+			detail.fillView(cell, CompactFragment.this);
 
+			View dv = detail.getView();
 			AnimationSet dSet = new AnimationSet(true);
 			dSet.addAnimation(new AlphaAnimation(0, 1));
-			dSet.addAnimation(new TranslateAnimation(0, 0, -detail.getHeight(), 0));
+			dSet.addAnimation(new TranslateAnimation(0, 0, -dv.getHeight(), 0));
 			dSet.setStartTime(AnimationUtils.currentAnimationTimeMillis());
 			dSet.setStartOffset(250);
 			dSet.setDuration(500);
-			root.bringChildToFront(detail);
-			detail.startAnimation(dSet);
-			detail.setVisibility(View.VISIBLE);
+			root.bringChildToFront(dv);
+			dv.startAnimation(dSet);
+			dv.setVisibility(View.VISIBLE);
 			
 			getActivity().findViewById(R.id.actionbar_back).setOnClickListener(new BaseButtonsListener());
 		}
@@ -104,10 +97,10 @@ public class CompactFragment extends Fragment {
 		public void onClick(View v) {
 			AnimationSet a1 = new AnimationSet(true);
 			a1.addAnimation(new AlphaAnimation(1, 0));
-			a1.addAnimation(new TranslateAnimation(0, 0, 0, -detail.getHeight()));
+			a1.addAnimation(new TranslateAnimation(0, 0, 0, -detail.getView().getHeight()));
 			a1.setDuration(500);
 			a1.setFillAfter(true);
-			detail.startAnimation(a1);
+			detail.getView().startAnimation(a1);
 
 			root.bringChildToFront(table);
 			AnimationSet a2 = new AnimationSet(true);
