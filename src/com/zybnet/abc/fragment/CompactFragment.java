@@ -13,7 +13,9 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 
 import com.zybnet.abc.R;
+import com.zybnet.abc.utils.L;
 import com.zybnet.abc.utils.SlotDetailHelper;
+import com.zybnet.abc.view.PreferenceView;
 import com.zybnet.abc.view.SlotView;
 import com.zybnet.abc.view.TableView;
 
@@ -45,7 +47,7 @@ public class CompactFragment extends BaseFragment {
 		table.setSlotListener(new SlotListener());
 		
 		root.addView(table);
-		
+		abc().findViewById(R.id.actionbar_menu).setOnClickListener(new SettingsMenuListener());
 		return root;
 	}
 
@@ -87,11 +89,28 @@ public class CompactFragment extends BaseFragment {
 			dv.startAnimation(dSet);
 			dv.setVisibility(View.VISIBLE);
 			
-			getActivity().findViewById(R.id.actionbar_back).setOnClickListener(new BaseButtonsListener());
+			abc().findViewById(R.id.actionbar_back).setOnClickListener(new BackNavigationListener());
 		}
 	}
 	
-	private class BaseButtonsListener implements View.OnClickListener {
+	private class SettingsMenuListener implements View.OnClickListener {
+		@Override
+		public void onClick(View v) {
+			final View p = new PreferenceView(abc());
+			p.setVisibility(View.VISIBLE);
+			root.addView(p, new FrameLayout.LayoutParams(-1, -1));
+			root.bringChildToFront(p);
+			abc().findViewById(R.id.actionbar_back).setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					root.removeView(p);
+				}
+			});
+		}
+	}
+	
+	private class BackNavigationListener implements View.OnClickListener {
 
 		@Override
 		public void onClick(View v) {

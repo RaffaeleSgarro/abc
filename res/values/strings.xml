@@ -10,4 +10,9 @@
     <string name="place">place</string>
     <string name="homework">Homework</string>
     <string name="score">Score</string>
+    <string name="decoration_header">decorations</string>
+    <string name="enabled_days">table columns</string>
+    <string name="enable_days_deco">Display the names of the days</string>
+    <string name="enable_ords_deco">Display number of slot in the main table</string>
+    <string name="slots_per_day">slots per day</string>
 </resources>
