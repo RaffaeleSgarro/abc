@@ -1,7 +1,6 @@
 package com.zybnet.abc.activity;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -28,7 +27,7 @@ public class AbbecedarioActivity extends FragmentActivity {
 	private final String COMPACT_FRAGMENT = "compact";
 	private final String SLOT_FRAGMENT = "slot";
 	
-	private SQLiteOpenHelper dbHelper;
+	private DatabaseHelper dbHelper;
 	private SQLiteLoaderCallbacks callbacks;
 	
     @Override
@@ -110,8 +109,8 @@ public class AbbecedarioActivity extends FragmentActivity {
     			dbHelper.close();
     			return;
     		}
-    		Fragment tableFragment = getTableFragment();
-    		TableView table = (TableView) tableFragment.getView().findViewById(TableView.ID);
+    		
+    		TableView table = getTableView();
     		if (!cursor.isBeforeFirst())
     			cursor.moveToPosition(-1);
     		table.setCursor(cursor);
@@ -122,6 +121,10 @@ public class AbbecedarioActivity extends FragmentActivity {
     		// TODO
     	}
 
+    }
+    
+    public TableView getTableView() {
+    	return (TableView) getTableFragment().getView().findViewById(TableView.ID);
     }
 
 }

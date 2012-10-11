@@ -19,6 +19,6 @@ public class BaseFragment extends Fragment {
 	}
 	
 	public TableView getTableView() {
-		return (TableView) abc().getTableFragment().getView().findViewById(TableView.ID);
+		return abc().getTableView();
 	}
 }
