@@ -8,6 +8,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.View.MeasureSpec;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.fragment.CompactFragment;
@@ -29,12 +34,14 @@ public class AbbecedarioActivity extends FragmentActivity {
 	
 	private DatabaseHelper dbHelper;
 	private SQLiteLoaderCallbacks callbacks;
+	private PopupWindow popup;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
     	
+        // Setup fragments
         if (findViewById(R.id.root) != null) {
         	addFragmentMaybe(CompactFragment.class, R.id.root, COMPACT_FRAGMENT);
         } else {
@@ -42,11 +49,41 @@ public class AbbecedarioActivity extends FragmentActivity {
         	addFragmentMaybe(LeftFragment.class, R.id.left, SLOT_FRAGMENT);
         }
         
+        // Setup the action bar
+        setupActionBar();
+        
         // TODO this is not persistent
         dbHelper = new FixturesDatabaseHelper(this);
         callbacks = new SQLiteLoaderCallbacks();
         
         getSupportLoaderManager().initLoader(LOADER_SLOTS, null, callbacks);
+    }
+    
+    @Override
+    public void onPause() {
+    	super.onPause();
+    	if (popup.isShowing()) {
+    		popup.dismiss();
+    	}
+    }
+    
+    private void setupActionBar() {
+    	final View content = getLayoutInflater().
+    			inflate(R.layout.menu, new LinearLayout(this, null), true);
+    	content.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+    	popup = new PopupWindow(content, content.getMeasuredWidth(), content.getMeasuredHeight(), true);
+    	popup.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
+    	popup.setOutsideTouchable(true);
+    	
+    	popup.setAnimationStyle(R.style.AnimationPopup);
+    	
+    	findViewById(R.id.actionbar_menu).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View button) {
+				popup.showAtLocation(button, Gravity.TOP | Gravity.RIGHT, 0, button.getHeight());
+			}
+		});
     }
     
     @Override

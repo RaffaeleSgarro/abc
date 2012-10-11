@@ -14,7 +14,6 @@ import android.widget.FrameLayout;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.utils.SlotDetailHelper;
-import com.zybnet.abc.view.PreferenceView;
 import com.zybnet.abc.view.SlotView;
 import com.zybnet.abc.view.TableView;
 
@@ -46,7 +45,7 @@ public class CompactFragment extends BaseFragment {
 		table.setSlotListener(new SlotListener());
 		
 		root.addView(table);
-		abc().findViewById(R.id.actionbar_menu).setOnClickListener(new SettingsMenuListener());
+		
 		return root;
 	}
 
@@ -89,23 +88,6 @@ public class CompactFragment extends BaseFragment {
 			dv.setVisibility(View.VISIBLE);
 			
 			abc().findViewById(R.id.actionbar_back).setOnClickListener(new BackNavigationListener());
-		}
-	}
-	
-	private class SettingsMenuListener implements View.OnClickListener {
-		@Override
-		public void onClick(View v) {
-			final View p = new PreferenceView(abc());
-			p.setVisibility(View.VISIBLE);
-			root.addView(p, new FrameLayout.LayoutParams(-1, -1));
-			root.bringChildToFront(p);
-			abc().findViewById(R.id.actionbar_back).setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					root.removeView(p);
-				}
-			});
 		}
 	}
 	

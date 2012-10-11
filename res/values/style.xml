@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+
     <style name="PaddedText">
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
     </style>
+
     <style name="PaddedSmallText">
         <item name="android:paddingTop">10dp</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
     </style>
+
     <style name="ActionBarButton">
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingRight">10dp</item>
@@ -17,10 +20,24 @@
         <item name="android:scaleType">centerCrop</item>
         <item name="android:background">@null</item>
     </style>
+
     <style name="Prefs">
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingLeft">50dp</item>
         <item name="android:paddingBottom">10dp</item>
-        <item name="android:paddingRight">10dp</item>  
+        <item name="android:paddingRight">10dp</item>
     </style>
+
+    <style name="MenuItem">
+        <item name="android:padding">20dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+    </style>
+
+    <style name="AnimationPopup">
+        <item name="@android:windowEnterAnimation">@anim/popup_show</item>
+        <item name="@android:windowExitAnimation">@anim/popup_hide</item>
+    </style>
+
+
 </resources>

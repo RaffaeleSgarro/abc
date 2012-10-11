@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    <TextView
+        android:id="@+id/string"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings"
+        style="@style/MenuItem" />
+	<include layout="@layout/separator" />
+    <TextView
+        android:id="@+id/help"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/help"
+        style="@style/MenuItem" />
+</LinearLayout>
