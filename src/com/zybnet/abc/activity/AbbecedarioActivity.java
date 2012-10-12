@@ -16,8 +16,7 @@ import android.widget.PopupWindow;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.fragment.CompactFragment;
-import com.zybnet.abc.fragment.LeftFragment;
-import com.zybnet.abc.fragment.RightFragment;
+import com.zybnet.abc.fragment.ExtendedFragment;
 import com.zybnet.abc.utils.DatabaseHelper;
 import com.zybnet.abc.utils.FixturesDatabaseHelper;
 import com.zybnet.abc.utils.L;
@@ -28,9 +27,8 @@ public class AbbecedarioActivity extends FragmentActivity {
 	
 	private final int LOADER_SLOTS = 1;
 	
-	private final String TABLE_FRAGMENT = "table";
-	private final String COMPACT_FRAGMENT = "compact";
-	private final String SLOT_FRAGMENT = "slot";
+	public final String EXTENDED_FRAGMENT = "table";
+	public final String COMPACT_FRAGMENT = "compact";
 	
 	private DatabaseHelper dbHelper;
 	private SQLiteLoaderCallbacks callbacks;
@@ -45,8 +43,8 @@ public class AbbecedarioActivity extends FragmentActivity {
         if (findViewById(R.id.root) != null) {
         	addFragmentMaybe(CompactFragment.class, R.id.root, COMPACT_FRAGMENT);
         } else {
-        	addFragmentMaybe(RightFragment.class, R.id.right, TABLE_FRAGMENT);
-        	addFragmentMaybe(LeftFragment.class, R.id.left, SLOT_FRAGMENT);
+        	addFragmentMaybe(ExtendedFragment.class, R.id.right, EXTENDED_FRAGMENT);
+        	//addFragmentMaybe(LeftFragment.class, R.id.left, SLOT_FRAGMENT);
         }
         
         // Setup the action bar
@@ -116,7 +114,7 @@ public class AbbecedarioActivity extends FragmentActivity {
     
     public Fragment getTableFragment() {
     	return 	getSupportFragmentManager().findFragmentByTag(
-    			(findViewById(R.id.root) == null) ? TABLE_FRAGMENT : COMPACT_FRAGMENT);
+    			(findViewById(R.id.root) == null) ? EXTENDED_FRAGMENT : COMPACT_FRAGMENT);
     }
     
     private class SQLiteLoaderCallbacks implements LoaderCallbacks<Cursor> {
