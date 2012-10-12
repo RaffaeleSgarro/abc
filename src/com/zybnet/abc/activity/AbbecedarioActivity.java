@@ -44,10 +44,8 @@ public class AbbecedarioActivity extends FragmentActivity {
         	addFragmentMaybe(CompactFragment.class, R.id.root, COMPACT_FRAGMENT);
         } else {
         	addFragmentMaybe(ExtendedFragment.class, R.id.right, EXTENDED_FRAGMENT);
-        	//addFragmentMaybe(LeftFragment.class, R.id.left, SLOT_FRAGMENT);
         }
         
-        // Setup the action bar
         setupActionBar();
         
         // TODO this is not persistent
