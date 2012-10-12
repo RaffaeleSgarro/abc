@@ -3,6 +3,8 @@ package com.zybnet.abc.utils;
 import java.util.Calendar;
 
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ViewSwitcher;
 
 /*
@@ -28,9 +30,9 @@ public class U {
 	/*
 	 * May return null
 	 */
-	public static View swap(ViewSwitcher flipper, View view, int in, int out) {
-		flipper.setInAnimation(flipper.getContext(), in);
-		flipper.setOutAnimation(flipper.getContext(), out);
+	public static View swap(ViewSwitcher flipper, View view, Animation in, Animation out) {
+		flipper.setInAnimation(in);
+		flipper.setOutAnimation(out);
 		
 		View returned = null;
 		
@@ -43,5 +45,12 @@ public class U {
 		flipper.showNext();
 		
 		return returned;
+	}
+	
+	public static View swap(ViewSwitcher flipper, View view, int in, int out) {
+		return swap(flipper, view,
+				AnimationUtils.loadAnimation(flipper.getContext(), in),
+				AnimationUtils.loadAnimation(flipper.getContext(), out));
+		
 	}
 }

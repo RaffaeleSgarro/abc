@@ -4,10 +4,10 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
     <include layout="@layout/action_bar" />
-	<FrameLayout
+	<ViewSwitcher
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/root"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
-    </FrameLayout>
+    </ViewSwitcher>
 </LinearLayout>

@@ -1,6 +1,8 @@
 package com.zybnet.abc.fragment;
 
 import android.support.v4.app.Fragment;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.zybnet.abc.activity.AbbecedarioActivity;
 import com.zybnet.abc.utils.DatabaseHelper;
@@ -25,5 +27,9 @@ public class BaseFragment extends Fragment {
 	
 	public DatabaseHelper db() {
 		return abc().db();
+	}
+	
+	public Animation loadAnimation(int id) {
+		return AnimationUtils.loadAnimation(getActivity(), id);
 	}
 }
