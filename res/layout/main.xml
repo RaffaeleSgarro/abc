@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:abc="http://schemas.android.com/apk/res/com.zybnet.abc"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
     <include layout="@layout/action_bar" />
-	<ViewSwitcher
-        xmlns:android="http://schemas.android.com/apk/res/android"
+	<view
+        class="com.zybnet.abc.view.HistoryFilpperView"
         android:id="@+id/root"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-    </ViewSwitcher>
+        android:layout_height="fill_parent"
+        abc:back="@+id/actionbar_back" >
+    </view>
 </LinearLayout>

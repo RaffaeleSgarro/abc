@@ -5,12 +5,14 @@ import java.util.Calendar;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ViewSwitcher;
+import android.widget.ViewAnimator;
 
 /*
  * Utility class
  */
 public class U {
+	
+	public static final String NAMESPACE_PREFIX = "http://schemas.android.com/apk/res/";
 	
 	private static Calendar calendar;
 	
@@ -28,9 +30,11 @@ public class U {
 	}
 	
 	/*
+	 * TODO remove
 	 * May return null
 	 */
-	public static View swap(ViewSwitcher flipper, View view, Animation in, Animation out) {
+	@Deprecated
+	public static View swap(ViewAnimator flipper, View view, Animation in, Animation out) {
 		flipper.setInAnimation(in);
 		flipper.setOutAnimation(out);
 		
@@ -47,7 +51,8 @@ public class U {
 		return returned;
 	}
 	
-	public static View swap(ViewSwitcher flipper, View view, int in, int out) {
+	@Deprecated
+	public static View swap(ViewAnimator flipper, View view, int in, int out) {
 		return swap(flipper, view,
 				AnimationUtils.loadAnimation(flipper.getContext(), in),
 				AnimationUtils.loadAnimation(flipper.getContext(), out));
