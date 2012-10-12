@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationSet;
@@ -16,6 +17,7 @@ import android.widget.ViewSwitcher;
 import com.zybnet.abc.R;
 import com.zybnet.abc.utils.SlotDetailHelper;
 import com.zybnet.abc.utils.U;
+import com.zybnet.abc.view.PreferenceView;
 import com.zybnet.abc.view.SlotView;
 import com.zybnet.abc.view.TableView;
 
@@ -52,13 +54,17 @@ public class CompactFragment extends BaseFragment {
 			out.addAnimation(new AlphaAnimation(1, 0));
 			out.setDuration(500);
 			
-			U.swap((ViewSwitcher) abc().findViewById(R.id.root), helper.getView(),
+			U.swap(switcher(), helper.getView(),
 					loadAnimation(R.anim.compact_first_pane_in), out);
 			
 			abc().findViewById(R.id.actionbar_back).setOnClickListener(
 					new BackNavigationListener(bounds));
 		}
 		
+	}
+	
+	private ViewSwitcher switcher() {
+		return(ViewSwitcher) abc().findViewById(R.id.root);
 	}
 	
 	private class BackNavigationListener implements View.OnClickListener {
@@ -89,6 +95,21 @@ public class CompactFragment extends BaseFragment {
 			// TODO remove here and find a general pattern
 			getActivity().findViewById(R.id.actionbar_back).setOnClickListener(null);
 		}
+	}
+
+	@Override
+	public OnClickListener getSettingsMenuClickedListener() {
+		return new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (switcher().getCurrentView() instanceof PreferenceView)
+					return;
+				
+				PreferenceView p = new PreferenceView(abc());
+				U.swap(switcher(), p, R.anim.left_pane_in, R.anim.left_pane_out);
+			}
+		};
 	}
 	
 }

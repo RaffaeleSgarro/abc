@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.zybnet.abc.R;
+import com.zybnet.abc.fragment.BaseFragment;
 import com.zybnet.abc.fragment.CompactFragment;
 import com.zybnet.abc.fragment.ExtendedFragment;
 import com.zybnet.abc.utils.DatabaseHelper;
@@ -67,6 +68,10 @@ public class AbbecedarioActivity extends FragmentActivity {
     	final View content = getLayoutInflater().
     			inflate(R.layout.menu, new LinearLayout(this, null), true);
     	content.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+    	
+    	content.findViewById(R.id.settings).setOnClickListener(
+    			getActiveFragment().getSettingsMenuClickedListener());
+    	
     	popup = new PopupWindow(content, content.getMeasuredWidth(), content.getMeasuredHeight(), true);
     	popup.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
     	popup.setOutsideTouchable(true);
@@ -80,6 +85,7 @@ public class AbbecedarioActivity extends FragmentActivity {
 				popup.showAtLocation(button, Gravity.TOP | Gravity.RIGHT, 0, button.getHeight());
 			}
 		});
+    	
     }
     
     @Override
@@ -110,8 +116,10 @@ public class AbbecedarioActivity extends FragmentActivity {
     	}
     }
     
-    public Fragment getTableFragment() {
-    	return 	getSupportFragmentManager().findFragmentByTag(
+    public BaseFragment getActiveFragment() {
+    	FragmentManager fm = getSupportFragmentManager();
+    	fm.executePendingTransactions();
+    	return 	(BaseFragment) fm.findFragmentByTag(
     			(findViewById(R.id.root) == null) ? EXTENDED_FRAGMENT : COMPACT_FRAGMENT);
     }
     

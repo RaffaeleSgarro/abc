@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ViewSwitcher;
 
@@ -38,5 +39,10 @@ public class ExtendedFragment extends BaseFragment {
 					R.anim.left_pane_in,
 					R.anim.left_pane_out);
 		}
+	}
+
+	@Override
+	public OnClickListener getSettingsMenuClickedListener() {
+		return null;
 	}
 }
