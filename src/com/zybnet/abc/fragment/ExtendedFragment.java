@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ViewSwitcher;
 
 import com.zybnet.abc.R;
@@ -19,16 +18,12 @@ public class ExtendedFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle params) {
 		Context mActivity = getActivity();
-		FrameLayout root = new FrameLayout(mActivity);
 		
 		// Setup the timetable view
 		TableView table = new TableView(mActivity);
-		table.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
 		table.setSlotListener(new SlotListener());
 				
-		root.addView(table);
-				
-		return root;
+		return table;
 	}
 	
 	private class SlotListener implements View.OnClickListener {
