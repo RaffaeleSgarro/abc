@@ -19,6 +19,11 @@ public class U {
 	public static final String P_DECORATE_ORDS = "decorate_ords";
 	public static final String P_SLOTS_PER_DAY = "slots_per_day";
 	
+	public static final int SLOTS_PER_DAY_MIN = 3;
+	public static final int SLOTS_PER_DAY_DEFAULT = 5;
+	public static final int SLOTS_PER_DAY_MAX = 6;
+	
+	
 	private static Calendar calendar;
 	
 	static {

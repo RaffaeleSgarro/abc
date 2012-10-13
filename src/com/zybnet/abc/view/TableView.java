@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
-import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.zybnet.abc.utils.L;
 import com.zybnet.abc.utils.U;
 
 /*
@@ -42,15 +40,15 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 	
 	private ProxyListener slotListener = new ProxyListener();
 	
-	private SparseIntArray columnsToDays;
-	private int displayedSlotsPerDay;
-	
 	private boolean decorateDays;
 	private boolean decorateOrds;
 	
 	public static final int DAYS_DECORATION_ID = 29843;
 	public static final int ORDS_DECORATION_ID = 92373;
 	public static final int TABLE_ID = 25912;
+	
+	public static final int ROWS = U.SLOTS_PER_DAY_MAX;
+	public static final int COLUMNS = 7;
 	
 	static {
 		BG_COLORS[0][0] = Color.parseColor("#e5e5e5"); // grey
@@ -74,14 +72,7 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 	// Builds the UI
 	private void setup(Cursor cursor) {
 		SharedPreferences prefs = prefs();
-		columnsToDays = new SparseIntArray();
-		for (int i = 1, count = 0; i <= 7; i++) {
-			if (prefs.getBoolean(U.P_DAY_PREFIX + i, true)) {
-				columnsToDays.put(count, i);
-				count++;
-			}
-		}
-		displayedSlotsPerDay = prefs.getInt(U.P_SLOTS_PER_DAY, 6);
+		
 		decorateDays = prefs.getBoolean(U.P_DECORATE_DAYS, true);
 		decorateOrds = prefs.getBoolean(U.P_DECORATE_ORDS, true);
 		
@@ -93,19 +84,23 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		int ord_index = cursor.getColumnIndex("ord");
 		int subject = cursor.getColumnIndex("subject_name_short");
 		
-		String[][] slots = new String[rows()][cols()];
+		String[][] slots = new String[ROWS][COLUMNS];
 		
 		while (cursor.moveToNext()) {
 			// Remember 1-based
 			int day = cursor.getInt(day_index);
 			int ord = cursor.getInt(ord_index);
 			
-			if (isDisplayable(day, ord)) {
-				slots[ord - 1][dayToColumn(day)] = cursor.getString(subject);
-			}
+			slots[ord - 1][day - 1] = cursor.getString(subject);
 		}
 		
 		addSlots(slots);
+		
+		for (int i = 0; i < 7; i++) {
+			// TODO set color here
+			boolean v = prefs().getBoolean(U.P_DAY_PREFIX + (i + 1), true);
+			setColumnVisibility(i, v ? View.VISIBLE : View.GONE);
+		}
 		
 		startAnimation();
 	}
@@ -180,58 +175,6 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		return getChildAt(coords[0], coords[1]);
 	}
 	
-	/*
-	 * Returns the SlotView, IF ANY, for displaying the ord-th slot in day.
-	 * NOTE: This method returns NULL if in the current user preferences
-	 * there is no room allocated for this slot, ie if the day column is
-	 * shifted out or ord is greater than the maximum per day.
-	 * 
-	 * @param day 1-based, locale specific
-	 * @param ord 1-based
-	 */
-	public SlotView getChildForSlot(int day, int ord) {
-		if (!isDisplayable(day, ord))
-			return null;
-		
-		return getChildAt(dayToColumn(day), ord - 1);
-	}
-	
-	/*
-	 * @param day 1-based locale specific day
-	 * @param ord 1-based order of slot in the day
-	 */
-	private boolean isDisplayable(int day, int ord) {
-		return dayToColumn(day) >= 0 && ord > 0 && ord <= rows();
-	}
-	
-	/*
-	 * Returns the 0-based index of the columns for
-	 * the 1-based day.
-	 * 
-	 * The return is a negative number if the day
-	 * is not enabled in the preferences
-	 * 
-	 */
-	public int dayToColumn(int day) {
-		return columnsToDays.indexOfValue(day);
-	}
-	
-	/*
-	 * Take a 0-based column index and returns the
-	 * 1-based day if it's show, 0 otherwise
-	 */
-	public int columnToDay(int column) {
-		return columnsToDays.get(column);
-	}
-	
-	public int rows() {
-		return displayedSlotsPerDay;
-	}
-	
-	public int cols() {
-		return columnsToDays.size();
-	}
-	
 	// Adds layouts for decorations and main view
 	private void addMainChildren() {
 		RelativeLayout.LayoutParams p;
@@ -240,10 +183,10 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		// h is horizontal decoration, for days
 		LinearLayout h = ll(DAYS_DECORATION_ID, LinearLayout.HORIZONTAL);
 		h.setVisibility(decorateDays ? View.VISIBLE : View.GONE);
-		for (int i = 0; i < cols(); i++) {
-			p2 = new LinearLayout.LayoutParams(FILL_PARENT, WRAP_CONTENT, 1f/cols());
+		for (int i = 0; i < COLUMNS; i++) {
+			p2 = new LinearLayout.LayoutParams(FILL_PARENT, WRAP_CONTENT, 1f/COLUMNS);
 			h.addView(createHeader(String.format("%ta",
-					U.getLocalizedDayOfTheWeek(columnToDay(i))).toUpperCase()), p2);
+					U.getLocalizedDayOfTheWeek(i + 1)).toUpperCase()), p2);
 		}
 		p = new RelativeLayout.LayoutParams(FILL_PARENT, WRAP_CONTENT);
 		p.addRule(ALIGN_PARENT_TOP);
@@ -253,10 +196,12 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		
 		// v is the ords decoration, the vertical one
 		LinearLayout v = ll(ORDS_DECORATION_ID, LinearLayout.VERTICAL);
-		for (int i = 0; i < rows(); i++) {
-			p2 = new LinearLayout.LayoutParams(WRAP_CONTENT, FILL_PARENT, 1f/rows());
+		for (int i = 0; i < ROWS; i++) {
+			p2 = new LinearLayout.LayoutParams(WRAP_CONTENT, FILL_PARENT, 1f/ROWS);
 			View hv = createHeader(Integer.toString(i + 1));
 			hv.setPadding(3, 0, 3, 0);
+			boolean visible = i < prefs().getInt(U.P_SLOTS_PER_DAY, U.SLOTS_PER_DAY_DEFAULT);
+			hv.setVisibility(visible ? View.VISIBLE : View.GONE);
 			v.addView(hv, p2);
 		}
 		
@@ -294,15 +239,19 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 	
 	private void addSlots(String[][] slots) {
 		LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
-				FILL_PARENT, FILL_PARENT, 1f / rows());
+				FILL_PARENT, FILL_PARENT, 1f / ROWS);
 		LinearLayout.LayoutParams cellParams = new LinearLayout.LayoutParams(
-				FILL_PARENT, FILL_PARENT, 1f / cols());
+				FILL_PARENT, FILL_PARENT, 1f / COLUMNS);
 		
-		for (int i = 0; i < slots.length; i++) {
+		int slotsPerDay = prefs().getInt(U.P_SLOTS_PER_DAY, U.SLOTS_PER_DAY_DEFAULT);
+		
+		for (int i = 0; i < ROWS; i++) {
 			LinearLayout row = new LinearLayout(getContext());
 			String[] slots_row = slots[i];
 			row.setOrientation(LinearLayout.HORIZONTAL); // default, but anyway
-			for (int j = 0; j < slots_row.length; j++) {
+			row.setVisibility(i < slotsPerDay ? View.VISIBLE:View.GONE);
+			for (int j = 0; j < COLUMNS; j++) {
+				// TODO can't set color here. it depends on column shown or not
 				SlotView cell = new SlotView(getContext(), slots_row[j], BG_COLORS[i % 2][j % 2]);
 				cell.setTextColor(DARK_GREY);
 				cell.setGravity(Gravity.CENTER);
@@ -315,6 +264,24 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 	
 	public View.OnClickListener getSlotListener() {
 		return slotListener;
+	}
+	
+	/*
+	 * return the header and the cells
+	 */
+	private View[] getAllChildrenForColumn(int column) {
+		View[] views = new View[ROWS + 1];
+		views[0] = days().getChildAt(column);
+		for (int i = 0; i < ROWS; i++) {
+			views[i + 1] = ((ViewGroup) table().getChildAt(i)).getChildAt(column);
+		}
+		return views;
+	}
+	
+	private void setColumnVisibility(int column, int visibility) {
+		for (View view : getAllChildrenForColumn(column)) {
+			view.setVisibility(visibility);
+		}
 	}
 	
 	public void setSlotListener(View.OnClickListener listener) {
@@ -349,7 +316,6 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 	
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-		L.og("preferences changed");
 		if (key.equals(U.P_DECORATE_DAYS)) {
 			boolean value = prefs.getBoolean(key, true);
 			days().setVisibility(value ? View.VISIBLE : View.GONE);
@@ -357,8 +323,12 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 			boolean value = prefs.getBoolean(key, true);
 			ords().setVisibility(value ? View.VISIBLE : View.GONE);
 			U.setPaddingLeft(days(), value ? ords().getWidth() : 0);
+		} else if (key.startsWith(U.P_DAY_PREFIX)) {
+			int day = Integer.parseInt(key.substring(key.length() - 1));
+			boolean visible = prefs().getBoolean(U.P_DAY_PREFIX + day, true);
+			setColumnVisibility(day - 1, visible ? View.VISIBLE : View.GONE);
 		}
-		
+		// TODO watch for slots per day
 	}
 	
 }

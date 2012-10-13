@@ -21,8 +21,8 @@ public class SlotDetailHelper {
 	}
 	
 	public void fillView(SlotView slotView, BaseFragment ctx) {
-		Slot slot = ctx.db().getSlot(ctx.getTableView().columnToDay(
-				slotView.getColumn()),
+		Slot slot = ctx.db().getSlot(
+				slotView.getColumn() + 1,
 				slotView.getRow() + 1
 		);
 		fillView(slot);
