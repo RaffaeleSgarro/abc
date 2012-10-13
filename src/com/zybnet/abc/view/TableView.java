@@ -267,7 +267,8 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		v.setVisibility(decorateOrds ? View.VISIBLE : View.GONE);
 		addView(v, p);
 		
-		U.setPaddingLeft(h, v.getWidth());
+		v.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+		U.setPaddingLeft(h, decorateOrds ? v.getMeasuredWidth() : 0);
 		
 		LinearLayout t = ll(TABLE_ID, LinearLayout.VERTICAL);
 		p = new RelativeLayout.LayoutParams(FILL_PARENT, FILL_PARENT);
