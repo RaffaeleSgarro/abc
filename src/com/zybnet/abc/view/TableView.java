@@ -97,10 +97,11 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		addSlots(slots);
 		
 		for (int i = 0; i < 7; i++) {
-			// TODO set color here
 			boolean v = prefs().getBoolean(U.P_DAY_PREFIX + (i + 1), true);
 			setColumnVisibility(i, v ? View.VISIBLE : View.GONE);
 		}
+		
+		recomputeCellsBackground();
 		
 		startAnimation();
 	}
@@ -168,7 +169,7 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 	 * @param column 0-based index
 	 */
 	public SlotView getChildAt(int row, int column) {
-		return (SlotView)(((ViewGroup) getChildAt(row)).getChildAt(column));
+		return (SlotView)(((ViewGroup) table().getChildAt(row)).getChildAt(column));
 	}
 	
 	public SlotView getChildAt(int[] coords) {
@@ -251,8 +252,7 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 			row.setOrientation(LinearLayout.HORIZONTAL); // default, but anyway
 			row.setVisibility(i < slotsPerDay ? View.VISIBLE:View.GONE);
 			for (int j = 0; j < COLUMNS; j++) {
-				// TODO can't set color here. it depends on column shown or not
-				SlotView cell = new SlotView(getContext(), slots_row[j], BG_COLORS[i % 2][j % 2]);
+				SlotView cell = new SlotView(getContext(), slots_row[j]);
 				cell.setTextColor(DARK_GREY);
 				cell.setGravity(Gravity.CENTER);
 				cell.insertAt(row, cellParams, i, j);
@@ -327,8 +327,21 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 			int day = Integer.parseInt(key.substring(key.length() - 1));
 			boolean visible = prefs().getBoolean(U.P_DAY_PREFIX + day, true);
 			setColumnVisibility(day - 1, visible ? View.VISIBLE : View.GONE);
+			recomputeCellsBackground();
 		}
 		// TODO watch for slots per day
+	}
+	
+	private void recomputeCellsBackground() {
+		for (int i = 0; i < ROWS; i++) {
+			for (int j = 0, count = 0; j < COLUMNS; j++) {
+				View view = getChildAt(i, j);
+				if (view.getVisibility() != View.VISIBLE)
+					continue;
+				view.setBackgroundColor(BG_COLORS[i % 2][count % 2]);
+				count++;
+			}
+		}
 	}
 	
 }

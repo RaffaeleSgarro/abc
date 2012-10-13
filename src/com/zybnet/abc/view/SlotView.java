@@ -8,10 +8,9 @@ public class SlotView extends TextView {
 
 	private int row = -1, column = -1;
 	
-	public SlotView(Context ctx, CharSequence text, int background) {
+	public SlotView(Context ctx, CharSequence text) {
 		this(ctx);
 		setText(text);
-		setBackgroundColor(background);
 		setClickable(true);
 	}
 	
