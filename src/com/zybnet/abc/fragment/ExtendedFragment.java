@@ -6,11 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ViewSwitcher;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.utils.SlotDetailHelper;
-import com.zybnet.abc.utils.U;
+import com.zybnet.abc.view.HistoryViewFlipper;
 import com.zybnet.abc.view.SlotView;
 import com.zybnet.abc.view.TableView;
 
@@ -34,15 +33,16 @@ public class ExtendedFragment extends BaseFragment {
 			SlotDetailHelper helper = new SlotDetailHelper(abc());
 			helper.fillView((SlotView) view, ExtendedFragment.this);
 			
-			U.swap((ViewSwitcher) abc().findViewById(R.id.left),
-					helper.getView(),
-					R.anim.left_pane_in,
-					R.anim.left_pane_out);
+			left().swapRootChild(helper.getView(), R.anim.left_pane_in, R.anim.left_pane_out);
 		}
 	}
 
 	@Override
 	public OnClickListener getSettingsMenuClickedListener() {
 		return null;
+	}
+	
+	private HistoryViewFlipper left() {
+		return (HistoryViewFlipper) abc().findViewById(R.id.left);
 	}
 }

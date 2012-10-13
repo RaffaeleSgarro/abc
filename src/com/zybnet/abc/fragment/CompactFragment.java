@@ -15,7 +15,7 @@ import android.widget.FrameLayout;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.utils.SlotDetailHelper;
-import com.zybnet.abc.view.HistoryFilpperView;
+import com.zybnet.abc.view.HistoryViewFlipper;
 import com.zybnet.abc.view.PreferenceView;
 import com.zybnet.abc.view.SlotView;
 import com.zybnet.abc.view.TableView;
@@ -67,8 +67,8 @@ public class CompactFragment extends BaseFragment {
 		
 	}
 	
-	private HistoryFilpperView switcher() {
-		return (HistoryFilpperView) abc().findViewById(R.id.root);
+	private HistoryViewFlipper switcher() {
+		return (HistoryViewFlipper) abc().findViewById(R.id.root);
 	}
 
 	@Override

@@ -63,4 +63,12 @@ public class NavigateBackView extends ImageButton {
 		public ViewAnimator animator;
 		public Animation in, out;
 	}
+	
+	public void clearHistoryFor(ViewAnimator animator) {
+		for (Item item: history) {
+			if (item.equals(animator)) {
+				history.remove(item);
+			}
+		}
+	}
 }

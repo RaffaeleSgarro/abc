@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:abc="http://schemas.android.com/apk/res/com.zybnet.abc"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal" >
 	<include android:id="@+id/action_bar" layout="@layout/action_bar" />
-    <ViewSwitcher
+    <view
+        class="com.zybnet.abc.view.HistoryViewFlipper"
         android:id="@+id/left"
+        abc:back="@+id/actionbar_back"
         android:layout_width="250dp"
         android:layout_height="fill_parent"
         android:layout_below="@+id/action_bar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true" />
 
-    <FrameLayout
+    <view
+        class="com.zybnet.abc.view.HistoryViewFlipper"
         android:id="@+id/right"
+        abc:back="@+id/actionbar_back"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_toRightOf="@+id/left"
