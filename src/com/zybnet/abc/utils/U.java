@@ -14,6 +14,11 @@ public class U {
 	
 	public static final String NAMESPACE_PREFIX = "http://schemas.android.com/apk/res/";
 	
+	public static final String P_DAY_PREFIX = "day_";
+	public static final String P_DECORATE_DAYS = "decorate_days";
+	public static final String P_DECORATE_ORDS = "decorate_ords";
+	public static final String P_SLOTS_PER_DAY = "slots_per_day";
+	
 	private static Calendar calendar;
 	
 	static {

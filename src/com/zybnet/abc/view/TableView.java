@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.zybnet.abc.utils.L;
 import com.zybnet.abc.utils.U;
 
 /*
@@ -31,7 +32,7 @@ import com.zybnet.abc.utils.U;
  * The table is a LinearLayout in vertical orientation
  * 
  */
-public class TableView extends RelativeLayout {
+public class TableView extends RelativeLayout implements SharedPreferences.OnSharedPreferenceChangeListener {
 	
 	public final static int ID = 0x923032f;
 	
@@ -41,7 +42,7 @@ public class TableView extends RelativeLayout {
 	
 	private ProxyListener slotListener = new ProxyListener();
 	
-	private SparseIntArray columnsToDays = new SparseIntArray();
+	private SparseIntArray columnsToDays;
 	private int displayedSlotsPerDay;
 	
 	private boolean decorateDays;
@@ -64,26 +65,28 @@ public class TableView extends RelativeLayout {
 		super(context);
 		setVisibility(View.INVISIBLE);
 		setId(ID);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+	}
+	
+	private SharedPreferences prefs() {
+		return PreferenceManager.getDefaultSharedPreferences(getContext());
+	}
+	
+	// Builds the UI
+	private void setup(Cursor cursor) {
+		SharedPreferences prefs = prefs();
+		columnsToDays = new SparseIntArray();
 		for (int i = 1, count = 0; i <= 7; i++) {
-			if (prefs.getBoolean("day_" + i, true)) {
+			if (prefs.getBoolean(U.P_DAY_PREFIX + i, true)) {
 				columnsToDays.put(count, i);
 				count++;
 			}
 		}
-		displayedSlotsPerDay = prefs.getInt("slots_per_day", 6);
-		decorateDays = prefs.getBoolean("decorate_days", true);
-		decorateOrds = prefs.getBoolean("decorate_ords", true);
+		displayedSlotsPerDay = prefs.getInt(U.P_SLOTS_PER_DAY, 6);
+		decorateDays = prefs.getBoolean(U.P_DECORATE_DAYS, true);
+		decorateOrds = prefs.getBoolean(U.P_DECORATE_ORDS, true);
 		
-		setupChildren();
-	}
-	
-	/*
-	 * Fill the TimeTable. The cursor must contain day, ord and
-	 * subject_name_short columns
-	 * 
-	 */
-	public void setCursor(Cursor cursor) {
+		addMainChildren();
+		
 		setVisibility(View.VISIBLE);
 		
 		int day_index = cursor.getColumnIndex("day");
@@ -102,9 +105,42 @@ public class TableView extends RelativeLayout {
 			}
 		}
 		
-		fillSlots(slots);
+		addSlots(slots);
 		
 		startAnimation();
+	}
+	
+	private Cursor pendingCursor;
+	
+	@Override
+	public void onAttachedToWindow() {
+		if (pendingCursor != null) {
+			setup(pendingCursor);
+			pendingCursor = null;
+		}
+		prefs().registerOnSharedPreferenceChangeListener(this);
+	}
+	
+	@Override
+	public void onDetachedFromWindow() {
+		prefs().unregisterOnSharedPreferenceChangeListener(this);
+	}
+	
+	/*
+	 * Fill the TimeTable. The cursor must contain day, ord and
+	 * subject_name_short columns.
+	 * 
+	 * When this method is invoked, the table may not have been
+	 * attached to any window, so the save the cursor and
+	 * add children asynchronously
+	 * 
+	 */
+	public void setCursor(Cursor cursor) {
+		if (getWindowToken() == null) {
+			pendingCursor = cursor;
+		} else {
+			setup(cursor);
+		}
 	}
 	
 	private void startAnimation() {
@@ -196,7 +232,8 @@ public class TableView extends RelativeLayout {
 		return columnsToDays.size();
 	}
 	
-	private void setupChildren() {
+	// Adds layouts for decorations and main view
+	private void addMainChildren() {
 		RelativeLayout.LayoutParams p;
 		LinearLayout.LayoutParams p2;
 		
@@ -252,7 +289,7 @@ public class TableView extends RelativeLayout {
 		return ll;
 	}
 	
-	private void fillSlots(String[][] slots) {
+	private void addSlots(String[][] slots) {
 		LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
 				FILL_PARENT, FILL_PARENT, 1f / rows());
 		LinearLayout.LayoutParams cellParams = new LinearLayout.LayoutParams(
@@ -289,6 +326,12 @@ public class TableView extends RelativeLayout {
 			if (listener != null)
 				listener.onClick(view);
 		}
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		// TODO animations? dynamically add/remove columns?
 	}
 	
 }
