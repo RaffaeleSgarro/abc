@@ -45,6 +45,8 @@ public class PreferenceView extends ScrollView {
 		for (int i = 1;  i <= 7; i++ ) {
 			int id = getResources().getIdentifier("day_" + i, "id", getContext().getPackageName());
 			setupCheckboxPreference(id, U.P_DAY_PREFIX + i);
+			((CheckBox) findViewById(id)).setText(
+					U.uppercaseFirstChar(String.format("%tA", U.getLocalizedDayOfTheWeek(i))));
 		}
 	}
 	
@@ -65,8 +67,8 @@ public class PreferenceView extends ScrollView {
 	};
 	
 	private void setupCheckboxPreference(int id, String prefKey) {
-		CheckBox v = (CheckBox) findViewById(R.id.decor_days);
-		BoolPref p = new BoolPref("decorate_days");
+		CheckBox v = (CheckBox) findViewById(id);
+		BoolPref p = new BoolPref(prefKey);
 		v.setChecked(p.get());
 		v.setTag(p);
 		v.setOnCheckedChangeListener(boolListener);
