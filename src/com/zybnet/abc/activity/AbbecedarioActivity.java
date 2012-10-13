@@ -64,13 +64,28 @@ public class AbbecedarioActivity extends FragmentActivity {
     	}
     }
     
+    private class ClosePopupListener implements View.OnClickListener{
+    	View.OnClickListener chain;
+    	
+    	ClosePopupListener(View.OnClickListener chain) {
+    		this.chain = chain;
+    	}
+    	
+    	@Override
+    	public void onClick(View view) {
+    		popup.dismiss();
+    		chain.onClick(view);
+    	}
+    }
+    
     private void setupActionBar() {
     	final View content = getLayoutInflater().
     			inflate(R.layout.menu, new LinearLayout(this, null), true);
     	content.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
     	
-    	content.findViewById(R.id.settings).setOnClickListener(
-    			getActiveFragment().getSettingsMenuClickedListener());
+    	content.findViewById(R.id.settings).setOnClickListener(new ClosePopupListener(
+    					getActiveFragment().getSettingsMenuClickedListener())
+    	);
     	
     	popup = new PopupWindow(content, content.getMeasuredWidth(), content.getMeasuredHeight(), true);
     	popup.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));

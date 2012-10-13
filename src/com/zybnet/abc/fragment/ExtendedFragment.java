@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.zybnet.abc.R;
 import com.zybnet.abc.utils.SlotDetailHelper;
 import com.zybnet.abc.view.HistoryViewFlipper;
+import com.zybnet.abc.view.PreferenceView;
 import com.zybnet.abc.view.SlotView;
 import com.zybnet.abc.view.TableView;
 
@@ -39,7 +40,20 @@ public class ExtendedFragment extends BaseFragment {
 
 	@Override
 	public OnClickListener getSettingsMenuClickedListener() {
-		return null;
+		return new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View view) {
+				if (right().getCurrentView() instanceof PreferenceView)
+					return;
+				
+				right().showView(new PreferenceView(abc()));
+			}
+		};
+	}
+	
+	private HistoryViewFlipper right() {
+		return (HistoryViewFlipper) abc().findViewById(R.id.right);
 	}
 	
 	private HistoryViewFlipper left() {
