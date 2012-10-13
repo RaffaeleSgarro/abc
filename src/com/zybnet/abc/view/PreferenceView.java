@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 
 import com.zybnet.abc.R;
@@ -23,6 +25,7 @@ public class PreferenceView extends ScrollView {
 		setBackgroundColor(Color.BLACK);
 		View.inflate(context, R.layout.preferences, this);
 		setupCheckboxes();
+		setupRadios();
 	}
 	
 	private OnCheckedChangeListener boolListener = new OnCheckedChangeListener() {
@@ -73,5 +76,30 @@ public class PreferenceView extends ScrollView {
 		v.setTag(p);
 		v.setOnCheckedChangeListener(boolListener);
 	}
+	
+	private void setupRadios() {
+		RadioGroup radios = (RadioGroup) findViewById(R.id.slots_per_day);
+		int current = prefs().getInt(U.P_SLOTS_PER_DAY, U.SLOTS_PER_DAY_DEFAULT);
+		for (int n = U.SLOTS_PER_DAY_MIN; n <= U.SLOTS_PER_DAY_MAX; n++) {
+			RadioButton radio = new RadioButton(getContext()); // TODO add padded text style
+			radio.setText(Integer.toString(n));
+			radio.setTag(Integer.valueOf(n));
+			radio.setOnClickListener(radioListener);
+			radios.addView(radio);
+			if (n == current)
+				radio.setChecked(true);
+		}
+	}
+	
+	private OnClickListener radioListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View radio) {
+			boolean checked = ((RadioButton) radio).isChecked();
+			if (checked) {
+				prefs().edit().putInt(U.P_SLOTS_PER_DAY, (Integer) radio.getTag()).commit();
+			}
+		}
+	};
 
 }

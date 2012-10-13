@@ -39,5 +39,9 @@
         <item name="@android:windowExitAnimation">@anim/popup_hide</item>
     </style>
 
-
+	<style name="PrefsHeader">
+	    <item name="@android:background">#444444</item>
+	    <item name="@android:textColor">#ffffff</item>
+	    <item name="@android:paddingLeft">3dp</item>
+	</style>
 </resources>
