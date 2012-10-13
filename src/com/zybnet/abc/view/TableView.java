@@ -239,12 +239,13 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		
 		// h is horizontal decoration, for days
 		LinearLayout h = ll(DAYS_DECORATION_ID, LinearLayout.HORIZONTAL);
+		h.setVisibility(decorateDays ? View.VISIBLE : View.GONE);
 		for (int i = 0; i < cols(); i++) {
 			p2 = new LinearLayout.LayoutParams(FILL_PARENT, WRAP_CONTENT, 1f/cols());
 			h.addView(createHeader(String.format("%ta",
 					U.getLocalizedDayOfTheWeek(columnToDay(i))).toUpperCase()), p2);
 		}
-		p = new RelativeLayout.LayoutParams(FILL_PARENT, decorateDays ? WRAP_CONTENT: 0);
+		p = new RelativeLayout.LayoutParams(FILL_PARENT, WRAP_CONTENT);
 		p.addRule(ALIGN_PARENT_TOP);
 		p.addRule(ALIGN_PARENT_LEFT);
 		p.addRule(ALIGN_PARENT_RIGHT);
@@ -258,14 +259,15 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 			hv.setPadding(3, 0, 3, 0);
 			v.addView(hv, p2);
 		}
-		p = new RelativeLayout.LayoutParams(decorateOrds ? WRAP_CONTENT : 0, FILL_PARENT);
+		
+		p = new RelativeLayout.LayoutParams(WRAP_CONTENT, FILL_PARENT);
 		p.addRule(ALIGN_BOTTOM);
 		p.addRule(ALIGN_LEFT);
 		p.addRule(BELOW, DAYS_DECORATION_ID);
+		v.setVisibility(decorateOrds ? View.VISIBLE : View.GONE);
 		addView(v, p);
 		
-		v.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-		h.setPadding(v.getMeasuredWidth(), 0, 0, 0);
+		U.setPaddingLeft(h, v.getWidth());
 		
 		LinearLayout t = ll(TABLE_ID, LinearLayout.VERTICAL);
 		p = new RelativeLayout.LayoutParams(FILL_PARENT, FILL_PARENT);
@@ -328,10 +330,34 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		}
 	}
 
+	private ViewGroup group(int id) {
+		return (ViewGroup) findViewById(id);
+	}
+	
+	private ViewGroup table() {
+		return group(TABLE_ID);
+	}
+	
+	private ViewGroup days() {
+		return group(DAYS_DECORATION_ID);
+	}
+	
+	private ViewGroup ords() {
+		return group(ORDS_DECORATION_ID);
+	}
+	
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		// TODO animations? dynamically add/remove columns?
+	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+		L.og("preferences changed");
+		if (key.equals(U.P_DECORATE_DAYS)) {
+			boolean value = prefs.getBoolean(key, true);
+			days().setVisibility(value ? View.VISIBLE : View.GONE);
+		} else if (key.equals(U.P_DECORATE_ORDS)) {
+			boolean value = prefs.getBoolean(key, true);
+			ords().setVisibility(value ? View.VISIBLE : View.GONE);
+			U.setPaddingLeft(days(), ords().getWidth());
+		}
+		
 	}
 	
 }

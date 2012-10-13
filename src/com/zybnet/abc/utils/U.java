@@ -63,4 +63,30 @@ public class U {
 				AnimationUtils.loadAnimation(flipper.getContext(), out));
 		
 	}
+	
+	private static final int DONT_CHANGE_PADDING = 91281239;
+	
+	private static void setPadding(View view, int left, int top, int right, int bottom) {
+		view.setPadding(
+				left == DONT_CHANGE_PADDING ? view.getPaddingLeft() : left,
+				top == DONT_CHANGE_PADDING ? view.getPaddingTop() : top,
+				right == DONT_CHANGE_PADDING ? view.getPaddingRight() : right,
+				bottom == DONT_CHANGE_PADDING ? view.getPaddingBottom() : bottom);
+	}
+	
+	public static void setPaddingLeft(View view, int padding) {
+		setPadding(view, padding, DONT_CHANGE_PADDING, DONT_CHANGE_PADDING, DONT_CHANGE_PADDING);
+	}
+	
+	public static void setPaddingRight(View view, int padding) {
+		setPadding(view, DONT_CHANGE_PADDING, DONT_CHANGE_PADDING, padding, DONT_CHANGE_PADDING);
+	}
+	
+	public static void setPaddingTop(View view, int padding) {
+		setPadding(view, DONT_CHANGE_PADDING, padding, DONT_CHANGE_PADDING, DONT_CHANGE_PADDING);
+	}
+	
+	public static void setPaddingBottom(View view, int padding) {
+		setPadding(view, DONT_CHANGE_PADDING, DONT_CHANGE_PADDING, DONT_CHANGE_PADDING, padding);
+	}
 }
