@@ -355,7 +355,7 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		} else if (key.equals(U.P_DECORATE_ORDS)) {
 			boolean value = prefs.getBoolean(key, true);
 			ords().setVisibility(value ? View.VISIBLE : View.GONE);
-			U.setPaddingLeft(days(), ords().getWidth());
+			U.setPaddingLeft(days(), value ? ords().getWidth() : 0);
 		}
 		
 	}
