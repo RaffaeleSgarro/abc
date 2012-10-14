@@ -328,8 +328,15 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 			boolean visible = prefs().getBoolean(U.P_DAY_PREFIX + day, true);
 			setColumnVisibility(day - 1, visible ? View.VISIBLE : View.GONE);
 			recomputeCellsBackground();
+		} else if (key.equals(U.P_SLOTS_PER_DAY)) {
+			int slots = prefs.getInt(U.P_SLOTS_PER_DAY, U.SLOTS_PER_DAY_DEFAULT);
+			for (int i = 0; i < ROWS; i++) {
+				int visibility = i < slots ? View.VISIBLE : View.GONE;
+				ords().getChildAt(i).setVisibility(visibility);
+				table().getChildAt(i).setVisibility(visibility);
+			}
 		}
-		// TODO watch for slots per day
+		
 	}
 	
 	private void recomputeCellsBackground() {

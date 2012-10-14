@@ -81,9 +81,10 @@ public class PreferenceView extends ScrollView {
 		RadioGroup radios = (RadioGroup) findViewById(R.id.slots_per_day);
 		int current = prefs().getInt(U.P_SLOTS_PER_DAY, U.SLOTS_PER_DAY_DEFAULT);
 		for (int n = U.SLOTS_PER_DAY_MIN; n <= U.SLOTS_PER_DAY_MAX; n++) {
-			RadioButton radio = new RadioButton(getContext()); // TODO add padded text style
+			RadioButton radio = new RadioButton(getContext());
 			radio.setText(Integer.toString(n));
 			radio.setTag(Integer.valueOf(n));
+			U.setPaddingLeft(radio, (int)(50 * getResources().getDisplayMetrics().density));
 			radio.setOnClickListener(radioListener);
 			radios.addView(radio);
 			if (n == current)
