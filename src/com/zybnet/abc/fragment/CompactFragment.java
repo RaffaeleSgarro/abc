@@ -38,7 +38,7 @@ public class CompactFragment extends BaseFragment {
 
 		@Override
 		public void onClick(View view) {
-			SlotDetailView details = SlotDetailView.create(abc(), (SlotView) view);
+			SlotDetailView details = SlotDetailView.create(abc(), (SlotView) view, switcher());
 			
 			Rect bounds = new Rect();
 			view.getGlobalVisibleRect(bounds);

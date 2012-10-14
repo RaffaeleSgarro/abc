@@ -57,10 +57,16 @@ INSERT INTO homework (subject_id, description, due) VALUES (1, 'Boring task #6',
 INSERT INTO homework (subject_id, description, due) VALUES (1, 'Boring task #7', '2012-10-27');
 
 
-INSERT INTO "test" (subject_id, description, score, "date") VALUES (1, 'Oral', '10+', '2008-10-13');
+INSERT INTO grade (subject_id, description, score, "date") VALUES (1, 'Oral', '10+', '2008-10-13');
 
-INSERT INTO "test" (subject_id, description, score, "date") VALUES (2, 'Written', 'Great', '2009-09-23');
+INSERT INTO grade (subject_id, description, score, "date") VALUES (2, 'Oral', '10+', '2008-10-13');
 
-INSERT INTO "test" (subject_id, description, score, "date") VALUES (3, 'Mixed', 'BBB-', '2012-05-26');
+INSERT INTO grade (subject_id, description, score, "date") VALUES (3, 'Oral', '10+', '2008-10-13');
+
+INSERT INTO grade (subject_id, description, score, "date") VALUES (4, 'Oral', '10+', '2008-10-13');
+
+INSERT INTO grade (subject_id, description, score, "date") VALUES (2, 'Written', 'Great', '2009-09-23');
+
+INSERT INTO grade (subject_id, description, score, "date") VALUES (3, 'Mixed', 'BBB-', '2012-05-26');
 
 

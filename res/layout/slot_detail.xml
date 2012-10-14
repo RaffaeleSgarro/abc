@@ -1,87 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <view
-    class="com.zybnet.abc.view.SlotDetailView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/slot_details"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_alignParentTop="true"
+    class="com.zybnet.abc.view.SlotDetailView"
+    android:background="#000000"
     android:orientation="vertical"
-    android:background="#000000" >
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp" >
 
-    <TextView
+    <LinearLayout
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:orientation="vertical"
+        android:paddingBottom="10dp" >
+
+        <com.zybnet.abc.view.AllCapsTextView
+            style="@style/SmallHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_displayed" />
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/contents_wrapper"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" >
+        android:layout_height="fill_parent" >
 
         <LinearLayout
             android:id="@+id/contents"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-            <com.zybnet.abc.view.AllCapsTextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                style="@style/PaddedSmallText"
-                android:text="@string/subject"/>
-            <TextView 
+
+            <LinearLayout
                 android:id="@+id/subject"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                style="@style/PaddedText" />
-            <com.zybnet.abc.view.AllCapsTextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                style="@style/PaddedSmallText"
-                android:text="@string/start_end_time"/>
-            <TextView 
+                android:orientation="vertical"
+                style="@style/PaddedTopBottom" >
+
+                <com.zybnet.abc.view.AllCapsTextView
+                    style="@style/SmallHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subject" />
+
+                <TextView
+                    android:id="@+id/content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/time"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                style="@style/PaddedText" />
-            <com.zybnet.abc.view.AllCapsTextView 
+                style="@style/PaddedTopBottom"
+                android:orientation="vertical" >
+
+                <com.zybnet.abc.view.AllCapsTextView
+                    style="@style/SmallHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_end_time" />
+
+                <TextView
+                    android:id="@+id/content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/place"
+                style="@style/PaddedTopBottom"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                style="@style/PaddedSmallText"
-                android:text="@string/place"/>
-            <TextView 
-                android:id="@+id/room"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                style="@style/PaddedText" />
-            <com.zybnet.abc.view.AllCapsTextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                style="@style/PaddedSmallText"
-                android:text="@string/teacher"/>
-            <TextView 
+                android:orientation="vertical" >
+
+                <com.zybnet.abc.view.AllCapsTextView
+                    style="@style/SmallHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/place" />
+
+                <TextView
+                    android:id="@+id/content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/teacher"
+                style="@style/PaddedTopBottom"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                style="@style/PaddedText" />
-            <TextView 
+                android:orientation="vertical" >
+
+                <com.zybnet.abc.view.AllCapsTextView
+                    style="@style/SmallHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/teacher" />
+
+                <TextView
+                    android:id="@+id/content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/PaddedTopBottom"
                 android:id="@+id/homework"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                style="@style/PaddedText"
                 android:paddingTop="10dp"
-                android:text="@string/homework"/>
-            <TextView 
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/homework" />
+
+            <TextView
                 android:id="@+id/grades"
+                style="@style/PaddedTopBottom"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                style="@style/PaddedText"
                 android:paddingTop="10dp"
-                android:text="@string/grades"/>
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/grades" />
         </LinearLayout>
     </ScrollView>
 

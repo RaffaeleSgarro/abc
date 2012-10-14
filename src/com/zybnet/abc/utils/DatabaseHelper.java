@@ -115,7 +115,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	public Date _date(Cursor c, String column) {
-		// TODO
 		L.og("Date as string: " + c.getString(c.getColumnIndex(column)));
 		L.og("Date as int: " + c.getInt(c.getColumnIndex(column)));
 		return new Date(c.getInt(c.getColumnIndex(column)));
@@ -129,5 +128,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			Log.e(L.TAG, "Cannot parse date", e);
 			return new Date();
 		}
+	}
+	
+	public Cursor getSubjects() {
+		return getReadableDatabase().query("subject",
+				new String[] {"_id", "name", "name_short"},
+				null, null, null, null, null);
+	}
+	
+	// Selection contains a single element with the subject id
+	public Cursor getHomework(int subject) {
+		return getReadableDatabase().query("homework",
+				new String[] {"_id", "description", "due"},
+				"subject_id = ?", new String[] {Integer.toString(subject)},
+				null, null, null);
+	}
+	
+	// Selection contains a single element with the subject id
+	public Cursor getGrades(int subject) {
+		return getReadableDatabase().query("grade",
+				new String[] {"_id", "date", "description", "score"},
+				"subject_id = ?", new String[] {Integer.toString(subject)},
+				null, null, null);
 	}
 }

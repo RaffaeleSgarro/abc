@@ -29,7 +29,7 @@ CREATE TABLE "homework" (
 	FOREIGN KEY ("subject_id") REFERENCES "subject"("_id") ON DELETE CASCADE
 );
 
-CREATE TABLE "test" (
+CREATE TABLE "grade" (
 	"_id" INT PRIMARY KEY,
 	"subject_id" INT NOT NULL,
 	"description" TEXT,
