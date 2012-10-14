@@ -14,9 +14,9 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 
 import com.zybnet.abc.R;
-import com.zybnet.abc.utils.SlotDetailHelper;
 import com.zybnet.abc.view.HistoryViewFlipper;
 import com.zybnet.abc.view.PreferenceView;
+import com.zybnet.abc.view.SlotDetailView;
 import com.zybnet.abc.view.SlotView;
 import com.zybnet.abc.view.TableView;
 
@@ -38,8 +38,7 @@ public class CompactFragment extends BaseFragment {
 
 		@Override
 		public void onClick(View view) {
-			SlotDetailHelper helper = new SlotDetailHelper(abc());
-			helper.fillView((SlotView) view, CompactFragment.this);
+			SlotDetailView details = SlotDetailView.create(abc(), (SlotView) view);
 			
 			Rect bounds = new Rect();
 			view.getGlobalVisibleRect(bounds);
@@ -60,7 +59,7 @@ public class CompactFragment extends BaseFragment {
 			backIn.addAnimation(new TranslateAnimation(-bounds.left, 0, -bounds.top, 0));
 			backIn.setDuration(500);
 			
-			switcher().showView(helper.getView(),
+			switcher().showView(details,
 					loadAnimation(R.anim.compact_first_pane_in), out,
 					backIn, loadAnimation(R.anim.compact_first_pane_out));
 		}

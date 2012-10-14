@@ -8,9 +8,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.zybnet.abc.R;
-import com.zybnet.abc.utils.SlotDetailHelper;
 import com.zybnet.abc.view.HistoryViewFlipper;
 import com.zybnet.abc.view.PreferenceView;
+import com.zybnet.abc.view.SlotDetailView;
 import com.zybnet.abc.view.SlotView;
 import com.zybnet.abc.view.TableView;
 
@@ -31,10 +31,8 @@ public class ExtendedFragment extends BaseFragment {
 		
 		@Override
 		public void onClick(View view) {
-			SlotDetailHelper helper = new SlotDetailHelper(abc());
-			helper.fillView((SlotView) view, ExtendedFragment.this);
-			
-			left().swapRootChild(helper.getView(), R.anim.left_pane_in, R.anim.left_pane_out);
+			SlotDetailView details = SlotDetailView.create(abc(), (SlotView) view);
+			left().swapRootChild(details, R.anim.left_pane_in, R.anim.left_pane_out);
 		}
 	}
 

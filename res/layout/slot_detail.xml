@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<view
+    class="com.zybnet.abc.view.SlotDetailView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/slot_details"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_alignParentTop="true"
@@ -82,4 +85,4 @@
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+</view>
