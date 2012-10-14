@@ -73,12 +73,12 @@
                 android:paddingTop="10dp"
                 android:text="@string/homework"/>
             <TextView 
-                android:id="@+id/marks"
+                android:id="@+id/grades"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 style="@style/PaddedText"
                 android:paddingTop="10dp"
-                android:text="@string/score"/>
+                android:text="@string/grades"/>
         </LinearLayout>
     </ScrollView>
 

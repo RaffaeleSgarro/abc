@@ -9,7 +9,7 @@
     <string name="start_end_time">start and end time</string>
     <string name="place">place</string>
     <string name="homework">Homework</string>
-    <string name="score">Score</string>
+    <string name="grades">Grades</string>
     <string name="decoration_header">decorations</string>
     <string name="enabled_days">table columns</string>
     <string name="enable_days_deco">Display the names of the days</string>

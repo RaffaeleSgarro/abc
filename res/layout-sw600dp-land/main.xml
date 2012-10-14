@@ -10,7 +10,7 @@
         class="com.zybnet.abc.view.HistoryViewFlipper"
         android:id="@+id/left"
         abc:back="@+id/actionbar_back"
-        android:layout_width="250dp"
+        android:layout_width="320dp"
         android:layout_height="fill_parent"
         android:layout_below="@+id/action_bar"
         android:layout_alignParentLeft="true"
