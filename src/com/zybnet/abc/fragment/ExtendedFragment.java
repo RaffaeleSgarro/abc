@@ -49,6 +49,7 @@ public class ExtendedFragment extends BaseFragment {
 				NavigateBackView.Item item = new NavigateBackView.Item(abc());
 				item.opener = view;
 				item.view = new PreferenceView(abc());
+				item.keep = false;
 				right().showView(item);
 			}
 		};

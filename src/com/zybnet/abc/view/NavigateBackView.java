@@ -45,6 +45,20 @@ public class NavigateBackView extends ImageButton {
 			}
 		}
 		
+		if (history.size() > 0) {
+			final Item last = history.lastElement();
+			if (!last.keep) {
+				history.pop();
+				last.animator.removeAfterAnimation(new HistoryViewFlipper.Filter() {
+					
+					@Override
+					public boolean accept(View view, HistoryViewFlipper parent) {
+						return view.equals(last.view);
+					}
+				});
+			}
+		}
+		
 		history.push(item);
 		if (history.size() == 1) {
 			startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.alpha_in));
@@ -93,6 +107,12 @@ public class NavigateBackView extends ImageButton {
 		public View opener, view;
 		public HistoryViewFlipper animator;
 		public Animation in, out;
+		// This item participate to the history
+		// If set to false, when a new item is pushed
+		// in the same animator, the current item is removed from
+		// both the animator and the listener. This is intended
+		// for "sticky" views like PreferenceView
+		public boolean keep = true;
 	}
 	
 	public void clearHistoryFor(ViewAnimator animator) {

@@ -115,14 +115,17 @@ public class HistoryViewFlipper extends ViewFlipper {
 		boolean accept(View view, HistoryViewFlipper parent);
 	}
 	
-	public void removeAfterAnimation(final Filter filter) {
-		getOutAnimation().setAnimationListener(new AnimationListenerStub(){
-			@Override
-			public void onAnimationEnd(Animation a) {
-				a.setAnimationListener(null);
-				post(new Runnable() {
-					public void run() {
-						backupAnimations();
+	private class RemoveListener extends AnimationListenerStub {
+		
+		List<Filter> filters = new LinkedList<Filter>();
+		
+		@Override
+		public void onAnimationEnd(Animation a) {
+			a.setAnimationListener(null);
+			post(new Runnable() {
+				public void run() {
+					backupAnimations();
+					for (Filter filter: filters) {
 						List<View> children = new LinkedList<View>();
 						for (int i = 0; i < getChildCount(); i++) {
 							View child = getChildAt(i);
@@ -132,11 +135,19 @@ public class HistoryViewFlipper extends ViewFlipper {
 						for (View child: children) {
 							removeView(child);
 						}
-						restoreAnimationBackup();
 					}
-				});
-			}
-		});
+					restoreAnimationBackup();
+					filters.clear();
+				}
+			});
+		}
+	};
+	
+	private RemoveListener removeListener = new RemoveListener();
+	
+	public void removeAfterAnimation(final Filter filter) {
+		removeListener.filters.add(filter);
+		getOutAnimation().setAnimationListener(removeListener);
 	}
 	
 	public void swapRootChild(final View view, Animation in, Animation out) {
