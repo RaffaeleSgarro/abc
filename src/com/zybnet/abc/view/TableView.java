@@ -82,7 +82,7 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		
 		int day_index = cursor.getColumnIndex("day");
 		int ord_index = cursor.getColumnIndex("ord");
-		int subject = cursor.getColumnIndex("subject_name_short");
+		int text = cursor.getColumnIndex("display_text");
 		
 		String[][] slots = new String[ROWS][COLUMNS];
 		
@@ -91,7 +91,7 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 			int day = cursor.getInt(day_index);
 			int ord = cursor.getInt(ord_index);
 			
-			slots[ord - 1][day - 1] = cursor.getString(subject);
+			slots[ord - 1][day - 1] = cursor.getString(text);
 		}
 		
 		addSlots(slots);

@@ -96,6 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Slot slot = new Slot();
 		slot.day = _i(c, "day");
 		slot.ord = _i(c, "ord");
+		slot.display_text = _s(c, "display_text");
 		slot.teacher = _s(c, "teacher");
 		slot.where = _s(c, "where");
 		slot.start = _time(c, "start");

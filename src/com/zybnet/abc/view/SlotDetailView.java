@@ -40,11 +40,11 @@ public class SlotDetailView extends LinearLayout {
 		public void onClick(View v) {
 			Helper helper;
 			int layout;
-			
+			Slot slot = (Slot) v.getTag();
 			
 			switch(v.getId()) {
 			case R.id.title:
-				helper = new TitleHelper(R.string.edit_displayed);
+				helper = new TitleHelper(R.string.edit_displayed, slot.display_text);
 				layout = R.layout.edit_item;
 				break;
 			case R.id.time:
@@ -52,7 +52,7 @@ public class SlotDetailView extends LinearLayout {
 				layout = R.layout.edit_time;
 				break;
 			case R.id.place:
-				helper = new TitleHelper(R.string.edit_place);
+				helper = new TitleHelper(R.string.edit_place, slot.where);
 				layout = R.layout.edit_item;
 				break;
 			default:
@@ -68,29 +68,37 @@ public class SlotDetailView extends LinearLayout {
 	};
 	
 	private class TitleHelper extends Helper {
-		public TitleHelper(int stringId) {
+		public TitleHelper(int stringId, String value) {
 			title = getResources().getString(stringId);
+			this.value = value;
 		}
 		
 		private String title;
+		private String value;
 		
 		@Override
 		public void afterInflate(EditView view) {
 			((TextView) view.findViewById(R.id.title)).setText(title);
+			((TextView) view.findViewById(R.id.content)).setText(value);
 		}
 	}
 	
 	public void fillView(Slot slot) {
-		setText(R.id.title,
+		View view = setText(R.id.title,
 				U.uppercaseFirstChar(String.format("%tA, slot %d",
-				U.getLocalizedDayOfTheWeek(slot.day), slot.ord)))
-				.setOnClickListener(itemListener);
+				U.getLocalizedDayOfTheWeek(slot.day), slot.ord)));
+		view.setOnClickListener(itemListener);
+		view.setTag(slot);
 		
 		setText(R.id.teacher, slot.teacher);
-		setText(R.id.time, String.format("%tR - %tR", slot.start, slot.end))
-			.setOnClickListener(itemListener);
 		
-		setText(R.id.place, slot.where).setOnClickListener(itemListener);
+		view = setText(R.id.time, String.format("%tR - %tR", slot.start, slot.end));
+		view.setOnClickListener(itemListener);
+		view.setTag(slot);
+		
+		view = setText(R.id.place, slot.where);
+		view.setTag(slot);
+		view.setOnClickListener(itemListener);
 		
 		ViewGroup subject = setText(R.id.subject, slot.subject_name);
 		subject.setOnClickListener(indexListener);

@@ -6,7 +6,7 @@ public class Slot {
 	// These are 1-based
 	public int day, ord, _id, subject_id;
 	public Date start, end;
-	public String where, teacher, subject_name;
+	public String where, teacher, subject_name, display_text;
 	
 	public static Slot getDefault() {
 		Slot template = new Slot();
@@ -22,6 +22,7 @@ public class Slot {
 		template.where = "Nowhere";
 		template.teacher = "Nobody";
 		template.subject_name = "Nothing";
+		template.display_text = "";
 		return template;
 	}
 	

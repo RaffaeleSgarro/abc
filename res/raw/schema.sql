@@ -5,7 +5,7 @@ CREATE TABLE "slot" (
 	"end" DATETIME NOT NULL DEFAULT '09:00',
 	"day" INT NOT NULL,
 	"ord" INT NOT NULL,
-	"compact_name" TEXT,
+	"display_text" TEXT,
 	"where" TEXT DEFAULT 'Nowhere',
 	"teacher" TEXT DEFAULT 'Nobody',
 	
