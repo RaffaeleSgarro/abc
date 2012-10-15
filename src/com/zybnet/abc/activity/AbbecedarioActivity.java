@@ -22,6 +22,8 @@ import com.zybnet.abc.utils.DatabaseHelper;
 import com.zybnet.abc.utils.FixturesDatabaseHelper;
 import com.zybnet.abc.utils.L;
 import com.zybnet.abc.utils.SQLiteCursorLoader;
+import com.zybnet.abc.view.NavigateBackView;
+import com.zybnet.abc.view.SaveButtonView;
 import com.zybnet.abc.view.TableView;
 
 public class AbbecedarioActivity extends FragmentActivity {
@@ -177,6 +179,14 @@ public class AbbecedarioActivity extends FragmentActivity {
     		// TODO
     	}
 
+    }
+    
+    public NavigateBackView getBackButton() {
+    	return (NavigateBackView) findViewById(R.id.actionbar_back);
+    }
+    
+    public SaveButtonView getSaveButton() {
+    	return (SaveButtonView) findViewById(R.id.actionbar_save);
     }
     
     public TableView getTableView() {

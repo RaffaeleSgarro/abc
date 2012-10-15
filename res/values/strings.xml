@@ -20,4 +20,7 @@
     <string name="index_help">Tap to selct. Tap and hold to edit</string>
     <string name="edit_displayed">Edit displayed text</string>
     <string name="add_new">Add new&#8230;</string>
+    <string name="start_time">Start time</string>
+    <string name="end_time">End Time</string>
+    <string name="edit_place">Edit place for this slot</string>
 </resources>

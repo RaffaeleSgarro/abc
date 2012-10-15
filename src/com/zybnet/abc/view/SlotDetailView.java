@@ -14,6 +14,8 @@ import com.zybnet.abc.fragment.BaseFragment;
 import com.zybnet.abc.model.Slot;
 import com.zybnet.abc.utils.TitleDescriptionAdapter;
 import com.zybnet.abc.utils.U;
+import com.zybnet.abc.view.EditView.Helper;
+import com.zybnet.abc.view.NavigateBackView.Item;
 
 public class SlotDetailView extends LinearLayout {
 
@@ -33,14 +35,63 @@ public class SlotDetailView extends LinearLayout {
 		fillView(slot);
 	}
 	
-	public void fillView(Slot slot) {
-		setText(R.id.title, U.uppercaseFirstChar(String.format("%tA, slot %d",
-				U.getLocalizedDayOfTheWeek(slot.day), slot.ord)));
-		setText(R.id.teacher, slot.teacher);
-		setText(R.id.time, String.format("%tR - %tR", slot.start, slot.end));
-		setText(R.id.place, slot.where);
+	private OnClickListener itemListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Helper helper;
+			int layout;
+			
+			
+			switch(v.getId()) {
+			case R.id.title:
+				helper = new TitleHelper(R.string.edit_displayed);
+				layout = R.layout.edit_item;
+				break;
+			case R.id.time:
+				helper = new Helper();
+				layout = R.layout.edit_time;
+				break;
+			case R.id.place:
+				helper = new TitleHelper(R.string.edit_place);
+				layout = R.layout.edit_item;
+				break;
+			default:
+				throw new RuntimeException("Register listener for unknown ID");
+			}
+			
+			Item item = new Item(getContext());
+			item.opener = SlotDetailView.this;
+			item.keep = false;
+			item.view = new EditView(abc(), layout, helper);
+			flipper.showView(item);
+		}
+	};
+	
+	private class TitleHelper extends Helper {
+		public TitleHelper(int stringId) {
+			title = getResources().getString(stringId);
+		}
 		
-		// TODO set tag
+		private String title;
+		
+		@Override
+		public void afterInflate(EditView view) {
+			((TextView) view.findViewById(R.id.title)).setText(title);
+		}
+	}
+	
+	public void fillView(Slot slot) {
+		setText(R.id.title,
+				U.uppercaseFirstChar(String.format("%tA, slot %d",
+				U.getLocalizedDayOfTheWeek(slot.day), slot.ord)))
+				.setOnClickListener(itemListener);
+		
+		setText(R.id.teacher, slot.teacher);
+		setText(R.id.time, String.format("%tR - %tR", slot.start, slot.end))
+			.setOnClickListener(itemListener);
+		
+		setText(R.id.place, slot.where).setOnClickListener(itemListener);
+		
 		ViewGroup subject = setText(R.id.subject, slot.subject_name);
 		subject.setOnClickListener(indexListener);
 		
@@ -51,6 +102,10 @@ public class SlotDetailView extends LinearLayout {
 		View grades = findViewById(R.id.grades);
 		grades.setOnClickListener(indexListener);
 		grades.setTag(slot.subject_id);
+	}
+	
+	private AbbecedarioActivity abc() {
+		return (AbbecedarioActivity) getContext();
 	}
 	
 	private OnClickListener indexListener = new OnClickListener() {
@@ -98,6 +153,7 @@ public class SlotDetailView extends LinearLayout {
 		}
 	};
 	
+	// This is the right flipper
 	private HistoryViewFlipper flipper;
 	
 	private ViewGroup group(int id) {

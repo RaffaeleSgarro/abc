@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <view
+        style="@style/SmallHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        class="com.zybnet.abc.view.AllCapsTextView"
+        android:text="@string/start_time" />
+
+    <TimePicker
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <view
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        class="com.zybnet.abc.view.AllCapsTextView"
+        android:paddingTop="10dp"
+        android:text="@string/end_time" />
+
+    <TimePicker
+        android:id="@+id/end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</merge>

@@ -23,7 +23,8 @@
         android:contentDescription="@string/place"
         style="@style/ActionBarButton"
         android:src="@drawable/btn_action_overflow" />
-    <ImageButton
+    <view
+        class="com.zybnet.abc.view.SaveButtonView"
         android:id="@+id/actionbar_save"
         android:visibility="invisible"
         android:layout_width="@dimen/action_bar_button"
