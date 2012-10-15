@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.view.HistoryViewFlipper;
+import com.zybnet.abc.view.NavigateBackView;
 import com.zybnet.abc.view.PreferenceView;
 import com.zybnet.abc.view.SlotDetailView;
 import com.zybnet.abc.view.SlotView;
@@ -45,7 +46,10 @@ public class ExtendedFragment extends BaseFragment {
 				if (right().getCurrentView() instanceof PreferenceView)
 					return;
 				
-				right().showView(new PreferenceView(abc()));
+				NavigateBackView.Item item = new NavigateBackView.Item(abc());
+				item.opener = view;
+				item.view = new PreferenceView(abc());
+				right().showView(item);
 			}
 		};
 	}

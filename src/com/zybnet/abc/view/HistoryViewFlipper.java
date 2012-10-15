@@ -1,5 +1,8 @@
 package com.zybnet.abc.view;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,6 +14,7 @@ import android.widget.ViewFlipper;
 import com.zybnet.abc.R;
 import com.zybnet.abc.utils.AnimationListenerStub;
 import com.zybnet.abc.utils.U;
+import com.zybnet.abc.view.NavigateBackView.Item;
 
 /*
  * The key point of this animator is integration with
@@ -58,16 +62,13 @@ public class HistoryViewFlipper extends ViewFlipper {
 	
 	private boolean _flag = false;
 	
-	public void showView(View view, Animation in, Animation out, Animation backIn, Animation backOut) {
-		back.addItem(this, backIn, backOut);
-		addView(view);
+	public void showView(NavigateBackView.Item item, Animation in, Animation out) {
 		setInAnimation(in);
 		setOutAnimation(out);
+		item.animator = this;
+		back.addItem(item);
+		addView(item.view);
 		invokeShowNext();
-	}
-	
-	public void showView(View view, Animation in, Animation out) {
-		showView(view, in, out, in, out);
 	}
 	
 	private int getDefaultInAnimation() {
@@ -78,17 +79,12 @@ public class HistoryViewFlipper extends ViewFlipper {
 		return R.anim.left_pane_out;
 	}
 	
-	public void showView(View view) {
-		// TODO create suitable animations
-		showView(view, getDefaultInAnimation(), getDefaultOutAnimation());
+	public void showView(Item item) {
+		showView(item, getDefaultInAnimation(), getDefaultOutAnimation());
 	}
 	
-	public void showView(View view, int in, int out) {
-		showView(view, in, out, in, out);
-	}
-	
-	public void showView(View view, int in, int out, int backIn, int backOut) {
-		showView(view, l(in), l(out), l(backIn), l(backOut));
+	public void showView(Item item, int in, int out) {
+		showView(item, l(in), l(out));
 	}
 	
 	private Animation l(int id) {
@@ -106,28 +102,41 @@ public class HistoryViewFlipper extends ViewFlipper {
 	
 	@Override
 	public void showPrevious() {
+		removeAfterAnimation(new Filter(){
+			public boolean accept(View view, HistoryViewFlipper parent) {
+				int i = parent.indexOfChild(view);
+				return i == (parent.getChildCount() - 1);
+			}
+		});	
+		super.showPrevious();
+	}
+	
+	public static interface Filter {
+		boolean accept(View view, HistoryViewFlipper parent);
+	}
+	
+	public void removeAfterAnimation(final Filter filter) {
 		getOutAnimation().setAnimationListener(new AnimationListenerStub(){
 			@Override
-			public void onAnimationEnd(Animation animation) {
-				animation.setAnimationListener(null);
-				post(new Runnable(){
+			public void onAnimationEnd(Animation a) {
+				a.setAnimationListener(null);
+				post(new Runnable() {
 					public void run() {
 						backupAnimations();
-						removeViewAt(getChildCount() - 1);
+						List<View> children = new LinkedList<View>();
+						for (int i = 0; i < getChildCount(); i++) {
+							View child = getChildAt(i);
+							if (filter.accept(child, HistoryViewFlipper.this))
+								children.add(child);
+						}
+						for (View child: children) {
+							removeView(child);
+						}
 						restoreAnimationBackup();
 					}
 				});
 			}
-		});		
-		super.showPrevious();
-	}
-	
-	private Animation getEndsLast(Animation a1, Animation a2) {
-		return (getAnimationEnd(a1) > getAnimationEnd(a2)) ? a1 : a2;
-	}
-	
-	private long getAnimationEnd(Animation a) {
-		return a.getStartTime() + a.getStartOffset() + a.getDuration();
+		});
 	}
 	
 	public void swapRootChild(final View view, Animation in, Animation out) {
@@ -135,24 +144,12 @@ public class HistoryViewFlipper extends ViewFlipper {
 		back.clearHistoryFor(this);
 		setInAnimation(in);
 		setOutAnimation(out);
-		getEndsLast(in, out).setAnimationListener(new AnimationListenerStub() {
-			@Override
-			public void onAnimationEnd(Animation a){
-				// remove this listener
-				a.setAnimationListener(null);
-				post(new Runnable() {
-					public void run() {
-						backupAnimations();
-						
-						while (getChildCount() > 1)
-							removeViewAt(0);
-						
-						restoreAnimationBackup();
-					}
-				});
+		removeAfterAnimation(new Filter(){
+			public boolean accept(View view, HistoryViewFlipper parent) {
+				int i = parent.indexOfChild(view);
+				return i < parent.getChildCount() - 1;
 			}
 		});
-				
 		invokeShowNext();
 	}
 	

@@ -91,7 +91,10 @@ public class SlotDetailView extends LinearLayout {
 							adapter = a;
 						}
 					});
-			flipper.showView(index);
+			NavigateBackView.Item item = new NavigateBackView.Item(getContext());
+			item.opener = SlotDetailView.this;
+			item.view = index;
+			flipper.showView(item);
 		}
 	};
 	

@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.view.HistoryViewFlipper;
+import com.zybnet.abc.view.NavigateBackView;
 import com.zybnet.abc.view.PreferenceView;
 import com.zybnet.abc.view.SlotDetailView;
 import com.zybnet.abc.view.SlotView;
@@ -59,9 +60,13 @@ public class CompactFragment extends BaseFragment {
 			backIn.addAnimation(new TranslateAnimation(-bounds.left, 0, -bounds.top, 0));
 			backIn.setDuration(500);
 			
-			switcher().showView(details,
-					loadAnimation(R.anim.compact_first_pane_in), out,
-					backIn, loadAnimation(R.anim.compact_first_pane_out));
+			NavigateBackView.Item item = new NavigateBackView.Item(getActivity());
+			item.opener = abc().findViewById(TableView.ID);
+			item.view = details;
+			item.in = backIn;
+			item.out = loadAnimation(R.anim.compact_first_pane_out);
+			
+			switcher().showView(item, loadAnimation(R.anim.compact_first_pane_in), out);
 		}
 		
 	}
@@ -75,12 +80,14 @@ public class CompactFragment extends BaseFragment {
 		return new View.OnClickListener() {
 			
 			@Override
-			public void onClick(View v) {
+			public void onClick(View btn) {
 				if (switcher().getCurrentView() instanceof PreferenceView)
 					return;
 				
-				PreferenceView p = new PreferenceView(abc());
-				switcher().showView(p, R.anim.left_pane_in, R.anim.left_pane_out);
+				NavigateBackView.Item item = new NavigateBackView.Item(abc());
+				item.view = new PreferenceView(abc());
+				item.opener = btn;
+				switcher().showView(item, R.anim.left_pane_in, R.anim.left_pane_out);
 			}
 		};
 	}

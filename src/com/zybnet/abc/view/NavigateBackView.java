@@ -1,5 +1,6 @@
 package com.zybnet.abc.view;
 
+import java.util.Iterator;
 import java.util.Stack;
 
 import com.zybnet.abc.R;
@@ -28,8 +29,23 @@ public class NavigateBackView extends ImageButton {
 		super(context, attrs, style);
 	}
 
-	public void addItem(ViewAnimator animator, Animation in, Animation out) {
-		history.push(new Item(animator, in, out));
+	public void addItem(Item item) {
+		Iterator<Item> i = history.iterator();
+		while (i.hasNext()) {
+			final Item current = i.next();
+			if (current.opener.equals(item.opener)) {
+				i.remove();
+				current.animator.removeAfterAnimation(new HistoryViewFlipper.Filter() {			
+					@Override
+					public boolean accept(View view, HistoryViewFlipper parent) {
+						return view.equals(current.view);
+					}
+				});
+				break;
+			}
+		}
+		
+		history.push(item);
 		if (history.size() == 1) {
 			startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.alpha_in));
 		}
@@ -68,20 +84,23 @@ public class NavigateBackView extends ImageButton {
 		setOnClickListener(null);
 	}
 	
-	private static class Item {
-		public Item(ViewAnimator animator, Animation in, Animation out) {
-			this.animator = animator;
-			this.in = in;
-			this.out = out;
+	public static class Item {
+		public Item(Context ctx) {
+			in = AnimationUtils.loadAnimation(ctx, R.anim.left_pane_in);
+			out = AnimationUtils.loadAnimation(ctx, R.anim.left_pane_out);
 		}
-		public ViewAnimator animator;
+		
+		public View opener, view;
+		public HistoryViewFlipper animator;
 		public Animation in, out;
 	}
 	
 	public void clearHistoryFor(ViewAnimator animator) {
-		for (Item item: history) {
-			if (item.equals(animator)) {
-				history.remove(item);
+		Iterator<Item> i = history.iterator();
+		while (i.hasNext()) {
+			Item current = i.next();
+			if (current.animator.equals(animator)) {
+				i.remove();
 			}
 		}
 	}
