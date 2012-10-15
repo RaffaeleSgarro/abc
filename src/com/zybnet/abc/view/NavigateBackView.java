@@ -100,8 +100,8 @@ public class NavigateBackView extends ImageButton {
 	
 	public static class Item {
 		public Item(Context ctx) {
-			in = AnimationUtils.loadAnimation(ctx, R.anim.left_pane_in);
-			out = AnimationUtils.loadAnimation(ctx, R.anim.left_pane_out);
+			in = AnimationUtils.loadAnimation(ctx, R.anim.page_back_in_default);
+			out = AnimationUtils.loadAnimation(ctx, R.anim.page_back_out_default);
 		}
 		
 		public View opener, view;

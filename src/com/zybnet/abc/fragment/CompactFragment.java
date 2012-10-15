@@ -87,7 +87,7 @@ public class CompactFragment extends BaseFragment {
 				NavigateBackView.Item item = new NavigateBackView.Item(abc());
 				item.view = new PreferenceView(abc());
 				item.opener = btn;
-				switcher().showView(item, R.anim.left_pane_in, R.anim.left_pane_out);
+				switcher().showView(item, R.anim.page_in_default, R.anim.page_out_default);
 			}
 		};
 	}

@@ -72,11 +72,11 @@ public class HistoryViewFlipper extends ViewFlipper {
 	}
 	
 	private int getDefaultInAnimation() {
-		return R.anim.left_pane_in;
+		return R.anim.page_in_default;
 	}
 	
 	private int getDefaultOutAnimation() {
-		return R.anim.left_pane_out;
+		return R.anim.page_out_default;
 	}
 	
 	public void showView(Item item) {
