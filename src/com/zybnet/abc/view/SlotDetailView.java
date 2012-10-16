@@ -248,17 +248,14 @@ public class SlotDetailView extends LinearLayout {
 				a = null;
 			}
 			
-			IndexView index = IndexView.create(
-					(AbbecedarioActivity) getContext(),
-					new IndexView.Content() {
-						{
-							title = t;
-							adapter = a;
-						}
-					});
+			IndexView index = new IndexView(abc);
+			index.setTitle(t);
+			index.setListAdapter(a);
+			
 			NavigateBackView.Item item = new NavigateBackView.Item(getContext());
 			item.opener = SlotDetailView.this;
 			item.view = index;
+			
 			flipper.showView(item);
 		}
 	};
