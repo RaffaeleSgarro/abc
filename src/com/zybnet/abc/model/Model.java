@@ -1,6 +1,7 @@
 package com.zybnet.abc.model;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -17,7 +18,24 @@ import com.zybnet.abc.utils.U;
 
 
 public class Model {
-	@Extern
+	
+	public Model() {}
+	
+	public Model(Model src) {
+		Model dst = this;
+		for (Field field : dst.getClass().getFields()) {
+			int mask = field.getModifiers() & Modifier.STATIC;			
+			if (mask == Modifier.STATIC)
+				continue;
+			
+			try {
+				field.set(dst, field.get(src));
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
 	public static final int NONEXISTENT = -1;
 	
 	public long _id = NONEXISTENT;
@@ -58,6 +76,9 @@ public class Model {
 		try {
 			for (Field field: clazz.getFields()) {
 				if (field.getAnnotation(Extern.class) != null)
+					continue;
+				
+				if ((field.getModifiers() & Modifier.STATIC) == Modifier.STATIC)
 					continue;
 				
 				Object value = field.get(this);

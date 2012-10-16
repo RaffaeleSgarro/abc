@@ -60,9 +60,9 @@ public class SlotDetailView extends LinearLayout {
 					
 					@Override
 					public void save(EditView view, DatabaseHelper db) {
-						// TODO use copy constructor
-						slot.display_text = ((TextView) view.findViewById(R.id.content)).getText().toString();
-						slot.save(db);
+						Slot dst = new Slot(slot);
+						dst.display_text = ((TextView) view.findViewById(R.id.content)).getText().toString();
+						dst.save(db);
 					}
 				};
 				layout = R.layout.edit_item;
@@ -91,14 +91,14 @@ public class SlotDetailView extends LinearLayout {
 					
 					@Override
 					public void save(EditView view, DatabaseHelper db) {
-						// TODO use copy constructor
 						Time start = extract(view, R.id.start);
 						Time end = extract(view, R.id.end);
 						
-						slot.start = start;
-						slot.end = end;
+						Slot dst = new Slot(slot);
+						dst.start = start;
+						dst.end = end;
 						
-						slot.save(db);
+						dst.save(db);
 					}
 					
 					private Time extract(EditView parent, int id) {
@@ -112,9 +112,9 @@ public class SlotDetailView extends LinearLayout {
 				helper = new TitleHelper(R.string.edit_place, slot.place){
 					@Override
 					public void save(EditView view, DatabaseHelper db) {
-						// TODO use copy constructor
-						slot.place = ((TextView) view.findViewById(R.id.content)).getText().toString();
-						slot.save(db);
+						Slot dst = new Slot(slot);
+						dst.place = ((TextView) view.findViewById(R.id.content)).getText().toString();
+						dst.save(db);
 					}
 				};
 				layout = R.layout.edit_item;
