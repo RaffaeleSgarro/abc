@@ -1,8 +1,8 @@
 CREATE TABLE "slot" (
 	"_id" INTEGER PRIMARY KEY NOT NULL,
 	"subject_id" INT DEFAULT -1,
-	"start" TEXT NOT NULL DEFAULT '08:00',
-	"end" TEXT NOT NULL DEFAULT '09:00',
+	"start" TEXT,
+	"end" TEXT,
 	"day" INTEGER NOT NULL,
 	"ord" INTEGER NOT NULL,
 	"display_text" TEXT,

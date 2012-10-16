@@ -59,6 +59,10 @@ public class AbbecedarioActivity extends FragmentActivity {
     	}
     }
     
+    /*
+     * First thing, close the popup when an item is clicked.
+     * Then invoked the proxied listener
+     */
     private class ClosePopupListener implements View.OnClickListener{
     	View.OnClickListener chain;
     	
@@ -80,6 +84,16 @@ public class AbbecedarioActivity extends FragmentActivity {
     	
     	content.findViewById(R.id.settings).setOnClickListener(new ClosePopupListener(
     					getActiveFragment().getSettingsMenuClickedListener())
+    	);
+    	
+    	content.findViewById(R.id.reset).setOnClickListener(new ClosePopupListener(
+    			new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						reset();
+					}
+				})
     	);
     	
     	popup = new PopupWindow(content, content.getMeasuredWidth(), content.getMeasuredHeight(), true);
@@ -148,5 +162,12 @@ public class AbbecedarioActivity extends FragmentActivity {
 
     public DatabaseHelper db() {
     	return dbHelper;
+    }
+    
+    private void reset() {
+    	db().close();
+    	this.deleteDatabase(DatabaseHelper.FILENAME);
+    	finish();
+    	startActivity(getIntent());
     }
 }

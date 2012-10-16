@@ -131,13 +131,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public java.sql.Date _date(Cursor c, String column) {
 		Date date = dateFromFormat(c, column, U.SQL_DATE_FORMAT);
+		
+		if (date == null)
+			return null;
+		
 		return new java.sql.Date(date.getYear(), date.getMonth(), date.getDay());
 	}
 	
+	// May return null
 	private java.util.Date dateFromFormat(Cursor c, String column, String format) {
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		String str = c.getString(c.getColumnIndex(column));
+		
+		if (str == null)
+			return null;
+		
 		try {
-			return sdf.parse(c.getString(c.getColumnIndex(column)));
+			return sdf.parse(str);
 		} catch (ParseException e) {
 			Log.e(L.TAG, "Cannot parse date", e);
 			return new java.util.Date();
@@ -146,6 +156,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	public Time _time(Cursor c, String column) {
 		Date date = dateFromFormat(c, column, U.SQL_TIME_FORMAT);
+		
+		if (date == null)
+			return null;
+		
 		return new Time(date.getHours(), date.getMinutes(), 0);
 	}
 	
