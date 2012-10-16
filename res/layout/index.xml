@@ -1,24 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<view
-    class="com.zybnet.abc.view.IndexView"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<view xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    class="com.zybnet.abc.view.IndexView"
     android:orientation="vertical"
     android:paddingLeft="10dp"
     android:paddingRight="10dp" >
 
-    <TextView
-        android:id="@+id/title"
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_height="wrap_content" >
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/index_help"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/add_new"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/title"
+            android:layout_toLeftOf="@+id/add_new"
+            android:text="@string/index_help"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+        
+        <Button 
+            android:id="@+id/add_new"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/title"
+            android:layout_alignBottom="@+id/subtitle"
+            android:text="@string/add_new" />
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/list"
