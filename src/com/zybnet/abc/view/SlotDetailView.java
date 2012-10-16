@@ -1,5 +1,7 @@
 package com.zybnet.abc.view;
 
+import java.sql.Time;
+
 import android.content.Context;
 import android.text.InputType;
 import android.util.AttributeSet;
@@ -9,6 +11,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.activity.AbbecedarioActivity;
@@ -44,7 +47,6 @@ public class SlotDetailView extends LinearLayout {
 		public void onClick(View v) {
 			Helper helper;
 			int layout;
-			final Slot slot = (Slot) v.getTag();
 			
 			switch(v.getId()) {
 			case R.id.title:
@@ -58,6 +60,7 @@ public class SlotDetailView extends LinearLayout {
 					
 					@Override
 					public void save(EditView view, DatabaseHelper db) {
+						// TODO use copy constructor
 						slot.display_text = ((TextView) view.findViewById(R.id.content)).getText().toString();
 						slot.save(db);
 					}
@@ -65,13 +68,51 @@ public class SlotDetailView extends LinearLayout {
 				layout = R.layout.edit_item;
 				break;
 			case R.id.time:
-				helper = new Helper();
+				helper = new Helper() {
+					private TimePicker find(View v, int id) {
+						return (TimePicker) v.findViewById(id);
+					}
+					
+					private TimePicker setup(View v, int id) {
+						TimePicker t = find(v, id);
+						t.setCurrentMinute(0);
+						t.setIs24HourView(true);
+						return t;
+					}
+					
+					@Override
+					public void afterInflate(EditView view) {
+						TimePicker start = setup(view, R.id.start);
+						start.setCurrentHour(slot.start != null ? slot.start.getHours() : 8);
+						
+						TimePicker end = setup(view, R.id.end);
+						end.setCurrentHour(slot.end != null ? slot.end.getHours() : 9);
+					}
+					
+					@Override
+					public void save(EditView view, DatabaseHelper db) {
+						// TODO use copy constructor
+						Time start = extract(view, R.id.start);
+						Time end = extract(view, R.id.end);
+						
+						slot.start = start;
+						slot.end = end;
+						
+						slot.save(db);
+					}
+					
+					private Time extract(EditView parent, int id) {
+						TimePicker src = find(parent, id);
+						return new Time(src.getCurrentHour(), src.getCurrentMinute(), 0);
+					}
+				};
 				layout = R.layout.edit_time;
 				break;
 			case R.id.place:
 				helper = new TitleHelper(R.string.edit_place, slot.place){
 					@Override
 					public void save(EditView view, DatabaseHelper db) {
+						// TODO use copy constructor
 						slot.place = ((TextView) view.findViewById(R.id.content)).getText().toString();
 						slot.save(db);
 					}
