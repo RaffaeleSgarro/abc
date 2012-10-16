@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_subject"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <com.zybnet.abc.view.AllCapsTextView
+        style="@style/SmallHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/name" />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textCapWords" />
+    
+    <com.zybnet.abc.view.AllCapsTextView
+        style="@style/SmallHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/name_short" />
+
+    <EditText
+        android:id="@+id/name_short"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textCapCharacters" />
+    
+    <com.zybnet.abc.view.AllCapsTextView
+        style="@style/SmallHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/default_place" />
+
+    <EditText
+        android:id="@+id/default_place"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textCapSentences" />
+
+</LinearLayout>

@@ -2,6 +2,7 @@ package com.zybnet.abc.view;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -34,17 +35,29 @@ public class IndexView extends LinearLayout {
 		title().setText(title);
 	}
 	
+	public void configureEditView(final HistoryViewFlipper switcher,
+			final int layout, final EditView.Helper helper) {
+		findViewById(R.id.add_new).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View button) {
+				EditView view = new EditView(abc(), layout, helper);
+				
+				NavigateBackView.Item item = new NavigateBackView.Item(abc());
+				item.opener = IndexView.this;
+				item.view = view;
+				item.keep = false;
+				
+				switcher.showView(item);
+			}
+		});
+	}
+	
 	public void setListAdapter(ListAdapter adapter) {
 		list().setAdapter(adapter);
 	}
 	
 	protected AbbecedarioActivity abc() {
 		return (AbbecedarioActivity) getContext();
-	}
-	
-	
-	public static IndexView create(Activity a) {
-		IndexView instance = (IndexView) a.getLayoutInflater().inflate(R.layout.index, null, false);
-		return instance;
 	}
 }

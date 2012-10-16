@@ -26,4 +26,14 @@
     <string name="edit">Edit</string>
     <string name="reset">Reset</string>
     <string name="see_related">See related</string>
+    <string name="edit_subject">Edit Subject</string>
+    <string name="name">Name</string>
+    <string name="name_short">Short Name</string>
+    <string name="default_place">Default place</string>
+    <string name="edit_homework">Edit Homework</string>
+    <string name="description">Description</string>
+    <string name="due_date">Due date</string>
+    <string name="edit_grade">Edit Grade</string>
+    <string name="score">Score</string>
+    <string name="date">Date</string>
 </resources>

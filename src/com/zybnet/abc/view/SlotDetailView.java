@@ -73,20 +73,22 @@ public class SlotDetailView extends LinearLayout {
 						return (TimePicker) v.findViewById(id);
 					}
 					
-					private TimePicker setup(View v, int id) {
+					private void setup(View v, int id, Time time, int hours) {
 						TimePicker t = find(v, id);
-						t.setCurrentMinute(0);
 						t.setIs24HourView(true);
-						return t;
+						if (time == null) {
+							t.setCurrentHour(hours);
+							t.setCurrentMinute(0);
+						} else {
+							t.setCurrentHour(time.getHours());
+							t.setCurrentMinute(time.getMinutes());
+						}
 					}
 					
 					@Override
 					public void afterInflate(EditView view) {
-						TimePicker start = setup(view, R.id.start);
-						start.setCurrentHour(slot.start != null ? slot.start.getHours() : 8);
-						
-						TimePicker end = setup(view, R.id.end);
-						end.setCurrentHour(slot.end != null ? slot.end.getHours() : 9);
+						setup(view, R.id.start, slot.start, 8);
+						setup(view, R.id.end, slot.end, 9);
 					}
 					
 					@Override
@@ -227,37 +229,40 @@ public class SlotDetailView extends LinearLayout {
 	
 	private OnClickListener indexListener = new OnClickListener() {
 		public void onClick(final View view) {
-			final String t;
-			final ListAdapter a;
+			String title = null;
+			ListAdapter adapter = null;
+			int layout = 0;
+			EditView.Helper helper = new EditView.Helper();
 			
 			switch (view.getId()) {
 			case R.id.subject:
-				t = "Subjects";
-				a = new TitleDescriptionAdapter(abc,
+				title = "Subjects";
+				adapter = new TitleDescriptionAdapter(abc,
 						abc.db().getSubjects(),
 						"name_short", "name");
+				layout = R.layout.edit_subject;
 				break;
 			case R.id.homework:
-				t = "Homework";
-				a = new TitleDescriptionAdapter(abc,
+				title = "Homework";
+				adapter = new TitleDescriptionAdapter(abc,
 						abc.db().getHomework(slot.subject_id),
 						"due", "description");
+				layout = R.layout.edit_homework;
 				break;
 			case R.id.grades:
-				t = "Grades";
+				title = "Grades";
 				abc.db();
-				a = new TitleDescriptionAdapter(abc,
+				adapter = new TitleDescriptionAdapter(abc,
 						abc.db().getGrades(slot.subject_id),
 						"date", "description");
+				layout = R.layout.edit_grade;
 				break;
-			default:
-				t = null;
-				a = null;
 			}
 			
 			IndexView index = new IndexView(abc);
-			index.setTitle(t);
-			index.setListAdapter(a);
+			index.setTitle(title);
+			index.setListAdapter(adapter);
+			index.configureEditView(flipper, layout, helper);
 			
 			NavigateBackView.Item item = new NavigateBackView.Item(getContext());
 			item.opener = SlotDetailView.this;
