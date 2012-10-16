@@ -6,8 +6,8 @@ CREATE TABLE "slot" (
 	"day" INTEGER NOT NULL,
 	"ord" INTEGER NOT NULL,
 	"display_text" TEXT,
-	"place" TEXT DEFAULT 'Nowhere',
-	"teacher" TEXT DEFAULT 'Nobody',
+	"place" TEXT,
+	"teacher" TEXT,
 	
 	FOREIGN KEY ("subject_id") REFERENCES "subject" ("_id") ON DELETE SET DEFAULT ON UPDATE CASCADE,
 	UNIQUE ("day", "ord")

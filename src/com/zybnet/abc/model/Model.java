@@ -60,6 +60,11 @@ public class Model {
 				if (field.getAnnotation(Extern.class) != null)
 					continue;
 				
+				Object value = field.get(this);
+				
+				if (value == null)
+					continue;
+				
 				Class<?> type = field.getType();
 				
 				if (type.equals(java.sql.Date.class)) {
@@ -71,7 +76,7 @@ public class Model {
 					DateFormat df = new SimpleDateFormat(U.SQL_TIME_FORMAT);
 					c.put(field.getName(), df.format(time));
 				} else {
-					c.put(field.getName(), field.get(this).toString());
+					c.put(field.getName(), value.toString());
 				}
 			}
 			return c;

@@ -137,7 +137,9 @@ public class SlotDetailView extends LinearLayout {
 		
 		setText(R.id.teacher, slot.teacher);
 		
-		view = setText(R.id.time, String.format("%tR - %tR", slot.start, slot.end));
+		view = setText(R.id.time,
+				(slot.start == null || slot.end == null) ?
+						null: String.format("%tR - %tR", slot.start, slot.end));
 		view.setOnClickListener(itemListener);
 		view.setTag(slot);
 		
@@ -215,6 +217,8 @@ public class SlotDetailView extends LinearLayout {
 	
 	private ViewGroup setText(int id, String text) {
 		ViewGroup layout = group(id);
+		if (text == null)
+			text = getResources().getString(R.string.edit);
 		((TextView) layout.findViewById(R.id.content)).setText(text);
 		return layout;
 	}

@@ -98,7 +98,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Cursor c = getReadableDatabase().rawQuery(sql, args);
 		
 		if (c.getCount() != 1) {
-			Slot slot = Slot.getDefault();
+			Slot slot = new Slot();
 			slot.day = day;
 			slot.ord = ord;
 			return slot;
