@@ -1,9 +1,11 @@
 package com.zybnet.abc.view;
 
 import android.content.Context;
+import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
@@ -11,7 +13,9 @@ import android.widget.TextView;
 import com.zybnet.abc.R;
 import com.zybnet.abc.activity.AbbecedarioActivity;
 import com.zybnet.abc.fragment.BaseFragment;
+import com.zybnet.abc.model.Model;
 import com.zybnet.abc.model.Slot;
+import com.zybnet.abc.utils.DatabaseHelper;
 import com.zybnet.abc.utils.TitleDescriptionAdapter;
 import com.zybnet.abc.utils.U;
 import com.zybnet.abc.view.EditView.Helper;
@@ -40,11 +44,24 @@ public class SlotDetailView extends LinearLayout {
 		public void onClick(View v) {
 			Helper helper;
 			int layout;
-			Slot slot = (Slot) v.getTag();
+			final Slot slot = (Slot) v.getTag();
 			
 			switch(v.getId()) {
 			case R.id.title:
-				helper = new TitleHelper(R.string.edit_displayed, slot.display_text);
+				helper = new TitleHelper(R.string.edit_displayed, slot.display_text) {
+					@Override
+					public void afterInflate(EditView view) {
+						super.afterInflate(view);
+						EditText et = (EditText) view.findViewById(R.id.content);
+						et.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+					}
+					
+					@Override
+					public void save(EditView view, DatabaseHelper db) {
+						slot.display_text = ((TextView) view.findViewById(R.id.content)).getText().toString();
+						slot.save(db);
+					}
+				};
 				layout = R.layout.edit_item;
 				break;
 			case R.id.time:
@@ -52,7 +69,13 @@ public class SlotDetailView extends LinearLayout {
 				layout = R.layout.edit_time;
 				break;
 			case R.id.place:
-				helper = new TitleHelper(R.string.edit_place, slot.where);
+				helper = new TitleHelper(R.string.edit_place, slot.place){
+					@Override
+					public void save(EditView view, DatabaseHelper db) {
+						slot.place = ((TextView) view.findViewById(R.id.content)).getText().toString();
+						slot.save(db);
+					}
+				};
 				layout = R.layout.edit_item;
 				break;
 			default:
@@ -67,7 +90,29 @@ public class SlotDetailView extends LinearLayout {
 		}
 	};
 	
-	private class TitleHelper extends Helper {
+	@Override
+	public void onAttachedToWindow() {
+		Model.Channel.subscribe(Slot.class, subscriber);
+	}
+	
+	@Override
+	public void onDetachedFromWindow() {
+		Model.Channel.unsucribe(Slot.class, subscriber);
+	}
+	
+	private Model.Subscriber subscriber = new Model.Subscriber() {
+		
+		@Override
+		public void onMessage(final Model model) {
+			post(new Runnable() {
+				public void run() {
+					fillView((Slot) model);
+				}
+			});
+		}
+	};
+	
+	private class TitleHelper extends EditView.Helper {
 		public TitleHelper(int stringId, String value) {
 			title = getResources().getString(stringId);
 			this.value = value;
@@ -96,7 +141,7 @@ public class SlotDetailView extends LinearLayout {
 		view.setOnClickListener(itemListener);
 		view.setTag(slot);
 		
-		view = setText(R.id.place, slot.where);
+		view = setText(R.id.place, slot.place);
 		view.setTag(slot);
 		view.setOnClickListener(itemListener);
 		

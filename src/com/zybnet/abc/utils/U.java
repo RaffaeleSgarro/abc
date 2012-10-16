@@ -23,6 +23,8 @@ public class U {
 	public static final int SLOTS_PER_DAY_DEFAULT = 5;
 	public static final int SLOTS_PER_DAY_MAX = 7;
 	
+	public static final String SQL_DATE_FORMAT = "yyyy-MM-dd";
+	public static final String SQL_TIME_FORMAT = "HH:mm";
 	
 	private static Calendar calendar;
 	

@@ -1,17 +1,12 @@
 package com.zybnet.abc.fragment;
 
-import android.app.Activity;
 import android.graphics.Rect;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
-import android.widget.FrameLayout;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.view.HistoryViewFlipper;
@@ -22,18 +17,6 @@ import com.zybnet.abc.view.SlotView;
 import com.zybnet.abc.view.TableView;
 
 public class CompactFragment extends BaseFragment {
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
-		Activity mActivity = getActivity();
-		
-		// Setup the timetable view
-		TableView table = new TableView(mActivity);
-		table.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
-		table.setSlotListener(new SlotListener());
-		
-		return table;
-	}
 
 	private class SlotListener implements View.OnClickListener {
 
@@ -90,6 +73,12 @@ public class CompactFragment extends BaseFragment {
 				switcher().showView(item, R.anim.page_in_default, R.anim.page_out_default);
 			}
 		};
+	}
+
+	@Override
+	public void addTable(TableView table) {
+		table.setSlotListener(new SlotListener());
+		switcher().addView(table);
 	}
 	
 }

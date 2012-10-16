@@ -35,4 +35,6 @@ public abstract class BaseFragment extends Fragment {
 	}
 	
 	public abstract View.OnClickListener getSettingsMenuClickedListener();
+	
+	public abstract void addTable(TableView table);
 }

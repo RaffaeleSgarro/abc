@@ -33,7 +33,7 @@ INSERT INTO slot ("subject_id", "ord", "day", "display_text") VALUES (4, 3, 1, '
 
 INSERT INTO slot ("subject_id", "ord", "day", "display_text") VALUES (4, 4, 1, 'ENGI');
 
-INSERT INTO slot ("subject_id", "ord", "day", "display_text") VALUES (3, 3, 5, 'CALC');
+INSERT INTO slot ("subject_id", "ord", "day", "display_text") VALUES (3, 1, 5, 'CALC');
 
 INSERT INTO slot ("subject_id", "ord", "day", "display_text") VALUES (3, 4, 5, 'CALC');
 

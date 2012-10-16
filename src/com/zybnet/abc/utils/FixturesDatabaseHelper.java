@@ -12,7 +12,7 @@ public class FixturesDatabaseHelper extends DatabaseHelper {
 	 * Returns a helper for an in-memory database
 	 */
 	public FixturesDatabaseHelper(Context ctx) {
-		this(ctx, null, null, 1);
+		this(ctx, FILENAME, null, VERSION);
 	}
 	
 	public FixturesDatabaseHelper(Context context, String name,

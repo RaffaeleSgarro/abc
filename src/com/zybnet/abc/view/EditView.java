@@ -40,13 +40,13 @@ public class EditView extends LinearLayout {
 	
 	public void save() {
 		save.setEditView(this);
-		helper.persist(this, abc.db());
+		helper.save(this, abc.db());
 		back.back();
 	}
 
 	public static class Helper {
 		public void afterInflate(EditView view) {}
-		public void persist(EditView view, DatabaseHelper db) {}
+		public void save(EditView view, DatabaseHelper db) {}
 	}
 	
 	@Override

@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ViewFlipper;
 
 import com.zybnet.abc.R;
@@ -79,6 +80,12 @@ public class HistoryViewFlipper extends ViewFlipper {
 		return R.anim.page_out_default;
 	}
 	
+	private void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) getContext()
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(getWindowToken(), 0);
+	}
+	
 	public void showView(Item item) {
 		showView(item, getDefaultInAnimation(), getDefaultOutAnimation());
 	}
@@ -97,6 +104,7 @@ public class HistoryViewFlipper extends ViewFlipper {
 			throw new IllegalStateException("You shouldn't call showNext()." +
 					" Use showView() instead for better control " +
 					" over animations and integration with the back history");
+		hideKeyboard();
 		super.showNext();
 	}
 	
@@ -108,6 +116,7 @@ public class HistoryViewFlipper extends ViewFlipper {
 				return i == (parent.getChildCount() - 1);
 			}
 		});	
+		hideKeyboard();
 		super.showPrevious();
 	}
 	

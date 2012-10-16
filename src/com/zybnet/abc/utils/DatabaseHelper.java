@@ -3,12 +3,14 @@ package com.zybnet.abc.utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -19,6 +21,9 @@ import com.zybnet.abc.model.Slot;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+	protected static final int VERSION = 1;
+	public static final String FILENAME = "abc.db";
+	
 	private Context context;
 	
 	/*
@@ -27,7 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * 
 	 */
 	public DatabaseHelper(Context ctx) {
-		this(ctx, null, null, 1);
+		this(ctx, FILENAME, null, VERSION);
 	}
 	
 	public DatabaseHelper(Context context, String name, CursorFactory factory, int version) {
@@ -40,6 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		try {
 			runScript(db, R.raw.schema);
 		} catch (IOException e) {
+			L.og("Script failed");
 			L.og(e);
 		}
 	}
@@ -61,7 +67,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 		while ((line = in.readLine() )!= null) {
 			if (line.trim().length() == 0 && builder.length() > 2 && builder.charAt(builder.length() - 2) == ';') {
-				db.execSQL(builder.toString());
+				try {
+					db.execSQL(builder.toString());
+				} catch (SQLException e) {
+					L.og(e);
+					L.og(builder.toString());
+				}
+				
 				builder = new StringBuilder();
 				continue;
 			}
@@ -93,12 +105,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 		
 		c.moveToFirst();
+		
 		Slot slot = new Slot();
+		slot._id = _i(c, "_id");
 		slot.day = _i(c, "day");
 		slot.ord = _i(c, "ord");
 		slot.display_text = _s(c, "display_text");
 		slot.teacher = _s(c, "teacher");
-		slot.where = _s(c, "where");
+		slot.place = _s(c, "place");
 		slot.start = _time(c, "start");
 		slot.end = _time(c, "end");
 		slot.subject_name = _s(c, "subject_name");
@@ -115,20 +129,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return c.getInt(c.getColumnIndex(column));
 	}
 
-	public Date _date(Cursor c, String column) {
-		L.og("Date as string: " + c.getString(c.getColumnIndex(column)));
-		L.og("Date as int: " + c.getInt(c.getColumnIndex(column)));
-		return new Date(c.getInt(c.getColumnIndex(column)));
+	public java.sql.Date _date(Cursor c, String column) {
+		Date date = dateFromFormat(c, column, U.SQL_DATE_FORMAT);
+		return new java.sql.Date(date.getYear(), date.getMonth(), date.getDay());
 	}
 	
-	public Date _time(Cursor c, String column) {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+	private java.util.Date dateFromFormat(Cursor c, String column, String format) {
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		try {
 			return sdf.parse(c.getString(c.getColumnIndex(column)));
 		} catch (ParseException e) {
 			Log.e(L.TAG, "Cannot parse date", e);
-			return new Date();
+			return new java.util.Date();
 		}
+	}
+	
+	public Time _time(Cursor c, String column) {
+		Date date = dateFromFormat(c, column, U.SQL_TIME_FORMAT);
+		return new Time(date.getHours(), date.getMinutes(), 0);
 	}
 	
 	public Cursor getSubjects() {

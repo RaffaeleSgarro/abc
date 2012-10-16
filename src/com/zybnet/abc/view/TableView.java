@@ -2,10 +2,11 @@ package com.zybnet.abc.view;
 
 import static android.view.ViewGroup.LayoutParams.FILL_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
@@ -18,6 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.zybnet.abc.activity.AbbecedarioActivity;
+import com.zybnet.abc.model.Model;
+import com.zybnet.abc.model.Slot;
+import com.zybnet.abc.utils.DatabaseHelper;
 import com.zybnet.abc.utils.U;
 
 /*
@@ -30,6 +35,7 @@ import com.zybnet.abc.utils.U;
  * The table is a LinearLayout in vertical orientation
  * 
  */
+@SuppressLint("ViewConstructor")
 public class TableView extends RelativeLayout implements SharedPreferences.OnSharedPreferenceChangeListener {
 	
 	public final static int ID = 0x923032f;
@@ -59,17 +65,41 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		DARK_GREY = Color.parseColor("#555555"); // for text
 	}
 	
-	public TableView(Context context) {
-		super(context);
+	public TableView(AbbecedarioActivity abc) {
+		super(abc);
+		this.abc = abc;
 		setVisibility(View.INVISIBLE);
 		setId(ID);
 	}
+	
+	private AbbecedarioActivity abc;
+	
+	private class AsyncLoad extends AsyncTask<DatabaseHelper, Void, Cursor> {
+		
+		@Override
+		public void onPostExecute(Cursor cursor) {
+			setup(cursor);
+		}
+
+		@Override
+		protected Cursor doInBackground(DatabaseHelper... params) {
+			DatabaseHelper helper = params[0];
+			Cursor c = helper.getReadableDatabase().query("slot",
+					new String[] {"day", "ord", "display_text"},
+					null, null, null, null, null);
+			return c;
+		}
+	};
 	
 	private SharedPreferences prefs() {
 		return PreferenceManager.getDefaultSharedPreferences(getContext());
 	}
 	
-	// Builds the UI
+	/*
+	 * Fill the TimeTable. The cursor must contain day, ord and
+	 * subject_name_short columns.
+	 * Builds the UI
+	 */
 	private void setup(Cursor cursor) {
 		SharedPreferences prefs = prefs();
 		
@@ -106,37 +136,29 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		startAnimation();
 	}
 	
-	private Cursor pendingCursor;
+	private Model.Subscriber subscriber = new Model.Subscriber() {
+		@Override
+		public void onMessage(Model model) {
+			final Slot slot = (Slot) model;
+			post(new Runnable(){
+				public void run() {
+					getChildAt(slot.ord - 1, slot.day - 1).setText(slot.display_text);
+				}
+			});
+		}
+	};
 	
 	@Override
 	public void onAttachedToWindow() {
-		if (pendingCursor != null) {
-			setup(pendingCursor);
-			pendingCursor = null;
-		}
+		new AsyncLoad().execute(abc.db());
 		prefs().registerOnSharedPreferenceChangeListener(this);
+		Model.Channel.subscribe(Slot.class, subscriber);
 	}
 	
 	@Override
 	public void onDetachedFromWindow() {
 		prefs().unregisterOnSharedPreferenceChangeListener(this);
-	}
-	
-	/*
-	 * Fill the TimeTable. The cursor must contain day, ord and
-	 * subject_name_short columns.
-	 * 
-	 * When this method is invoked, the table may not have been
-	 * attached to any window, so the save the cursor and
-	 * add children asynchronously
-	 * 
-	 */
-	public void setCursor(Cursor cursor) {
-		if (getWindowToken() == null) {
-			pendingCursor = cursor;
-		} else {
-			setup(cursor);
-		}
+		Model.Channel.unsucribe(Slot.class, subscriber);
 	}
 	
 	private void startAnimation() {
