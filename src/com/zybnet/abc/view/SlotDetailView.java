@@ -106,7 +106,12 @@ public class SlotDetailView extends LinearLayout {
 		public void onMessage(final Model model) {
 			post(new Runnable() {
 				public void run() {
-					fillView((Slot) model);
+					Slot other = (Slot) model;
+					Slot self = getSlot();
+					
+					if (other.ord == self.ord && other.day == self.day) {
+						fillView((Slot) model);
+					}
 				}
 			});
 		}
@@ -128,7 +133,16 @@ public class SlotDetailView extends LinearLayout {
 		}
 	}
 	
+	private Slot slot;
+	
+	public Slot getSlot() {
+		return slot;
+	}
+	
 	public void fillView(Slot slot) {
+		
+		this.slot = slot;
+		
 		View view = setText(R.id.title,
 				U.uppercaseFirstChar(String.format("%tA, slot %d",
 				U.getLocalizedDayOfTheWeek(slot.day), slot.ord)));
