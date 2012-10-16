@@ -18,6 +18,7 @@ import android.util.Log;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.model.Slot;
+import com.zybnet.abc.model.Subject;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -170,18 +171,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	
 	// Selection contains a single element with the subject id
-	public Cursor getHomework(int subject) {
+	public Cursor getHomework(long subject) {
 		return getReadableDatabase().query("homework",
 				new String[] {"_id", "description", "due"},
-				"subject_id = ?", new String[] {Integer.toString(subject)},
+				"subject_id = ?", new String[] {Long.toString(subject)},
 				null, null, null);
 	}
 	
 	// Selection contains a single element with the subject id
-	public Cursor getGrades(int subject) {
+	public Cursor getGrades(long subject) {
 		return getReadableDatabase().query("grade",
 				new String[] {"_id", "date", "description", "score"},
-				"subject_id = ?", new String[] {Integer.toString(subject)},
+				"subject_id = ?", new String[] {Long.toString(subject)},
 				null, null, null);
+	}
+	
+	public Subject getSubject(long id) {
+		Cursor c = getReadableDatabase().query("subject",
+				new String[] {"name", "name_short", "default_place"},
+				"_id = ?", new String[] {Long.toString(id)}, null, null, null);
+		
+		Subject s = new Subject();
+		
+		if (c.getCount() != 1)
+			return s;
+		
+		c.moveToFirst();
+		s._id = id;
+		s.name = _s(c, "name");
+		s.name_short = _s(c, "name_short");
+		s.default_place = _s(c, "default_place");
+		
+		return s;
 	}
 }

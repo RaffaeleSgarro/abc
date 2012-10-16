@@ -3,6 +3,7 @@ package com.zybnet.abc.view;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -51,6 +52,10 @@ public class IndexView extends LinearLayout {
 				switcher.showView(item);
 			}
 		});
+	}
+	
+	public void setListClickListener(AdapterView.OnItemClickListener listener) {
+		list().setOnItemClickListener(listener);
 	}
 	
 	public void setListAdapter(ListAdapter adapter) {

@@ -7,6 +7,7 @@ import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -18,6 +19,7 @@ import com.zybnet.abc.activity.AbbecedarioActivity;
 import com.zybnet.abc.fragment.BaseFragment;
 import com.zybnet.abc.model.Model;
 import com.zybnet.abc.model.Slot;
+import com.zybnet.abc.model.Subject;
 import com.zybnet.abc.utils.DatabaseHelper;
 import com.zybnet.abc.utils.TitleDescriptionAdapter;
 import com.zybnet.abc.utils.U;
@@ -229,6 +231,8 @@ public class SlotDetailView extends LinearLayout {
 	
 	private OnClickListener indexListener = new OnClickListener() {
 		public void onClick(final View view) {
+			IndexView index = new IndexView(abc);
+			
 			String title = null;
 			ListAdapter adapter = null;
 			int layout = 0;
@@ -241,6 +245,21 @@ public class SlotDetailView extends LinearLayout {
 						abc.db().getSubjects(),
 						"name_short", "name");
 				layout = R.layout.edit_subject;
+				index.setListClickListener(new AdapterView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						Slot dst = new Slot(slot);
+						dst.subject_id = id;
+						Subject subject = abc().db().getSubject(id);
+						dst.display_text = subject.name_short;
+						dst.subject_name = abc().db().getSubject(id).name;
+						dst.place = subject.default_place;
+						dst.save(abc().db());
+						flipper.showPrevious();
+					}
+				});
 				break;
 			case R.id.homework:
 				title = "Homework";
@@ -259,7 +278,6 @@ public class SlotDetailView extends LinearLayout {
 				break;
 			}
 			
-			IndexView index = new IndexView(abc);
 			index.setTitle(title);
 			index.setListAdapter(adapter);
 			index.configureEditView(flipper, layout, helper);
