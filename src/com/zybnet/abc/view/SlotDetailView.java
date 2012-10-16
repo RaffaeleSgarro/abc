@@ -206,12 +206,19 @@ public class SlotDetailView extends LinearLayout {
 		subject.setOnClickListener(indexListener);
 		
 		View homework = findViewById(R.id.homework);
-		homework.setOnClickListener(indexListener);
-		homework.setTag(slot.subject_id);
-		
 		View grades = findViewById(R.id.grades);
-		grades.setOnClickListener(indexListener);
-		grades.setTag(slot.subject_id);
+		
+		if (slot.subject_id < 1) {
+			homework.setVisibility(View.INVISIBLE);
+			grades.setVisibility(View.INVISIBLE);
+		} else {
+			homework.setVisibility(View.VISIBLE);
+			homework.setOnClickListener(indexListener);
+			
+			grades.setVisibility(View.VISIBLE);
+			grades.setOnClickListener(indexListener);
+		}
+		
 	}
 	
 	private AbbecedarioActivity abc() {
@@ -233,14 +240,14 @@ public class SlotDetailView extends LinearLayout {
 			case R.id.homework:
 				t = "Homework";
 				a = new TitleDescriptionAdapter(abc,
-						abc.db().getHomework((Integer) view.getTag()),
+						abc.db().getHomework(slot.subject_id),
 						"due", "description");
 				break;
 			case R.id.grades:
 				t = "Grades";
 				abc.db();
 				a = new TitleDescriptionAdapter(abc,
-						abc.db().getGrades((Integer) view.getTag()),
+						abc.db().getGrades(slot.subject_id),
 						"date", "description");
 				break;
 			default:

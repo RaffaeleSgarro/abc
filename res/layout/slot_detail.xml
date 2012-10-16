@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<view
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<view xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/slot_details"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -44,10 +43,10 @@
 
             <LinearLayout
                 android:id="@+id/subject"
+                style="@style/PaddedTopBottom"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                style="@style/PaddedTopBottom" >
+                android:orientation="vertical" >
 
                 <com.zybnet.abc.view.AllCapsTextView
                     style="@style/SmallHeader"
@@ -57,16 +56,16 @@
 
                 <TextView
                     android:id="@+id/content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/time"
+                style="@style/PaddedTopBottom"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                style="@style/PaddedTopBottom"
                 android:orientation="vertical" >
 
                 <com.zybnet.abc.view.AllCapsTextView
@@ -77,9 +76,9 @@
 
                 <TextView
                     android:id="@+id/content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
 
             <LinearLayout
@@ -97,9 +96,9 @@
 
                 <TextView
                     android:id="@+id/content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
 
             <LinearLayout
@@ -117,28 +116,52 @@
 
                 <TextView
                     android:id="@+id/content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
 
-            <TextView
-                style="@style/PaddedTopBottom"
+            <LinearLayout
                 android:id="@+id/homework"
+                style="@style/PaddedTopBottom"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/homework" />
+                android:orientation="vertical" >
 
-            <TextView
+                <com.zybnet.abc.view.AllCapsTextView
+                    style="@style/SmallHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/see_related" />
+
+                <TextView
+                    android:id="@+id/content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/homework"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/grades"
                 style="@style/PaddedTopBottom"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/grades" />
+                android:orientation="vertical" >
+
+                <com.zybnet.abc.view.AllCapsTextView
+                    style="@style/SmallHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/see_related" />
+
+                <TextView
+                    android:id="@+id/content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/grades"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

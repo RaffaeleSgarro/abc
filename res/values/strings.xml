@@ -25,4 +25,5 @@
     <string name="edit_place">Edit place for this slot</string>
     <string name="edit">Edit</string>
     <string name="reset">Reset</string>
+    <string name="see_related">See related</string>
 </resources>
