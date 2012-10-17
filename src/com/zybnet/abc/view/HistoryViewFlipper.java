@@ -108,8 +108,11 @@ public class HistoryViewFlipper extends ViewFlipper {
 		super.showNext();
 	}
 	
-	@Override
-	public void showPrevious() {
+	/*
+	 * IMPORTANT!!! This should be invoked ONLY by NavigateBackView!
+	 * 
+	 */
+	void showPreviousSafe() {
 		removeAfterAnimation(new Filter(){
 			public boolean accept(View view, HistoryViewFlipper parent) {
 				int i = parent.indexOfChild(view);
@@ -117,7 +120,13 @@ public class HistoryViewFlipper extends ViewFlipper {
 			}
 		});	
 		hideKeyboard();
+		
 		super.showPrevious();
+	}
+	
+	@Override
+	public void showPrevious() {
+		throw new IllegalStateException("Please use NavigateBackView.back()");
 	}
 	
 	public static interface Filter {

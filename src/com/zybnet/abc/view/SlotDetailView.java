@@ -257,7 +257,7 @@ public class SlotDetailView extends LinearLayout {
 						dst.subject_name = abc().db().getSubject(id).name;
 						dst.place = subject.default_place;
 						dst.save(abc().db());
-						flipper.showPrevious();
+						abc().getBackButton().back();
 					}
 				});
 				break;

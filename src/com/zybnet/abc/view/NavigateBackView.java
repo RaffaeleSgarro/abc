@@ -80,7 +80,7 @@ public class NavigateBackView extends ImageButton {
 		Item item = history.pop();
 		item.animator.setInAnimation(item.in);
 		item.animator.setOutAnimation(item.out);
-		item.animator.showPrevious();
+		item.animator.showPreviousSafe();
 		// TODO setup listeners
 		
 		if (history.size() == 0) {

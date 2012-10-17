@@ -23,15 +23,5 @@
         android:contentDescription="@string/place"
         style="@style/ActionBarButton"
         android:src="@drawable/btn_action_overflow" />
-    <view
-        class="com.zybnet.abc.view.SaveButtonView"
-        android:id="@+id/actionbar_save"
-        android:visibility="invisible"
-        android:layout_width="@dimen/action_bar_button"
-        android:layout_height="@dimen/action_bar_button"
-        android:layout_toLeftOf="@+id/actionbar_menu"
-        android:contentDescription="@string/save"
-        style="@style/ActionBarButton"
-        android:src="@drawable/btn_save" />
 
 </RelativeLayout>
