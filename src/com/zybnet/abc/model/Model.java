@@ -27,7 +27,7 @@ public class Model {
 	
 	public Model(Model src) {
 		Model dst = this;
-		for (Field field : getPublicFields(dst, true)) {
+		for (Field field : getPublicFields(true)) {
 			try {
 				field.set(dst, field.get(src));
 			} catch (Exception e) {
@@ -36,8 +36,8 @@ public class Model {
 		}
 	}
 	
-	public static List<Field> getPublicFields(Model model, boolean includeExterns) {
-		List<Field> fields = new ArrayList<Field>(Arrays.asList(model.getClass().getFields()));
+	public List<Field> getPublicFields(boolean includeExterns) {
+		List<Field> fields = new ArrayList<Field>(Arrays.asList(getClass().getFields()));
 		Iterator<Field> i = fields.iterator();
 		while (i.hasNext()) {
 			Field field = i.next();
@@ -51,8 +51,8 @@ public class Model {
 		return fields;
 	}
 	
-	public static List<Field> getPublicFields(Model model) {
-		return getPublicFields(model, false);
+	public List<Field> getPublicFields(Model model) {
+		return getPublicFields(false);
 	}
 	
 	public static final int NONEXISTENT = -1;
