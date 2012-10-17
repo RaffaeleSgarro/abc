@@ -4,8 +4,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,17 +27,32 @@ public class Model {
 	
 	public Model(Model src) {
 		Model dst = this;
-		for (Field field : dst.getClass().getFields()) {
-			int mask = field.getModifiers() & Modifier.STATIC;			
-			if (mask == Modifier.STATIC)
-				continue;
-			
+		for (Field field : getPublicFields(dst, true)) {
 			try {
 				field.set(dst, field.get(src));
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}
+	}
+	
+	public static List<Field> getPublicFields(Model model, boolean includeExterns) {
+		List<Field> fields = new ArrayList<Field>(Arrays.asList(model.getClass().getFields()));
+		Iterator<Field> i = fields.iterator();
+		while (i.hasNext()) {
+			Field field = i.next();
+			
+			if (Modifier.isStatic(field.getModifiers()))
+				i.remove();
+			
+			if (!includeExterns && field.getAnnotation(Extern.class) != null)
+				i.remove();
+		}
+		return fields;
+	}
+	
+	public static List<Field> getPublicFields(Model model) {
+		return getPublicFields(model, false);
 	}
 	
 	public static final int NONEXISTENT = -1;
@@ -62,7 +81,7 @@ public class Model {
 		Channel.publish(this);
 	}
 	
-	private boolean exists(SQLiteDatabase db) {
+	public boolean exists(SQLiteDatabase db) {
 		String table = getClass().getSimpleName().toLowerCase();
 		long result = DatabaseUtils.longForQuery(db,
 				String.format("SELECT COUNT(_id) FROM %s WHERE _id = ?", table),
@@ -72,14 +91,8 @@ public class Model {
 	
 	private ContentValues generateContentValues() {
 		ContentValues c = new ContentValues();
-		Class<?> clazz = getClass();
 		try {
-			for (Field field: clazz.getFields()) {
-				if (field.getAnnotation(Extern.class) != null)
-					continue;
-				
-				if ((field.getModifiers() & Modifier.STATIC) == Modifier.STATIC)
-					continue;
+			for (Field field: getPublicFields(this)) {
 				
 				Object value = field.get(this);
 				
