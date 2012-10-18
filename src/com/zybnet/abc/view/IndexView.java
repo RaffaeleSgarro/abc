@@ -111,8 +111,8 @@ public class IndexView<T extends Model> extends LinearLayout {
 	
 	private OnItemPickedListener<T> itemPickedListener;
 	
-	public void setOnItemPickedListener(OnItemPickedListener<T> listener) {
-		itemPickedListener = listener;
+	public void setOnItemPickedListener(OnItemPickedListener<T> pickerListener) {
+		itemPickedListener = pickerListener;
 	}
 	
 	public interface OnItemPickedListener<T> {

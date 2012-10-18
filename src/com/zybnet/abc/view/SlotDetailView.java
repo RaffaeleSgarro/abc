@@ -232,52 +232,43 @@ public class SlotDetailView extends LinearLayout {
 		return (AbbecedarioActivity) getContext();
 	}
 	
+	private IndexView.OnItemPickedListener<Subject> pickedListener = new IndexView.OnItemPickedListener<Subject>() {
+
+		@Override
+		public void onItemPicked(Subject subject) {
+			Slot dst = new Slot(slot);
+			dst.subject_id = subject._id;
+			dst.display_text = subject.name_short;
+			dst.subject_name = subject.name;
+			dst.place = subject.default_place;
+			dst.save(abc().db());
+			abc().getBackButton().back();
+		}
+	};
+	
 	private OnClickListener indexListener = new OnClickListener() {
 		public void onClick(final View view) {
-			IndexView<? extends Model> index;
+			IndexView<?> index = getIndexView(view.getId());
 			
 			String title = null;
 			ListAdapter adapter = null;
+			
 			// TODO don't use hardcoded strings
 			switch (view.getId()) {
 			case R.id.subject:
 				title = "Subjects";
-				adapter = new TitleDescriptionAdapter(abc,
-						abc.db().getSubjects(),
+				adapter = new TitleDescriptionAdapter(abc, abc.db().getSubjects(),
 						"name_short", "name");
-				/* TODO this is the item picked listener
-				index.setListClickListener(new AdapterView.OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						Slot dst = new Slot(slot);
-						dst.subject_id = id;
-						Subject subject = abc().db().getSubject(id);
-						dst.display_text = subject.name_short;
-						dst.subject_name = abc().db().getSubject(id).name;
-						dst.place = subject.default_place;
-						dst.save(abc().db());
-						abc().getBackButton().back();
-					}
-				});
-				*/
-				index = new IndexView<Subject>(abc.db(), flipper, Subject.class, null);
 				break;
 			case R.id.homework:
 				title = "Homework";
-				adapter = new TitleDescriptionAdapter(abc,
-						abc.db().getHomework(slot.subject_id),
+				adapter = new TitleDescriptionAdapter(abc,	abc.db().getHomework(slot.subject_id),
 						"due", "description");
-				index = new IndexView<Homework>(abc.db(), flipper, Homework.class, null);
 				break;
 			case R.id.grades:
 				title = "Grades";
-				abc.db();
-				adapter = new TitleDescriptionAdapter(abc,
-						abc.db().getGrades(slot.subject_id),
+				adapter = new TitleDescriptionAdapter(abc,	abc.db().getGrades(slot.subject_id),
 						"date", "description");
-				index = new IndexView<Grade>(abc.db(), flipper, Grade.class, null);
 				break;
 			default:
 				throw new IllegalArgumentException();
@@ -293,6 +284,21 @@ public class SlotDetailView extends LinearLayout {
 			flipper.showView(item);
 		}
 	};
+	
+	private IndexView<?> getIndexView(int id) {
+		switch (id) {
+		case R.id.subject:
+			IndexView<Subject> index = new IndexView<Subject>(abc.db(), flipper, Subject.class, null);
+			index.setOnItemPickedListener(pickedListener);
+			return index;
+		case R.id.homework:
+			return new IndexView<Homework>(abc.db(), flipper, Homework.class, null);
+		case R.id.grades:
+			return new IndexView<Grade>(abc.db(), flipper, Grade.class, null);
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
 	
 	// This is the right flipper
 	private HistoryViewFlipper flipper;
