@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.activity.AbbecedarioActivity;
@@ -73,7 +72,6 @@ public class SlotDetailView extends LinearLayout {
 			
 			Item item = new Item(getContext());
 			item.opener = SlotDetailView.this;
-			item.keep = false;
 			item.view = new EditView(abc, layout, helper);
 			flipper.showView(item);
 		}
@@ -110,44 +108,28 @@ public class SlotDetailView extends LinearLayout {
 	};
 	
 	private Delegate timeDelegate = new Delegate() {
-		private TimePicker find(View v, int id) {
-			return (TimePicker) v.findViewById(id);
-		}
-		
-		private void setup(View v, int id, Time time, int hours) {
-			TimePicker t = find(v, id);
-			t.setIs24HourView(true);
-			if (time == null) {
-				t.setCurrentHour(hours);
-				t.setCurrentMinute(0);
-			} else {
-				t.setCurrentHour(time.getHours());
-				t.setCurrentMinute(time.getMinutes());
-			}
-		}
+		TimeEditText start, end;
 		
 		@Override
 		public void afterInflate(EditView view) {
-			setup(view, R.id.start, slot.start, 8);
-			setup(view, R.id.end, slot.end, 9);
+			start = (TimeEditText) view.findViewById(R.id.start);
+			end = (TimeEditText) view.findViewById(R.id.end);
+			
+			start.setTime(slot.start != null ? slot.start : Time.valueOf("08:00:00"));
+			end.setTime(slot.end != null ? slot.end : Time.valueOf("09:00:00"));
+			
+			start.setup(flipper);
+			end.setup(flipper);
 		}
 		
 		@Override
 		public void save(EditView view) {
-			Time start = extract(view, R.id.start);
-			Time end = extract(view, R.id.end);
-			
 			Slot dst = new Slot(slot);
-			dst.start = start;
-			dst.end = end;
+			dst.start = start.getTime();
+			dst.end = end.getTime();
 			
 			dst.save(abc.db());
 			flipper.back();
-		}
-		
-		private Time extract(EditView parent, int id) {
-			TimePicker src = find(parent, id);
-			return new Time(src.getCurrentHour(), src.getCurrentMinute(), 0);
 		}
 	};
 	
