@@ -1,5 +1,10 @@
 package com.zybnet.abc.model;
 
-public class Grade extends Model {
+import java.sql.Date;
 
+public class Grade extends Model {
+	public long subject_id;
+	public String description;
+	public String score;
+	public Date date;
 }

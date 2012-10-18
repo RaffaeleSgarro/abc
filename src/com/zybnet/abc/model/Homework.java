@@ -1,5 +1,9 @@
 package com.zybnet.abc.model;
 
-public class Homework extends Model {
+import java.sql.Date;
 
+public class Homework extends Model {
+	public long subject_id;
+	public String description;
+	public Date due;
 }
