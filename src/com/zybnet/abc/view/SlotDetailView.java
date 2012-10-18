@@ -20,10 +20,9 @@ import com.zybnet.abc.fragment.BaseFragment;
 import com.zybnet.abc.model.Model;
 import com.zybnet.abc.model.Slot;
 import com.zybnet.abc.model.Subject;
-import com.zybnet.abc.utils.DatabaseHelper;
 import com.zybnet.abc.utils.TitleDescriptionAdapter;
 import com.zybnet.abc.utils.U;
-import com.zybnet.abc.view.EditView.Helper;
+import com.zybnet.abc.view.EditView.Delegate;
 import com.zybnet.abc.view.NavigateBackView.Item;
 
 public class SlotDetailView extends LinearLayout {
@@ -47,7 +46,7 @@ public class SlotDetailView extends LinearLayout {
 	private OnClickListener itemListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Helper helper;
+			Delegate helper;
 			int layout;
 			
 			switch(v.getId()) {
@@ -61,16 +60,17 @@ public class SlotDetailView extends LinearLayout {
 					}
 					
 					@Override
-					public void save(EditView view, DatabaseHelper db) {
+					public void save(EditView view) {
 						Slot dst = new Slot(slot);
 						dst.display_text = ((TextView) view.findViewById(R.id.content)).getText().toString();
-						dst.save(db);
+						dst.save(abc.db());
+						flipper.back();
 					}
 				};
 				layout = R.layout.edit_item;
 				break;
 			case R.id.time:
-				helper = new Helper() {
+				helper = new Delegate() {
 					private TimePicker find(View v, int id) {
 						return (TimePicker) v.findViewById(id);
 					}
@@ -94,7 +94,7 @@ public class SlotDetailView extends LinearLayout {
 					}
 					
 					@Override
-					public void save(EditView view, DatabaseHelper db) {
+					public void save(EditView view) {
 						Time start = extract(view, R.id.start);
 						Time end = extract(view, R.id.end);
 						
@@ -102,7 +102,8 @@ public class SlotDetailView extends LinearLayout {
 						dst.start = start;
 						dst.end = end;
 						
-						dst.save(db);
+						dst.save(abc.db());
+						flipper.back();
 					}
 					
 					private Time extract(EditView parent, int id) {
@@ -115,10 +116,11 @@ public class SlotDetailView extends LinearLayout {
 			case R.id.place:
 				helper = new TitleHelper(R.string.edit_place, slot.place){
 					@Override
-					public void save(EditView view, DatabaseHelper db) {
+					public void save(EditView view) {
 						Slot dst = new Slot(slot);
 						dst.place = ((TextView) view.findViewById(R.id.content)).getText().toString();
-						dst.save(db);
+						dst.save(abc.db());
+						flipper.back();
 					}
 				};
 				layout = R.layout.edit_item;
@@ -162,7 +164,7 @@ public class SlotDetailView extends LinearLayout {
 		}
 	};
 	
-	private class TitleHelper extends EditView.Helper {
+	private class TitleHelper extends EditView.Delegate {
 		public TitleHelper(int stringId, String value) {
 			title = getResources().getString(stringId);
 			this.value = value;
@@ -231,20 +233,17 @@ public class SlotDetailView extends LinearLayout {
 	
 	private OnClickListener indexListener = new OnClickListener() {
 		public void onClick(final View view) {
-			IndexView index = new IndexView(abc);
+			IndexView<Model> index = new IndexView<Model>(flipper, null, null);
 			
 			String title = null;
 			ListAdapter adapter = null;
-			int layout = 0;
-			EditView.Helper helper = new EditView.Helper();
-			
+			// TODO don't use hardcoded strings
 			switch (view.getId()) {
 			case R.id.subject:
 				title = "Subjects";
 				adapter = new TitleDescriptionAdapter(abc,
 						abc.db().getSubjects(),
 						"name_short", "name");
-				layout = R.layout.edit_subject;
 				index.setListClickListener(new AdapterView.OnItemClickListener() {
 
 					@Override
@@ -266,7 +265,6 @@ public class SlotDetailView extends LinearLayout {
 				adapter = new TitleDescriptionAdapter(abc,
 						abc.db().getHomework(slot.subject_id),
 						"due", "description");
-				layout = R.layout.edit_homework;
 				break;
 			case R.id.grades:
 				title = "Grades";
@@ -274,13 +272,11 @@ public class SlotDetailView extends LinearLayout {
 				adapter = new TitleDescriptionAdapter(abc,
 						abc.db().getGrades(slot.subject_id),
 						"date", "description");
-				layout = R.layout.edit_grade;
 				break;
 			}
 			
 			index.setTitle(title);
 			index.setListAdapter(adapter);
-			index.configureEditView(flipper, layout, helper);
 			
 			NavigateBackView.Item item = new NavigateBackView.Item(getContext());
 			item.opener = SlotDetailView.this;

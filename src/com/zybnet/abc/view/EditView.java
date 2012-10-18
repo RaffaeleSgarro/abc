@@ -1,43 +1,36 @@
 package com.zybnet.abc.view;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.zybnet.abc.R;
-import com.zybnet.abc.activity.AbbecedarioActivity;
-import com.zybnet.abc.utils.DatabaseHelper;
 import com.zybnet.abc.utils.U;
 
 @SuppressLint({"ViewConstructor" })
 public class EditView extends RelativeLayout {
 	
-	private NavigateBackView back;
+	private Delegate helper;
 	
-	private AbbecedarioActivity abc;
-	private Helper helper;
-	
-	public EditView(AbbecedarioActivity abc, int layout, Helper helper) {
-		super(abc);
+	public EditView(Context ctx, int layout, Delegate helper) {
+		super(ctx);
 		
 		U.setPaddingLeft(this, 10);
 		U.setPaddingRight(this, 10);
 		
-		this.abc = abc;
 		this.helper = helper;
 		
-		LayoutInflater infl = abc.getLayoutInflater();
+		LayoutInflater infl = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		infl.inflate(R.layout.edit_view,this);
+		infl.inflate(R.layout.edit_view, this);
 		
 		ViewGroup container = (ViewGroup) findViewById(R.id.container);
 		infl.inflate(layout, container);
 		
 		helper.afterInflate(this);
-		
-		back = abc.getBackButton();
 		
 		findViewById(R.id.save).setOnClickListener(new OnClickListener() {			
 			@Override
@@ -55,18 +48,16 @@ public class EditView extends RelativeLayout {
 	}
 	
 	private void save() {
-		helper.save(this, abc.db());
-		back.back();
+		helper.save(this);
 	}
 	
 	private void delete() {
-		helper.delete(this, abc.db());
-		back.back();
+		helper.delete(this);
 	}
 
-	public static class Helper {
+	public static class Delegate {
 		public void afterInflate(EditView view) {}
-		public void save(EditView view, DatabaseHelper db) {}
-		public void delete(EditView view, DatabaseHelper db) {}
+		public void save(EditView view) {}
+		public void delete(EditView view) {}
 	}
 }

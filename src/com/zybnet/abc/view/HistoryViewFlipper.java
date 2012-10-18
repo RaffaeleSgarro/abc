@@ -210,4 +210,8 @@ public class HistoryViewFlipper extends ViewFlipper {
 		swapRootChild(view, getDefaultInAnimation(), getDefaultOutAnimation());
 	}
 	
+	// TODO what a messy API!
+	public void back() {
+		back.back();
+	}
 }
