@@ -17,7 +17,7 @@ public class ExtendedFragment extends BaseFragment {
 		
 		@Override
 		public void onClick(View view) {
-			SlotDetailView details = SlotDetailView.create(abc(), (SlotView) view, right());
+			SlotDetailView details = new SlotDetailView(abc(), right(), (SlotView) view);
 			left().swapRootChild(details, R.anim.page_in_default, R.anim.page_out_default);
 		}
 	}

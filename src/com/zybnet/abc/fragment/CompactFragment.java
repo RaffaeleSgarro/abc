@@ -22,7 +22,7 @@ public class CompactFragment extends BaseFragment {
 
 		@Override
 		public void onClick(View view) {
-			SlotDetailView details = SlotDetailView.create(abc(), (SlotView) view, switcher());
+			SlotDetailView details = new SlotDetailView(abc(), switcher(), (SlotView) view);
 			
 			Rect bounds = new Rect();
 			view.getGlobalVisibleRect(bounds);

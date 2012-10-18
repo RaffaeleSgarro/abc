@@ -2,9 +2,8 @@ package com.zybnet.abc.view;
 
 import java.sql.Time;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.text.InputType;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -15,7 +14,6 @@ import android.widget.TimePicker;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.activity.AbbecedarioActivity;
-import com.zybnet.abc.fragment.BaseFragment;
 import com.zybnet.abc.model.Grade;
 import com.zybnet.abc.model.Homework;
 import com.zybnet.abc.model.Model;
@@ -26,18 +24,24 @@ import com.zybnet.abc.utils.U;
 import com.zybnet.abc.view.EditView.Delegate;
 import com.zybnet.abc.view.NavigateBackView.Item;
 
+@SuppressLint("ViewConstructor")
 public class SlotDetailView extends LinearLayout {
 
-	public SlotDetailView(Context ctx) {
-		super(ctx);
+	public SlotDetailView(AbbecedarioActivity abc, HistoryViewFlipper flipper, SlotView slot) {
+		super(abc);
+		this.abc = abc;
+		this.flipper = flipper;
+		
+		setOrientation(VERTICAL);
+		U.setPaddingLeft(this, 10);
+		U.setPaddingRight(this, 10);
+		
+		abc.getLayoutInflater().inflate(R.layout.slot_detail, this);
+		fillView(slot);
 	}
 	
-	public SlotDetailView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
-	
-	public void fillView(SlotView slotView, BaseFragment ctx) {
-		Slot slot = ctx.db().getSlot(
+	public void fillView(SlotView slotView) {
+		Slot slot = abc.db().getSlot(
 				slotView.getColumn() + 1,
 				slotView.getRow() + 1
 		);
@@ -52,78 +56,15 @@ public class SlotDetailView extends LinearLayout {
 			
 			switch(v.getId()) {
 			case R.id.title:
-				helper = new TitleHelper(R.string.edit_displayed, slot.display_text) {
-					@Override
-					public void afterInflate(EditView view) {
-						super.afterInflate(view);
-						EditText et = (EditText) view.findViewById(R.id.content);
-						et.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
-					}
-					
-					@Override
-					public void save(EditView view) {
-						Slot dst = new Slot(slot);
-						dst.display_text = ((TextView) view.findViewById(R.id.content)).getText().toString();
-						dst.save(abc.db());
-						flipper.back();
-					}
-				};
+				helper = shortNameDelegate.setup(R.string.edit_displayed, slot.display_text);
 				layout = R.layout.edit_item;
 				break;
 			case R.id.time:
-				helper = new Delegate() {
-					private TimePicker find(View v, int id) {
-						return (TimePicker) v.findViewById(id);
-					}
-					
-					private void setup(View v, int id, Time time, int hours) {
-						TimePicker t = find(v, id);
-						t.setIs24HourView(true);
-						if (time == null) {
-							t.setCurrentHour(hours);
-							t.setCurrentMinute(0);
-						} else {
-							t.setCurrentHour(time.getHours());
-							t.setCurrentMinute(time.getMinutes());
-						}
-					}
-					
-					@Override
-					public void afterInflate(EditView view) {
-						setup(view, R.id.start, slot.start, 8);
-						setup(view, R.id.end, slot.end, 9);
-					}
-					
-					@Override
-					public void save(EditView view) {
-						Time start = extract(view, R.id.start);
-						Time end = extract(view, R.id.end);
-						
-						Slot dst = new Slot(slot);
-						dst.start = start;
-						dst.end = end;
-						
-						dst.save(abc.db());
-						flipper.back();
-					}
-					
-					private Time extract(EditView parent, int id) {
-						TimePicker src = find(parent, id);
-						return new Time(src.getCurrentHour(), src.getCurrentMinute(), 0);
-					}
-				};
+				helper = timeDelegate;
 				layout = R.layout.edit_time;
 				break;
 			case R.id.place:
-				helper = new TitleHelper(R.string.edit_place, slot.place){
-					@Override
-					public void save(EditView view) {
-						Slot dst = new Slot(slot);
-						dst.place = ((TextView) view.findViewById(R.id.content)).getText().toString();
-						dst.save(abc.db());
-						flipper.back();
-					}
-				};
+				helper = placeDelegate.setup(R.string.edit_place, slot.place);
 				layout = R.layout.edit_item;
 				break;
 			default:
@@ -133,8 +74,80 @@ public class SlotDetailView extends LinearLayout {
 			Item item = new Item(getContext());
 			item.opener = SlotDetailView.this;
 			item.keep = false;
-			item.view = new EditView(abc(), layout, helper);
+			item.view = new EditView(abc, layout, helper);
 			flipper.showView(item);
+		}
+	};
+	
+	private SingleStringDelegate shortNameDelegate = new SingleStringDelegate() {
+		
+		@Override
+		public void afterInflate(EditView view) {
+			super.afterInflate(view);
+			EditText et = (EditText) view.findViewById(R.id.content);
+			et.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+		}
+		
+		@Override
+		public void save(EditView view) {
+			Slot dst = new Slot(slot);
+			dst.display_text = ((TextView) view.findViewById(R.id.content)).getText().toString();
+			dst.save(abc.db());
+			flipper.back();
+		}
+	};
+	
+	private SingleStringDelegate placeDelegate = new SingleStringDelegate(){
+		
+		@Override
+		public void save(EditView view) {
+			Slot dst = new Slot(slot);
+			dst.place = ((TextView) view.findViewById(R.id.content)).getText().toString();
+			dst.save(abc.db());
+			flipper.back();
+		}
+		
+	};
+	
+	private Delegate timeDelegate = new Delegate() {
+		private TimePicker find(View v, int id) {
+			return (TimePicker) v.findViewById(id);
+		}
+		
+		private void setup(View v, int id, Time time, int hours) {
+			TimePicker t = find(v, id);
+			t.setIs24HourView(true);
+			if (time == null) {
+				t.setCurrentHour(hours);
+				t.setCurrentMinute(0);
+			} else {
+				t.setCurrentHour(time.getHours());
+				t.setCurrentMinute(time.getMinutes());
+			}
+		}
+		
+		@Override
+		public void afterInflate(EditView view) {
+			setup(view, R.id.start, slot.start, 8);
+			setup(view, R.id.end, slot.end, 9);
+		}
+		
+		@Override
+		public void save(EditView view) {
+			Time start = extract(view, R.id.start);
+			Time end = extract(view, R.id.end);
+			
+			Slot dst = new Slot(slot);
+			dst.start = start;
+			dst.end = end;
+			
+			dst.save(abc.db());
+			flipper.back();
+		}
+		
+		private Time extract(EditView parent, int id) {
+			TimePicker src = find(parent, id);
+			return new Time(src.getCurrentHour(), src.getCurrentMinute(), 0);
 		}
 	};
 	
@@ -165,19 +178,22 @@ public class SlotDetailView extends LinearLayout {
 		}
 	};
 	
-	private class TitleHelper extends EditView.Delegate {
-		public TitleHelper(int stringId, String value) {
-			title = getResources().getString(stringId);
-			this.value = value;
-		}
+	private class SingleStringDelegate extends EditView.Delegate {
 		
-		private String title;
-		private String value;
+		public int titleId;
+		public String value;
 		
 		@Override
 		public void afterInflate(EditView view) {
+			String title = getResources().getString(titleId);
 			((TextView) view.findViewById(R.id.title)).setText(title);
 			((TextView) view.findViewById(R.id.content)).setText(value);
+		}
+		
+		public SingleStringDelegate setup(int titleId, String value) {
+			this.titleId = titleId;
+			this.value = value;
+			return this;
 		}
 	}
 	
@@ -228,10 +244,6 @@ public class SlotDetailView extends LinearLayout {
 		
 	}
 	
-	private AbbecedarioActivity abc() {
-		return (AbbecedarioActivity) getContext();
-	}
-	
 	private IndexView.OnItemPickedListener<Subject> pickedListener = new IndexView.OnItemPickedListener<Subject>() {
 
 		@Override
@@ -241,8 +253,8 @@ public class SlotDetailView extends LinearLayout {
 			dst.display_text = subject.name_short;
 			dst.subject_name = subject.name;
 			dst.place = subject.default_place;
-			dst.save(abc().db());
-			abc().getBackButton().back();
+			dst.save(abc.db());
+			abc.getBackButton().back();
 		}
 	};
 	
@@ -315,22 +327,6 @@ public class SlotDetailView extends LinearLayout {
 		return layout;
 	}
 	
-	public static SlotDetailView create(AbbecedarioActivity a, HistoryViewFlipper flipper) {
-		if (flipper == null)
-			throw new NullPointerException("We need a HistoryViewFlipper");
-		
-		SlotDetailView instance = (SlotDetailView) a.getLayoutInflater().inflate(R.layout.slot_detail, null, false);
-		instance.flipper = flipper;
-		instance.abc = a;
-		return instance;
-	}
-	
 	private AbbecedarioActivity abc;
-	
-	public static SlotDetailView create(AbbecedarioActivity a, SlotView src, HistoryViewFlipper flipper) {
-		SlotDetailView detail = create(a, flipper);
-		detail.fillView(src, a.getActiveFragment());
-		return detail;
-	}
 	
 }
