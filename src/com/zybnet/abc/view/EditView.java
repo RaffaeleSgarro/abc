@@ -13,15 +13,18 @@ import com.zybnet.abc.utils.U;
 @SuppressLint({"ViewConstructor" })
 public class EditView extends RelativeLayout {
 	
-	private Delegate helper;
+	private Delegate delegate;
 	
-	public EditView(Context ctx, int layout, Delegate helper) {
+	public EditView(Context ctx, int layout, Delegate delegate) {
 		super(ctx);
 		
 		U.setPaddingLeft(this, 10);
 		U.setPaddingRight(this, 10);
 		
-		this.helper = helper;
+		if (delegate == null)
+			delegate = new Delegate();
+		
+		this.delegate = delegate;
 		
 		LayoutInflater infl = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
@@ -30,7 +33,7 @@ public class EditView extends RelativeLayout {
 		ViewGroup container = (ViewGroup) findViewById(R.id.container);
 		infl.inflate(layout, container);
 		
-		helper.afterInflate(this);
+		delegate.afterInflate(this);
 		
 		findViewById(R.id.save).setOnClickListener(new OnClickListener() {			
 			@Override
@@ -48,11 +51,11 @@ public class EditView extends RelativeLayout {
 	}
 	
 	private void save() {
-		helper.save(this);
+		delegate.save(this);
 	}
 	
 	private void delete() {
-		helper.delete(this);
+		delegate.delete(this);
 	}
 
 	public static class Delegate {

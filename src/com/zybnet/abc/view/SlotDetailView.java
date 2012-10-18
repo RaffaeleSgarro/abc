@@ -7,7 +7,6 @@ import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -17,6 +16,8 @@ import android.widget.TimePicker;
 import com.zybnet.abc.R;
 import com.zybnet.abc.activity.AbbecedarioActivity;
 import com.zybnet.abc.fragment.BaseFragment;
+import com.zybnet.abc.model.Grade;
+import com.zybnet.abc.model.Homework;
 import com.zybnet.abc.model.Model;
 import com.zybnet.abc.model.Slot;
 import com.zybnet.abc.model.Subject;
@@ -233,7 +234,7 @@ public class SlotDetailView extends LinearLayout {
 	
 	private OnClickListener indexListener = new OnClickListener() {
 		public void onClick(final View view) {
-			IndexView<Model> index = new IndexView<Model>(flipper, null, null);
+			IndexView<? extends Model> index;
 			
 			String title = null;
 			ListAdapter adapter = null;
@@ -244,6 +245,7 @@ public class SlotDetailView extends LinearLayout {
 				adapter = new TitleDescriptionAdapter(abc,
 						abc.db().getSubjects(),
 						"name_short", "name");
+				/* TODO this is the item picked listener
 				index.setListClickListener(new AdapterView.OnItemClickListener() {
 
 					@Override
@@ -259,12 +261,15 @@ public class SlotDetailView extends LinearLayout {
 						abc().getBackButton().back();
 					}
 				});
+				*/
+				index = new IndexView<Subject>(flipper, Subject.class, null);
 				break;
 			case R.id.homework:
 				title = "Homework";
 				adapter = new TitleDescriptionAdapter(abc,
 						abc.db().getHomework(slot.subject_id),
 						"due", "description");
+				index = new IndexView<Homework>(flipper, Homework.class, null);
 				break;
 			case R.id.grades:
 				title = "Grades";
@@ -272,7 +277,10 @@ public class SlotDetailView extends LinearLayout {
 				adapter = new TitleDescriptionAdapter(abc,
 						abc.db().getGrades(slot.subject_id),
 						"date", "description");
+				index = new IndexView<Grade>(flipper, Grade.class, null);
 				break;
+			default:
+				throw new IllegalArgumentException();
 			}
 			
 			index.setTitle(title);

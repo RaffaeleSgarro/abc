@@ -42,14 +42,11 @@ public class IndexView<T extends Model> extends LinearLayout {
 		
 		title = (TextView) findViewById(R.id.title);
 		list = (ListView) findViewById(R.id.list);
+		findViewById(R.id.add_new).setOnClickListener(addNewListener);
 	}
 	
 	public void setTitle(String str) {
 		title.setText(str);
-	}
-	
-	public void setListClickListener(AdapterView.OnItemClickListener listener) {
-		list.setOnItemClickListener(listener);
 	}
 	
 	public void setListAdapter(ListAdapter adapter) {
@@ -58,22 +55,19 @@ public class IndexView<T extends Model> extends LinearLayout {
 		list.setOnItemLongClickListener(itemLongClickListener);
 	}
 	
+	private EditView getEditView(long id) {
+		int layout = getResources().getIdentifier(
+				"edit_" + modelClassToken.getSimpleName().toLowerCase(),
+				"layout",
+				getContext().getPackageName());
+		EditView view = new ModelEditView(getContext(), layout, delegate);
+		return view;
+	}
+	
 	private OnItemLongClickListener itemLongClickListener = new OnItemLongClickListener() {
 		@Override
 		public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-			// TODO implement get(Class, long) in DatabaseHelper
-			// TODO configure and show the edit view for the selected model
-			/*
-			EditView view = new EditView(abc(), layout, helper);
-			
-			NavigateBackView.Item item = new NavigateBackView.Item(abc());
-			item.opener = IndexView.this;
-			item.view = view;
-			item.keep = false;
-			
-			flipper.showView(item);
-			 */
-			// Don't propagate, otherwise clickListener will be called
+			showEditView(id);
 			return true;
 		}
 	};
@@ -81,9 +75,22 @@ public class IndexView<T extends Model> extends LinearLayout {
 	private OnClickListener addNewListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
-			// TODO configure and show the appropriate EditView
+			showEditView(Model.NONEXISTENT);
 		}
 	};
+	
+	private void showEditView(long id) {
+		// TODO implement get(Class, long) in DatabaseHelper
+		
+		EditView edit = getEditView(id);
+		
+		NavigateBackView.Item item = new NavigateBackView.Item(getContext());
+		item.opener = IndexView.this;
+		item.view = edit;
+		item.keep = false;
+		
+		flipper.showView(item);
+	}
 	
 	private OnItemClickListener itemClickListener = new OnItemClickListener() {
 		@Override
@@ -105,7 +112,7 @@ public class IndexView<T extends Model> extends LinearLayout {
 		void onItemPicked(T item);
 	}
 	
-	private class ModelEditView<T> extends EditView {
+	private class ModelEditView extends EditView {
 
 		public ModelEditView(Context ctx, int layout, Delegate helper) {
 			super(ctx, layout, delegate);
