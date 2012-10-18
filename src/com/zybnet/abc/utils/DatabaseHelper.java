@@ -3,10 +3,13 @@ package com.zybnet.abc.utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -17,6 +20,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.zybnet.abc.R;
+import com.zybnet.abc.model.Model;
 import com.zybnet.abc.model.Slot;
 import com.zybnet.abc.model.Subject;
 
@@ -130,6 +134,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return c.getInt(c.getColumnIndex(column));
 	}
 
+	public long _l(Cursor c, String column) {
+		return c.getLong(c.getColumnIndex(column));
+	}
+	
 	public java.sql.Date _date(Cursor c, String column) {
 		Date date = dateFromFormat(c, column, U.SQL_DATE_FORMAT);
 		
@@ -203,5 +211,68 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		s.default_place = _s(c, "default_place");
 		
 		return s;
+	}
+	
+	/*
+	 * This is a "magic" method that tries to fill the passed
+	 * model by reading fields from the database.
+	 * 
+	 * It assumes a number of conventions:
+	 *  - the table name is the model name to lower case
+	 *  - 
+	 *  
+	 * This method does not fill fields marked @Extern
+	 */
+	public <T extends Model> T fill(Class<T> token, long id) {
+		String table = token.getSimpleName();
+		T instance = null;
+		try {
+			instance = token.getDeclaredConstructor().newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(token.getSimpleName() + "Doesn't have a default constructor");
+		}
+		List<String> columns = new LinkedList<String>();
+		List<Field> fields = instance.getPublicFields(false);
+		for (Field field: fields) {
+			columns.add(field.getName());
+		}
+		
+		String[] cols = new String[columns.size()];
+		
+		Cursor c = getReadableDatabase().query(table, columns.toArray(cols),
+				"_id = ?", new String[] {Long.toString(id)}, null, null, null);
+		
+		if (c.getCount() != 1) {
+			return instance;
+		}
+		
+		c.moveToFirst();
+		
+		for (Field field: fields) {
+			try {
+				String key = field.getName();
+				Class<?> type = field.getType();
+				if (type.equals(String.class)){
+					field.set(instance, _s(c, key));
+				} else if (type.equals(long.class)) {
+					field.set(instance, _l(c, key));
+				} else if (type.equals(java.sql.Date.class)) {
+					field.set(instance, _date(c, key));
+				} else if (type.equals(java.sql.Time.class)) {
+					field.set(instance, _time(c, key));
+				} else {
+					throw new IllegalArgumentException(
+							String.format("Can't bind %s.%s of type %s",
+							token.getSimpleName(),
+							field.getName(),
+							type.getCanonicalName())
+					);
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		
+		return instance;
 	}
 }

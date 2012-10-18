@@ -262,14 +262,14 @@ public class SlotDetailView extends LinearLayout {
 					}
 				});
 				*/
-				index = new IndexView<Subject>(flipper, Subject.class, null);
+				index = new IndexView<Subject>(abc.db(), flipper, Subject.class, null);
 				break;
 			case R.id.homework:
 				title = "Homework";
 				adapter = new TitleDescriptionAdapter(abc,
 						abc.db().getHomework(slot.subject_id),
 						"due", "description");
-				index = new IndexView<Homework>(flipper, Homework.class, null);
+				index = new IndexView<Homework>(abc.db(), flipper, Homework.class, null);
 				break;
 			case R.id.grades:
 				title = "Grades";
@@ -277,7 +277,7 @@ public class SlotDetailView extends LinearLayout {
 				adapter = new TitleDescriptionAdapter(abc,
 						abc.db().getGrades(slot.subject_id),
 						"date", "description");
-				index = new IndexView<Grade>(flipper, Grade.class, null);
+				index = new IndexView<Grade>(abc.db(), flipper, Grade.class, null);
 				break;
 			default:
 				throw new IllegalArgumentException();

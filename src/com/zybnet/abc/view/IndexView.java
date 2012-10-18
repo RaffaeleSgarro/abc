@@ -1,5 +1,7 @@
 package com.zybnet.abc.view;
 
+import java.lang.reflect.Field;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.model.Model;
+import com.zybnet.abc.utils.DatabaseHelper;
+import com.zybnet.abc.utils.L;
 import com.zybnet.abc.utils.U;
 
 @SuppressLint("ViewConstructor")
@@ -24,13 +28,15 @@ public class IndexView<T extends Model> extends LinearLayout {
 	private HistoryViewFlipper flipper;
 	private Class<T> modelClassToken;
 	private EditView.Delegate delegate;
+	private DatabaseHelper dh;
 	
-	public IndexView(HistoryViewFlipper flipper, Class<T> token, EditView.Delegate delegate) {
+	public IndexView(DatabaseHelper dh, HistoryViewFlipper flipper, Class<T> token, EditView.Delegate delegate) {
 		super(flipper.getContext());
 		
 		this.flipper = flipper;
 		this.modelClassToken = token;
 		this.delegate = delegate;
+		this.dh = dh;
 		
 		setOrientation(LinearLayout.VERTICAL);
 		
@@ -56,11 +62,12 @@ public class IndexView<T extends Model> extends LinearLayout {
 	}
 	
 	private EditView getEditView(long id) {
+		T model = dh.fill(modelClassToken, id);
 		int layout = getResources().getIdentifier(
 				"edit_" + modelClassToken.getSimpleName().toLowerCase(),
 				"layout",
 				getContext().getPackageName());
-		EditView view = new ModelEditView(getContext(), layout, delegate);
+		EditView view = new ModelEditView(model, layout);
 		return view;
 	}
 	
@@ -80,8 +87,6 @@ public class IndexView<T extends Model> extends LinearLayout {
 	};
 	
 	private void showEditView(long id) {
-		// TODO implement get(Class, long) in DatabaseHelper
-		
 		EditView edit = getEditView(id);
 		
 		NavigateBackView.Item item = new NavigateBackView.Item(getContext());
@@ -96,8 +101,10 @@ public class IndexView<T extends Model> extends LinearLayout {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			if (itemPickedListener != null) {
-				// TODO implement get(Class, long) in DatabaseHelper
-				itemPickedListener.onItemPicked(null);
+				T model = dh.fill(modelClassToken, id);
+				L.og("Picked model:");
+				L.og(model.dump());
+				itemPickedListener.onItemPicked(model);
 			}
 		}
 	};
@@ -114,9 +121,58 @@ public class IndexView<T extends Model> extends LinearLayout {
 	
 	private class ModelEditView extends EditView {
 
-		public ModelEditView(Context ctx, int layout, Delegate helper) {
-			super(ctx, layout, delegate);
+		public ModelEditView(T model, int layout) {
+			super(IndexView.this.getContext(), layout, new ModelDelegate(model, delegate));
 		}
 		
+	}
+	
+	public class ModelDelegate extends EditView.Delegate {
+		
+		private EditView.Delegate chained;
+		protected T model;
+		
+		public ModelDelegate(T model) {
+			this(model, null);
+		}
+		
+		public ModelDelegate(T model, EditView.Delegate chained) {
+			if (chained == null) {
+				chained = new EditView.Delegate();
+			}
+			
+			this.chained = chained;
+			this.model = model;
+		}
+		
+		@Override
+		public void afterInflate(EditView view) {
+			chained.afterInflate(view);
+			for (Field field : model.getPublicFields()) {
+				Class<?> type = field.getType();
+				if (type.equals(String.class)) {
+					int id = getResources().getIdentifier(field.getName(), "id", getContext().getPackageName());
+					try {
+						((TextView) view.findViewById(id)).setText((String)field.get(model));
+					} catch (Exception e) {
+						throw new RuntimeException(String.format("Can't get %s.%s %s",
+								model.getClass().getSimpleName(),
+								field.getName(),
+								type.getCanonicalName())
+						);
+					}
+				}
+			}
+		}
+		
+		@Override
+		public void save(EditView view) {
+			chained.save(view);
+		}
+		
+		@Override
+		public void delete(EditView view) {
+			chained.delete(view);
+		}
 	}
 }

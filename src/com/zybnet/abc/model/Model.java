@@ -51,7 +51,7 @@ public class Model {
 		return fields;
 	}
 	
-	public List<Field> getPublicFields(Model model) {
+	public List<Field> getPublicFields() {
 		return getPublicFields(false);
 	}
 	
@@ -92,7 +92,7 @@ public class Model {
 	private ContentValues generateContentValues() {
 		ContentValues c = new ContentValues();
 		try {
-			for (Field field: getPublicFields(this)) {
+			for (Field field: getPublicFields()) {
 				
 				Object value = field.get(this);
 				
@@ -127,9 +127,7 @@ public class Model {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getClass().getSimpleName());
 		builder.append(" {\n");
-		for (Field f: getClass().getFields()) {
-			if (f.getAnnotation(Extern.class) != null)
-				continue;
+		for (Field f: getPublicFields(true)) {
 			try {
 				builder.append(String.format("    %s: %s%n", f.getName(), f.get(this)));
 			} catch (Exception e) {
