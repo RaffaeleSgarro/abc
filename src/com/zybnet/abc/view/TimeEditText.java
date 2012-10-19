@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
@@ -94,6 +95,11 @@ public class TimeEditText extends EditText {
 			picker = (TimePicker) view.findViewById(R.id.time);
 			picker.setIs24HourView(true);
 			view.findViewById(R.id.delete).setVisibility(View.GONE);
+			
+			View save = view.findViewById(R.id.save);
+			MarginLayoutParams params = (MarginLayoutParams) save.getLayoutParams();
+			params.rightMargin = 0;
+			save.setLayoutParams(params);
 		}
 	};
 
