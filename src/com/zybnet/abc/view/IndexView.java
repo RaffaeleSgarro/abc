@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.zybnet.abc.R;
 import com.zybnet.abc.model.Model;
 import com.zybnet.abc.utils.DatabaseHelper;
-import com.zybnet.abc.utils.L;
 import com.zybnet.abc.utils.U;
 
 @SuppressLint("ViewConstructor")
@@ -102,8 +101,6 @@ public class IndexView<T extends Model> extends LinearLayout {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			if (itemPickedListener != null) {
 				T model = dh.fill(modelClassToken, id);
-				L.og("Picked model:");
-				L.og(model.dump());
 				itemPickedListener.onItemPicked(model);
 			}
 		}

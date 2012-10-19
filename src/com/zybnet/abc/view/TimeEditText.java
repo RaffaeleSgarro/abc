@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import com.zybnet.abc.R;
-import com.zybnet.abc.utils.L;
 
 public class TimeEditText extends EditText {
 
@@ -31,7 +30,6 @@ public class TimeEditText extends EditText {
 
 		@Override
 		public void onClick(View v) {
-			L.og("Click");
 			TimeEditView view = new TimeEditView(getContext());
 			view.setup();
 			
