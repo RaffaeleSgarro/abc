@@ -9,18 +9,7 @@
         android:layout_height="wrap_content"
         android:text="@string/edit_grade"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <com.zybnet.abc.view.AllCapsTextView
-        style="@style/SmallHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/subject" />
-
-    <TextView
-        android:id="@+id/subject"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    
+	    
     <com.zybnet.abc.view.AllCapsTextView
         style="@style/SmallHeader"
         android:layout_width="wrap_content"
@@ -39,11 +28,10 @@
         android:layout_height="wrap_content"
         android:text="@string/date" />
     
-    <EditText
+    <com.zybnet.abc.view.DateEditText
         android:id="@+id/date"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="date" />
+        android:layout_height="wrap_content" />
     
     <com.zybnet.abc.view.AllCapsTextView
         style="@style/SmallHeader"

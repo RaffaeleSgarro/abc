@@ -1,6 +1,10 @@
 package com.zybnet.abc.view;
 
 import java.lang.reflect.Field;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -17,6 +21,7 @@ import android.widget.TextView;
 import com.zybnet.abc.R;
 import com.zybnet.abc.model.Model;
 import com.zybnet.abc.utils.DatabaseHelper;
+import com.zybnet.abc.utils.L;
 import com.zybnet.abc.utils.U;
 
 @SuppressLint("ViewConstructor")
@@ -128,6 +133,7 @@ public class IndexView<T extends Model> extends LinearLayout {
 		
 		private EditView.Delegate chained;
 		protected T model;
+		private Map<Field, TextView> bindings = new HashMap<Field, TextView>();
 		
 		public ModelDelegate(T model) {
 			this(model, null);
@@ -146,24 +152,72 @@ public class IndexView<T extends Model> extends LinearLayout {
 		public void afterInflate(EditView view) {
 			chained.afterInflate(view);
 			for (Field field : model.getPublicFields()) {
+				// ID can't be displayed nor modified
+				// neither for this model nor for related ones
+				if (field.getName().endsWith("_id"))
+					continue;
+				
 				Class<?> type = field.getType();
-				if (type.equals(String.class)) {
-					int id = getResources().getIdentifier(field.getName(), "id", getContext().getPackageName());
-					try {
-						((TextView) view.findViewById(id)).setText((String)field.get(model));
-					} catch (Exception e) {
-						throw new RuntimeException(String.format("Can't get %s.%s %s",
-								model.getClass().getSimpleName(),
-								field.getName(),
-								type.getCanonicalName())
-						);
-					}
+				int id = getResources().getIdentifier(field.getName(), "id", getContext().getPackageName());
+				TextView textView = (TextView) view.findViewById(id);
+				
+				// Setup special text views...
+				if (textView instanceof DateEditText) {
+					((DateEditText) textView).setup(flipper);
 				}
+				
+				bindings.put(field, textView);
+				
+				Object value;
+				
+				try {
+					value = field.get(model);
+				} catch (Exception e) {
+					throw new RuntimeException(String.format("Can't get %s.%s %s",
+							model.getClass().getSimpleName(),
+							field.getName(),
+							type.getCanonicalName(), e)
+					);
+				}
+				
+				if (value == null)
+					continue;
+				
+				if (type.equals(String.class)) {
+					textView.setText((String) value);
+				} else if (type.equals(java.sql.Date.class)) {
+					((DateEditText) textView).setDate((java.sql.Date) value);
+				} else {
+					throw new IllegalArgumentException(type.getCanonicalName());
+				}
+				
 			}
 		}
 		
 		@Override
 		public void save(EditView view) {
+			for (Map.Entry<Field, TextView> entry : bindings.entrySet()) {
+				CharSequence seq = entry.getValue().getText();
+				
+				// Don't change empty fields
+				if (seq.length() < 1)
+					continue;
+				
+				Field field = entry.getKey();
+				Class<?> type = field.getType();
+				if (type.equals(String.class)) {
+					L.og(String.format("Trying to set %s to %s",
+							field.getName(), seq.toString()));
+				} else if (type.equals(java.sql.Date.class)) {
+					try {
+						java.util.Date date = DateFormat.getDateInstance().parse(seq.toString());
+						java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+						L.og(String.format("Saving %s to a date: %tF", field.getName(), sqlDate));
+					} catch (ParseException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			}
 			chained.save(view);
 		}
 		
