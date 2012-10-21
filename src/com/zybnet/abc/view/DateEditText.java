@@ -2,6 +2,7 @@ package com.zybnet.abc.view;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -10,7 +11,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.zybnet.abc.R;
-import com.zybnet.abc.utils.L;
 
 public class DateEditText extends EditText {
 	
@@ -31,7 +31,6 @@ public class DateEditText extends EditText {
 	
 	public void setDate(java.sql.Date date) {
 		this.date = date;
-		L.og(String.format("%tF", date));
 		setText(DateFormat.getDateInstance().format(date));
 	}
 	
@@ -80,16 +79,13 @@ public class DateEditText extends EditText {
 			
 			Calendar c = Calendar.getInstance();
 			c.setTime(date);
-			picker.updateDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
+			picker.updateDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
 		}
 		
 		@Override
 		public void save(EditView view) {
-			java.util.Date tmp = new java.util.Date();
-			date.setYear(picker.getYear());
-			date.setMonth(picker.getMonth());
-			date.setDate(picker.getDayOfMonth());
-			setDate(new java.sql.Date(tmp.getTime()));
+			GregorianCalendar c = new GregorianCalendar(picker.getYear(), picker.getMonth(), picker.getDayOfMonth());
+			setDate(new java.sql.Date(c.getTimeInMillis()));
 			flipper.back();
 		}
 	};
