@@ -187,5 +187,6 @@ public class Model {
 		
 		String table = getClass().getSimpleName().toLowerCase();
 		db.delete(table, "_id = ?", new String[]{Long.toString(_id)});
+		// TODO update bus
 	}
 }
