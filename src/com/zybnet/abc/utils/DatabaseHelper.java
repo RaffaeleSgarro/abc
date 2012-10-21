@@ -144,7 +144,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		if (date == null)
 			return null;
 		
-		return new java.sql.Date(date.getYear(), date.getMonth(), date.getDay());
+		return new java.sql.Date(date.getTime());
 	}
 	
 	// May return null
