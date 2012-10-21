@@ -178,4 +178,14 @@ public class Model {
 			return model.getClass().getCanonicalName();
 		}
 	}
+	
+	public void delete(DatabaseHelper dh) {
+		SQLiteDatabase db = dh.getWritableDatabase();
+		
+		if (!exists(db))
+			return;
+		
+		String table = getClass().getSimpleName().toLowerCase();
+		db.delete(table, "_id = ?", new String[]{Long.toString(_id)});
+	}
 }
