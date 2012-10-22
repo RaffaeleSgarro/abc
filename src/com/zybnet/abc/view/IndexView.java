@@ -96,7 +96,6 @@ public class IndexView<T extends Model> extends LinearLayout {
 		NavigateBackView.Item item = new NavigateBackView.Item(getContext());
 		item.opener = IndexView.this;
 		item.view = edit;
-		item.keep = false;
 		
 		flipper.showView(item);
 	}
