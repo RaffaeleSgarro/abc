@@ -70,12 +70,12 @@ public class Model {
 			String[] args = new String[] {Long.toString(_id)};
 			int affected = db.update(table, values, selection, args);
 			if (affected != 1)
-				throw new RuntimeException("Could not update model " + this);
+				throw new RuntimeException("Could not update model " + this.dump());
 		} else {
 			values.remove("_id");
 			long id = db.insert(table, null, values);
 			if (id == -1)
-				throw new RuntimeException("Could not insert model " + this);
+				throw new RuntimeException("Could not insert model " + this.dump());
 		}
 		
 		Channel.publish(this);

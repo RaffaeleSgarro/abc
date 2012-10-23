@@ -27,7 +27,7 @@ CREATE TABLE "homework" (
 	"description" TEXT,
 	"due" TEXT,
 	
-	FOREIGN KEY ("subject_id") REFERENCES "subject"("_id") ON DELETE CASCADE
+	FOREIGN KEY ("subject_id") REFERENCES "subject"("_id")
 );
 
 CREATE TABLE "grade" (
@@ -35,6 +35,8 @@ CREATE TABLE "grade" (
 	"subject_id" INTEGER NOT NULL,
 	"description" TEXT,
 	"score" TEXT,
-	"date" TEXT
+	"date" TEXT,
+	
+	FOREIGN KEY ("subject_id") REFERENCES "subject"("_id")
 );
 
