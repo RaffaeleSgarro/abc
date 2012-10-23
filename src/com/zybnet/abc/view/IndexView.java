@@ -204,20 +204,34 @@ public class IndexView<T extends Model> extends LinearLayout {
 				
 				Field field = entry.getKey();
 				Class<?> type = field.getType();
+				Object value;
+				
 				if (type.equals(String.class)) {
-					L.og(String.format("Trying to set %s to %s",
-							field.getName(), seq.toString()));
+					value = seq.toString();
 				} else if (type.equals(java.sql.Date.class)) {
 					try {
 						java.util.Date date = DateFormat.getDateInstance().parse(seq.toString());
 						java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-						L.og(String.format("Saving %s to a date: %tF", field.getName(), sqlDate));
+						value = sqlDate;
 					} catch (ParseException e) {
 						throw new RuntimeException(e);
 					}
+				} else {
+					throw new IllegalArgumentException(type.getCanonicalName());
 				}
+				
+				try {
+					field.set(model, value);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+				
+				L.og(model.dump());
+				model.save(dh);
 			}
+			
 			chained.save(view);
+			flipper.back();
 		}
 		
 		@Override
