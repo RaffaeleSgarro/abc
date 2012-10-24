@@ -20,8 +20,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zybnet.abc.activity.AbbecedarioActivity;
-import com.zybnet.abc.model.Model;
+import com.zybnet.abc.model.MessageBus;
 import com.zybnet.abc.model.Slot;
+import com.zybnet.abc.model.Subscriber;
 import com.zybnet.abc.utils.DatabaseHelper;
 import com.zybnet.abc.utils.U;
 
@@ -136,10 +137,9 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 		startAnimation();
 	}
 	
-	private Model.Subscriber subscriber = new Model.Subscriber() {
+	private Subscriber<Slot> subscriber = new Subscriber<Slot>() {
 		@Override
-		public void onMessage(Model model) {
-			final Slot slot = (Slot) model;
+		public void onMessage(final Slot slot, MessageBus.Action action) {
 			post(new Runnable(){
 				public void run() {
 					getChildAt(slot.ord - 1, slot.day - 1).setText(slot.display_text);
@@ -152,13 +152,13 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 	public void onAttachedToWindow() {
 		new AsyncLoad().execute(abc.db());
 		prefs().registerOnSharedPreferenceChangeListener(this);
-		Model.Channel.subscribe(Slot.class, subscriber);
+		MessageBus.subscribe(subscriber);
 	}
 	
 	@Override
 	public void onDetachedFromWindow() {
 		prefs().unregisterOnSharedPreferenceChangeListener(this);
-		Model.Channel.unsucribe(Slot.class, subscriber);
+		MessageBus.unsuscribe(subscriber);
 	}
 	
 	private void startAnimation() {

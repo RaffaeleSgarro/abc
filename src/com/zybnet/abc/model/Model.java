@@ -6,12 +6,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import android.content.ContentValues;
 import android.database.DatabaseUtils;
@@ -64,21 +60,25 @@ public class Model {
 		String table = getClass().getSimpleName().toLowerCase();
 		ContentValues values = generateContentValues();
 		
+		MessageBus.Action action;
+		
 		//TODO does it really works?
 		if (exists(db)) {
+			action = MessageBus.Action.UPDATE;
 			String selection = "_id = ?";
 			String[] args = new String[] {Long.toString(_id)};
 			int affected = db.update(table, values, selection, args);
 			if (affected != 1)
 				throw new RuntimeException("Could not update model " + this.dump());
 		} else {
+			action = MessageBus.Action.CREATE;
 			values.remove("_id");
 			long id = db.insert(table, null, values);
 			if (id == -1)
 				throw new RuntimeException("Could not insert model " + this.dump());
 		}
 		
-		Channel.publish(this);
+		MessageBus.publish(this, action);
 	}
 	
 	public boolean exists(SQLiteDatabase db) {
@@ -119,10 +119,6 @@ public class Model {
 		}
 	}
 	
-	public interface Subscriber {
-		void onMessage(Model model);
-	}
-	
 	public String dump() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getClass().getSimpleName());
@@ -138,47 +134,6 @@ public class Model {
 		return builder.toString();
 	}
 	
-	public static class Channel {
-		private Map<String, Set<Subscriber>> subscribers;
-		
-		private Channel() {
-			subscribers = new HashMap<String, Set<Subscriber>>();
-		}
-		
-		private static Channel instance = new Channel();
-		
-		public static void publish(Model model) {
-			createTopicMaybe(model.getClass());
-			Set<Subscriber> subs = instance.subscribers.get(getKey(model.getClass()));
-			
-			for (Subscriber sub: subs) {
-				sub.onMessage(model);
-			}
-		}
-		
-		private static void createTopicMaybe(Class<? extends Model> topic) {
-			String key = getKey(topic);
-			
-			if (instance.subscribers.containsKey(key))
-				return;
-			
-			instance.subscribers.put(key, new HashSet<Subscriber>());
-		}
-		
-		public static void subscribe(Class<? extends Model> topic, Subscriber sub) {
-			createTopicMaybe(topic);
-			instance.subscribers.get(getKey(topic)).add(sub);
-		}
-		
-		public static void unsucribe(Class<? extends Model> topic, Subscriber sub) {
-			instance.subscribers.get(getKey(topic)).remove(sub);
-		}
-		
-		private static String getKey(Class<?> model) {
-			return model.getClass().getCanonicalName();
-		}
-	}
-	
 	public void delete(DatabaseHelper dh) {
 		SQLiteDatabase db = dh.getWritableDatabase();
 		
@@ -187,6 +142,7 @@ public class Model {
 		
 		String table = getClass().getSimpleName().toLowerCase();
 		db.delete(table, "_id = ?", new String[]{Long.toString(_id)});
-		// TODO update bus
+		
+		MessageBus.publish(this, MessageBus.Action.DELETE);
 	}
 }

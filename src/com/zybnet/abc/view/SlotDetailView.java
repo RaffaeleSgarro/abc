@@ -15,9 +15,10 @@ import com.zybnet.abc.R;
 import com.zybnet.abc.activity.AbbecedarioActivity;
 import com.zybnet.abc.model.Grade;
 import com.zybnet.abc.model.Homework;
-import com.zybnet.abc.model.Model;
+import com.zybnet.abc.model.MessageBus;
 import com.zybnet.abc.model.Slot;
 import com.zybnet.abc.model.Subject;
+import com.zybnet.abc.model.Subscriber;
 import com.zybnet.abc.utils.TitleDescriptionAdapter;
 import com.zybnet.abc.utils.U;
 import com.zybnet.abc.view.EditView.Delegate;
@@ -135,25 +136,24 @@ public class SlotDetailView extends LinearLayout {
 	
 	@Override
 	public void onAttachedToWindow() {
-		Model.Channel.subscribe(Slot.class, subscriber);
+		MessageBus.subscribe(subscriber);
 	}
 	
 	@Override
 	public void onDetachedFromWindow() {
-		Model.Channel.unsucribe(Slot.class, subscriber);
+		MessageBus.unsuscribe(subscriber);
 	}
 	
-	private Model.Subscriber subscriber = new Model.Subscriber() {
+	private Subscriber<Slot> subscriber = new Subscriber<Slot>() {
 		
 		@Override
-		public void onMessage(final Model model) {
+		public void onMessage(final Slot other, MessageBus.Action action) {
 			post(new Runnable() {
 				public void run() {
-					Slot other = (Slot) model;
 					Slot self = getSlot();
 					
 					if (other.ord == self.ord && other.day == self.day) {
-						fillView((Slot) model);
+						fillView((Slot) other);
 					}
 				}
 			});

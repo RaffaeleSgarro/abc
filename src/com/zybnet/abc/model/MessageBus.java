@@ -43,7 +43,7 @@ public class MessageBus {
 		set.add(subscriber);
 	}
 	
-	public void unsuscribe(Subscriber<?> subscriber) {
+	public static void unsuscribe(Subscriber<?> subscriber) {
 		Class<?> type = getKey(subscriber.getClass());	
 		Set<Subscriber<?>> set = getSubscribersFor(type);
 		set.remove(subscriber);
