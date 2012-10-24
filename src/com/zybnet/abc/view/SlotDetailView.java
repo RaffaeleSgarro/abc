@@ -153,7 +153,7 @@ public class SlotDetailView extends LinearLayout {
 					Slot self = getSlot();
 					
 					if (other.ord == self.ord && other.day == self.day) {
-						fillView((Slot) other);
+						fillView(other);
 					}
 				}
 			});
