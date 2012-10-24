@@ -282,13 +282,13 @@ public class SlotDetailView extends LinearLayout {
 	private IndexView<?> getIndexView(int id) {
 		switch (id) {
 		case R.id.subject:
-			IndexView<Subject> index = new IndexView<Subject>(abc.db(), flipper, Subject.class, null);
+			IndexView<Subject> index = new IndexView<Subject>(abc.db(), flipper, Subject.class);
 			index.setOnItemPickedListener(pickedListener);
 			return index;
 		case R.id.homework:
-			return new IndexView<Homework>(abc.db(), flipper, Homework.class, null);
+			return new IndexView<Homework>(abc.db(), flipper, Homework.class);
 		case R.id.grades:
-			return new IndexView<Grade>(abc.db(), flipper, Grade.class, null);
+			return new IndexView<Grade>(abc.db(), flipper, Grade.class);
 		default:
 			throw new IllegalArgumentException();
 		}

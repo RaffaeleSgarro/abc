@@ -31,15 +31,13 @@ public class IndexView<T extends Model> extends LinearLayout {
 	private ListView list;
 	private HistoryViewFlipper flipper;
 	private Class<T> modelClassToken;
-	private EditView.Delegate delegate;
 	private DatabaseHelper dh;
 	
-	public IndexView(DatabaseHelper dh, HistoryViewFlipper flipper, Class<T> token, EditView.Delegate delegate) {
+	public IndexView(DatabaseHelper dh, HistoryViewFlipper flipper, Class<T> token) {
 		super(flipper.getContext());
 		
 		this.flipper = flipper;
 		this.modelClassToken = token;
-		this.delegate = delegate;
 		this.dh = dh;
 		
 		setOrientation(LinearLayout.VERTICAL);
@@ -123,33 +121,23 @@ public class IndexView<T extends Model> extends LinearLayout {
 	private class ModelEditView extends EditView {
 
 		public ModelEditView(T model, int layout) {
-			super(IndexView.this.getContext(), layout, new ModelDelegate(model, delegate));
+			super(IndexView.this.getContext(), layout, new ModelDelegate(model));
 		}
 		
 	}
 	
 	public class ModelDelegate extends EditView.Delegate {
 		
-		private EditView.Delegate chained;
 		protected T model;
 		private Map<Field, TextView> bindings = new HashMap<Field, TextView>();
 		
 		public ModelDelegate(T model) {
-			this(model, null);
-		}
-		
-		public ModelDelegate(T model, EditView.Delegate chained) {
-			if (chained == null) {
-				chained = new EditView.Delegate();
-			}
 			
-			this.chained = chained;
 			this.model = model;
 		}
 		
 		@Override
 		public void afterInflate(EditView view) {
-			chained.afterInflate(view);
 			for (Field field : model.getPublicFields()) {
 				// ID can't be displayed nor modified
 				// neither for this model nor for related ones
@@ -230,13 +218,12 @@ public class IndexView<T extends Model> extends LinearLayout {
 				model.save(dh);
 			}
 			
-			chained.save(view);
 			flipper.back();
 		}
 		
 		@Override
 		public void delete(EditView view) {
-			chained.delete(view);
+			// TODO model.delete();
 		}
 	}
 }
