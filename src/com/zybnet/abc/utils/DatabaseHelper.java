@@ -116,7 +116,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		slot.day = _i(c, "day");
 		slot.ord = _i(c, "ord");
 		slot.display_text = _s(c, "display_text");
-		slot.teacher = _s(c, "teacher");
+		slot.teacher_id = _i(c, "teacher_id");
 		slot.place = _s(c, "place");
 		slot.start = _time(c, "start");
 		slot.end = _time(c, "end");

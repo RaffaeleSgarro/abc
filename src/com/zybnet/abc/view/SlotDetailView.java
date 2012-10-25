@@ -195,7 +195,8 @@ public class SlotDetailView extends LinearLayout {
 		view.setOnClickListener(itemListener);
 		view.setTag(slot);
 		
-		setText(R.id.teacher, slot.teacher);
+		// TODO
+		setText(R.id.teacher, "TODO JOIN");
 		
 		view = setText(R.id.time,
 				(slot.start == null || slot.end == null) ?
