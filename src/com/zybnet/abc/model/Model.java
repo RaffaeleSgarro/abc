@@ -75,8 +75,11 @@ public class Model {
 			action = MessageBus.Action.CREATE;
 			values.remove("_id");
 			long id = db.insert(table, null, values);
+			
 			if (id == -1)
 				throw new RuntimeException("Could not insert model " + this.dump());
+			
+			this._id = Long.valueOf(id);
 		}
 		
 		MessageBus.publish(this, action);
