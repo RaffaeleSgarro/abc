@@ -215,7 +215,7 @@ public class SlotDetailView extends LinearLayout {
 		View homework = findViewById(R.id.homework);
 		View grades = findViewById(R.id.grades);
 		
-		if (slot.subject_id < 1) {
+		if (slot.subject_id == null) {
 			homework.setVisibility(View.INVISIBLE);
 			grades.setVisibility(View.INVISIBLE);
 		} else {
