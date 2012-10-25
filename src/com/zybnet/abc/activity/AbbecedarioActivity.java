@@ -46,10 +46,6 @@ public class AbbecedarioActivity extends FragmentActivity {
         TableView table = new TableView(this);
 		getActiveFragment().addTable(table);
         
-        // TODO this is not persistent
-		if (!deleteDatabase(DatabaseHelper.FILENAME)) {
-			throw new RuntimeException("Cannot empty the database. TODO remove me");
-		}
         dbHelper = new FixturesDatabaseHelper(this);
     }
     
