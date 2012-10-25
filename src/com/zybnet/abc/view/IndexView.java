@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,38 +18,60 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.zybnet.abc.R;
+import com.zybnet.abc.activity.AbbecedarioActivity;
+import com.zybnet.abc.model.MessageBus;
+import com.zybnet.abc.model.MessageBus.Action;
 import com.zybnet.abc.model.Model;
+import com.zybnet.abc.model.Subscriber;
 import com.zybnet.abc.utils.DatabaseHelper;
-import com.zybnet.abc.utils.L;
+import com.zybnet.abc.utils.IndexController;
 import com.zybnet.abc.utils.U;
 
 @SuppressLint("ViewConstructor")
-public class IndexView<T extends Model> extends LinearLayout {
+public class IndexView<T extends Model> extends LinearLayout implements Subscriber<T> {
 
 	private TextView title;
 	private ListView list;
 	private HistoryViewFlipper flipper;
 	private Class<T> modelClassToken;
 	private DatabaseHelper dh;
+	private IndexController<T> controller;
 	
-	public IndexView(DatabaseHelper dh, HistoryViewFlipper flipper, Class<T> token) {
-		super(flipper.getContext());
+	public IndexView(AbbecedarioActivity abc, Class<T> token, IndexController<T> controller) {
+		super(abc);
 		
-		this.flipper = flipper;
 		this.modelClassToken = token;
-		this.dh = dh;
+		this.dh = abc.db();
+		this.controller = controller;
 		
 		setOrientation(LinearLayout.VERTICAL);
 		
 		U.setPaddingLeft(this, 10);
 		U.setPaddingRight(this, 10);
 		
-		LayoutInflater inflater = (LayoutInflater) flipper.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = abc.getLayoutInflater();
 		inflater.inflate(R.layout.index, this, true);
 		
 		title = (TextView) findViewById(R.id.title);
 		list = (ListView) findViewById(R.id.list);
+		
 		findViewById(R.id.add_new).setOnClickListener(addNewListener);
+		
+		controller.fillList(this);
+	}
+	
+	@Override
+	public void onAttachedToWindow() {
+		MessageBus.subscribe(modelClassToken, this);
+	}
+	
+	@Override
+	public void onDetachedFromWindow() {
+		MessageBus.unsuscribe(modelClassToken, this);
+	}
+	
+	public void setFlipper(HistoryViewFlipper flipper) {
+		this.flipper = flipper;
 	}
 	
 	public void setTitle(String str) {
@@ -63,7 +84,7 @@ public class IndexView<T extends Model> extends LinearLayout {
 		list.setOnItemLongClickListener(itemLongClickListener);
 	}
 	
-	private EditView getEditView(long id) {
+	private EditView getEditView(Long id) {
 		T model = dh.fill(modelClassToken, id);
 		int layout = getResources().getIdentifier(
 				"edit_" + modelClassToken.getSimpleName().toLowerCase(),
@@ -84,11 +105,11 @@ public class IndexView<T extends Model> extends LinearLayout {
 	private OnClickListener addNewListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
-			showEditView(Model.NONEXISTENT);
+			showEditView(null);
 		}
 	};
 	
-	private void showEditView(long id) {
+	private void showEditView(Long id) {
 		EditView edit = getEditView(id);
 		
 		NavigateBackView.Item item = new NavigateBackView.Item(getContext());
@@ -212,12 +233,10 @@ public class IndexView<T extends Model> extends LinearLayout {
 					field.set(model, value);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
-				}
-				
-				L.og(model.dump());
-				model.save(dh);
+				}	
 			}
-			
+			controller.fixBelongsTo(model);
+			model.save(dh);
 			flipper.back();
 		}
 		
@@ -225,5 +244,10 @@ public class IndexView<T extends Model> extends LinearLayout {
 		public void delete(EditView view) {
 			// TODO model.delete();
 		}
+	}
+
+	@Override
+	public void onMessage(T message, Action action) {
+		controller.fillList(this);
 	}
 }

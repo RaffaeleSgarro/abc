@@ -152,13 +152,13 @@ public class TableView extends RelativeLayout implements SharedPreferences.OnSha
 	public void onAttachedToWindow() {
 		new AsyncLoad().execute(abc.db());
 		prefs().registerOnSharedPreferenceChangeListener(this);
-		MessageBus.subscribe(subscriber);
+		MessageBus.subscribe(Slot.class, subscriber);
 	}
 	
 	@Override
 	public void onDetachedFromWindow() {
 		prefs().unregisterOnSharedPreferenceChangeListener(this);
-		MessageBus.unsuscribe(subscriber);
+		MessageBus.unsuscribe(Slot.class, subscriber);
 	}
 	
 	private void startAnimation() {

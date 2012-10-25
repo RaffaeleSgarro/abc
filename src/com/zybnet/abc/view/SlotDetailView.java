@@ -8,18 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.zybnet.abc.R;
 import com.zybnet.abc.activity.AbbecedarioActivity;
+import com.zybnet.abc.controller.GradeController;
+import com.zybnet.abc.controller.HomeworkController;
+import com.zybnet.abc.controller.SubjectController;
 import com.zybnet.abc.model.Grade;
 import com.zybnet.abc.model.Homework;
 import com.zybnet.abc.model.MessageBus;
 import com.zybnet.abc.model.Slot;
 import com.zybnet.abc.model.Subject;
 import com.zybnet.abc.model.Subscriber;
-import com.zybnet.abc.utils.TitleDescriptionAdapter;
 import com.zybnet.abc.utils.U;
 import com.zybnet.abc.view.EditView.Delegate;
 import com.zybnet.abc.view.NavigateBackView.Item;
@@ -136,12 +137,12 @@ public class SlotDetailView extends LinearLayout {
 	
 	@Override
 	public void onAttachedToWindow() {
-		MessageBus.subscribe(subscriber);
+		MessageBus.subscribe(Slot.class, subscriber);
 	}
 	
 	@Override
 	public void onDetachedFromWindow() {
-		MessageBus.unsuscribe(subscriber);
+		MessageBus.unsuscribe(Slot.class, subscriber);
 	}
 	
 	private Subscriber<Slot> subscriber = new Subscriber<Slot>() {
@@ -236,6 +237,7 @@ public class SlotDetailView extends LinearLayout {
 			dst.display_text = subject.name_short;
 			dst.subject_name = subject.name;
 			dst.place = subject.default_place;
+			dst.teacher_id = subject.default_teacher_id;
 			dst.save(abc.db());
 			abc.getBackButton().back();
 		}
@@ -243,34 +245,32 @@ public class SlotDetailView extends LinearLayout {
 	
 	private OnClickListener indexListener = new OnClickListener() {
 		public void onClick(final View view) {
-			IndexView<?> index = getIndexView(view.getId());
+			int viewId = view.getId();
 			
-			String title = null;
-			ListAdapter adapter = null;
+			IndexView<?> index;
+			
+			String title;
 			
 			// TODO don't use hardcoded strings
-			switch (view.getId()) {
-			case R.id.subject:
+			if (viewId == R.id.subject) {
 				title = "Subjects";
-				adapter = new TitleDescriptionAdapter(abc, abc.db().getSubjects(),
-						"name_short", "name");
-				break;
-			case R.id.homework:
+				SubjectController c = new SubjectController(abc, abc.db());
+				index = new IndexView<Subject>(abc, Subject.class, c);
+				((IndexView<Subject>)index).setOnItemPickedListener(pickedListener);
+			} else if (viewId == R.id.homework) {
 				title = "Homework";
-				adapter = new TitleDescriptionAdapter(abc,	abc.db().getHomework(slot.subject_id),
-						"due", "description");
-				break;
-			case R.id.grades:
+				HomeworkController c = new HomeworkController(abc, abc.db(), slot.subject_id);
+				index = new IndexView<Homework>(abc, Homework.class, c);
+			} else if (viewId == R.id.grades) {
 				title = "Grades";
-				adapter = new TitleDescriptionAdapter(abc,	abc.db().getGrades(slot.subject_id),
-						"date", "description");
-				break;
-			default:
+				GradeController c = new GradeController(abc, abc.db(), slot.subject_id);
+				index = new IndexView<Grade>(abc, Grade.class, c);
+			} else {
 				throw new IllegalArgumentException();
 			}
 			
 			index.setTitle(title);
-			index.setListAdapter(adapter);
+			index.setFlipper(flipper);
 			
 			NavigateBackView.Item item = new NavigateBackView.Item(getContext());
 			item.opener = SlotDetailView.this;
@@ -279,21 +279,6 @@ public class SlotDetailView extends LinearLayout {
 			flipper.showView(item);
 		}
 	};
-	
-	private IndexView<?> getIndexView(int id) {
-		switch (id) {
-		case R.id.subject:
-			IndexView<Subject> index = new IndexView<Subject>(abc.db(), flipper, Subject.class);
-			index.setOnItemPickedListener(pickedListener);
-			return index;
-		case R.id.homework:
-			return new IndexView<Homework>(abc.db(), flipper, Homework.class);
-		case R.id.grades:
-			return new IndexView<Grade>(abc.db(), flipper, Grade.class);
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
 	
 	// This is the right flipper
 	private HistoryViewFlipper flipper;

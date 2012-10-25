@@ -14,6 +14,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.zybnet.abc.utils.DatabaseHelper;
+import com.zybnet.abc.utils.L;
 import com.zybnet.abc.utils.U;
 
 
@@ -51,9 +52,7 @@ public class Model {
 		return getPublicFields(false);
 	}
 	
-	public static final int NONEXISTENT = -1;
-	
-	public long _id = NONEXISTENT;
+	public Long _id = null;
 	
 	public void save(DatabaseHelper helper) {
 		SQLiteDatabase db = helper.getWritableDatabase();
@@ -61,6 +60,8 @@ public class Model {
 		ContentValues values = generateContentValues();
 		
 		MessageBus.Action action;
+		
+		L.og(dump());
 		
 		//TODO does it really works?
 		if (exists(db)) {
@@ -85,7 +86,7 @@ public class Model {
 		String table = getClass().getSimpleName().toLowerCase();
 		long result = DatabaseUtils.longForQuery(db,
 				String.format("SELECT COUNT(_id) FROM %s WHERE _id = ?", table),
-				new String[]{Long.toString(_id)});
+				new String[]{ (_id == null) ? "NULL" : _id.toString() });
 		return result == 1L;
 	}
 	

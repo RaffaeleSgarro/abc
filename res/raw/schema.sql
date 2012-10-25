@@ -1,16 +1,14 @@
 CREATE TABLE "slot" (
 	"_id" INTEGER PRIMARY KEY NOT NULL,
-	"subject_id" INT DEFAULT -1,
 	"start" TEXT,
 	"end" TEXT,
 	"day" INTEGER NOT NULL,
 	"ord" INTEGER NOT NULL,
 	"display_text" TEXT,
 	"place" TEXT,
-	"teacher_id" INT DEFAULT -1,
+	"subject_id" INT REFERENCES "subject" ("_id") ON DELETE SET NULL ON UPDATE CASCADE,
+	"teacher_id" INT REFERENCES "teacher" ("_id") ON DELETE SET NULL ON UPDATE CASCADE,
 	
-	FOREIGN KEY ("subject_id") REFERENCES "subject" ("_id") ON DELETE SET DEFAULT ON UPDATE CASCADE,
-	FOREIGN KEY ("teacher_id") REFERENCES "teacher" ("_id") ON DELETE SET DEFAULT ON UPDATE CASCADE,
 	UNIQUE ("day", "ord")
 );
 
@@ -18,29 +16,23 @@ CREATE TABLE "subject" (
 	"_id" INTEGER PRIMARY KEY NOT NULL,
 	"name" TEXT UNIQUE,
 	"name_short" TEXT,
-	"default_teacher_id" INT DEFAULT -1,
-	"default_place" TEXT,
-	
-	FOREIGN KEY ("default_teacher_id") REFERENCES "teacher" ("_id") ON DELETE SET DEFAULT ON UPDATE CASCADE
+	"default_teacher_id" INT REFERENCES "teacher" ("_id") ON DELETE SET NULL ON UPDATE CASCADE,
+	"default_place" TEXT
 );
 
 CREATE TABLE "homework" (
 	"_id" INTEGER PRIMARY KEY NOT NULL,
-	"subject_id" INTEGER NOT NULL,
+	"subject_id" INTEGER NOT NULL REFERENCES "subject"("_id") ON DELETE CASCADE ON UPDATE CASCADE,
 	"description" TEXT,
-	"due" TEXT,
-	
-	FOREIGN KEY ("subject_id") REFERENCES "subject"("_id")
+	"due" TEXT
 );
 
 CREATE TABLE "grade" (
 	"_id" INTEGER PRIMARY KEY NOT NULL,
-	"subject_id" INTEGER NOT NULL,
+	"subject_id" INTEGER NOT NULL REFERENCES "subject"("_id") ON DELETE CASCADE ON UPDATE CASCADE,
 	"description" TEXT,
 	"score" TEXT,
-	"date" TEXT,
-	
-	FOREIGN KEY ("subject_id") REFERENCES "subject"("_id")
+	"date" TEXT
 );
 
 CREATE TABLE "teacher" (
@@ -50,3 +42,4 @@ CREATE TABLE "teacher" (
 	"phone" TEXT,
 	"notes" TEXT
 );
+

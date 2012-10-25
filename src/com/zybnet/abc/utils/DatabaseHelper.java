@@ -112,16 +112,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		c.moveToFirst();
 		
 		Slot slot = new Slot();
-		slot._id = _i(c, "_id");
+		slot._id = _id(c, "_id");
 		slot.day = _i(c, "day");
 		slot.ord = _i(c, "ord");
 		slot.display_text = _s(c, "display_text");
-		slot.teacher_id = _i(c, "teacher_id");
+		slot.teacher_id = _id(c, "teacher_id");
 		slot.place = _s(c, "place");
 		slot.start = _time(c, "start");
 		slot.end = _time(c, "end");
 		slot.subject_name = _s(c, "subject_name");
-		slot.subject_id = _i(c, "subject_id");
+		slot.subject_id = _id(c, "subject_id");
 		c.close();
 		return slot;
 	}
@@ -134,8 +134,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return c.getInt(c.getColumnIndex(column));
 	}
 
-	public long _l(Cursor c, String column) {
-		return c.getLong(c.getColumnIndex(column));
+	public Long _id(Cursor c, String column) {
+		Long id = c.getLong(c.getColumnIndex(column));
+		return (id == 0) ? null: id;
 	}
 	
 	public java.sql.Date _date(Cursor c, String column) {
@@ -223,7 +224,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 *  
 	 * This method does not fill fields marked @Extern
 	 */
-	public <T extends Model> T fill(Class<T> token, long id) {
+	public <T extends Model> T fill(Class<T> token, Long id) {
 		String table = token.getSimpleName();
 		T instance = null;
 		try {
@@ -240,7 +241,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String[] cols = new String[columns.size()];
 		
 		Cursor c = getReadableDatabase().query(table, columns.toArray(cols),
-				"_id = ?", new String[] {Long.toString(id)}, null, null, null);
+				"_id = ?", new String[] { (id == null) ? "NULL" : id.toString() }, null, null, null);
 		
 		if (c.getCount() != 1) {
 			return instance;
@@ -254,8 +255,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				Class<?> type = field.getType();
 				if (type.equals(String.class)){
 					field.set(instance, _s(c, key));
-				} else if (type.equals(long.class)) {
-					field.set(instance, _l(c, key));
+				} else if (type.equals(Long.class)) {
+					field.set(instance, _id(c, key));
 				} else if (type.equals(java.sql.Date.class)) {
 					field.set(instance, _date(c, key));
 				} else if (type.equals(java.sql.Time.class)) {

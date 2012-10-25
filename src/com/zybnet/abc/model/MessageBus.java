@@ -1,6 +1,5 @@
 package com.zybnet.abc.model;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,9 +29,7 @@ public class MessageBus {
 		}
 	}
 	
-	public static void subscribe(Subscriber<?> subscriber) {
-		Class<?> type = getKey(subscriber.getClass());
-		
+	public static <T> void subscribe(Class<T> type, Subscriber<T> subscriber) {
 		Set<Subscriber<?>> set = getSubscribersFor(type);
 		
 		if (set == null) {
@@ -43,15 +40,9 @@ public class MessageBus {
 		set.add(subscriber);
 	}
 	
-	public static void unsuscribe(Subscriber<?> subscriber) {
-		Class<?> type = getKey(subscriber.getClass());	
+	public static <T> void unsuscribe(Class<T> type, Subscriber<T> subscriber) {
 		Set<Subscriber<?>> set = getSubscribersFor(type);
 		set.remove(subscriber);
-	}
-	
-	private static Class<?> getKey(Class<?> klass) {
-		ParameterizedType supertype = (ParameterizedType) klass.getGenericInterfaces()[0];
-		return (Class<?>) supertype.getActualTypeArguments()[0];
 	}
 	
 	private static Set<Subscriber<?>> getSubscribersFor(Class<?> topic) {

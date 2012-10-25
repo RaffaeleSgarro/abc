@@ -35,29 +35,25 @@ public class EditView extends RelativeLayout {
 		
 		delegate.afterInflate(this);
 		
-		findViewById(R.id.save).setOnClickListener(new OnClickListener() {			
-			@Override
-			public void onClick(View v) {
-				save();
-			}
-		});
+		findViewById(R.id.save).setOnClickListener(saveListener);
 		
-		findViewById(R.id.delete).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				delete();
-			}
-		});
-	}
-	
-	private void save() {
-		delegate.save(this);
-	}
-	
-	private void delete() {
-		delegate.delete(this);
+		findViewById(R.id.delete).setOnClickListener(deleteListener);
 	}
 
+	private OnClickListener saveListener = new OnClickListener() {			
+		@Override
+		public void onClick(View v) {
+			delegate.save(EditView.this);
+		}
+	};
+	
+	private OnClickListener deleteListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			delegate.delete(EditView.this);
+		}
+	};
+	
 	public static class Delegate {
 		public void afterInflate(EditView view) {}
 		public void save(EditView view) {}

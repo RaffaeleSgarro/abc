@@ -14,7 +14,7 @@ public class Slot extends Model {
 	
 	// These are 1-based
 	public int day, ord;
-	public long subject_id, teacher_id;
+	public Long subject_id, teacher_id;
 	public Time start, end;
 	public String place, display_text;
 	@Extern
