@@ -22,7 +22,6 @@ import android.util.Log;
 import com.zybnet.abc.R;
 import com.zybnet.abc.model.Model;
 import com.zybnet.abc.model.Slot;
-import com.zybnet.abc.model.Subject;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -95,9 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	public Slot getSlot(int day, int ord) {
 		String sql = "" +
-				"SELECT slot.* , " +
-				"  subject.name AS subject_name, subject._id AS subject_id " +
-				"FROM slot LEFT JOIN subject ON slot.subject_id = subject._id " +
+				"SELECT slot.* FROM slot " +
 				"WHERE slot.day = ? AND slot.ord = ? ";
 		String[] args = {Integer.toString(day), Integer.toString(ord)};
 		Cursor c = getReadableDatabase().rawQuery(sql, args);
@@ -120,7 +117,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		slot.place = _s(c, "place");
 		slot.start = _time(c, "start");
 		slot.end = _time(c, "end");
-		slot.subject_name = _s(c, "subject_name");
 		slot.subject_id = _id(c, "subject_id");
 		c.close();
 		return slot;
@@ -195,34 +191,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				null, null, null);
 	}
 	
-	public Subject getSubject(long id) {
-		Cursor c = getReadableDatabase().query("subject",
-				new String[] {"name", "name_short", "default_place"},
-				"_id = ?", new String[] {Long.toString(id)}, null, null, null);
-		
-		Subject s = new Subject();
-		
-		if (c.getCount() != 1)
-			return s;
-		
-		c.moveToFirst();
-		s._id = id;
-		s.name = _s(c, "name");
-		s.name_short = _s(c, "name_short");
-		s.default_place = _s(c, "default_place");
-		
-		return s;
-	}
-	
 	/*
 	 * This is a "magic" method that tries to fill the passed
 	 * model by reading fields from the database.
 	 * 
 	 * It assumes a number of conventions:
 	 *  - the table name is the model name to lower case
-	 *  - 
-	 *  
-	 * This method does not fill fields marked @Extern
+	 * 
+	 * If an entity with the specified ID does not exist, this
+	 * method returns an "empty" entity
 	 */
 	public <T extends Model> T fill(Class<T> token, Long id) {
 		String table = token.getSimpleName();

@@ -42,8 +42,6 @@ public class Model {
 			if (Modifier.isStatic(field.getModifiers()))
 				i.remove();
 			
-			if (!includeExterns && field.getAnnotation(Extern.class) != null)
-				i.remove();
 		}
 		return fields;
 	}

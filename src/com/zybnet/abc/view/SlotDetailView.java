@@ -18,6 +18,7 @@ import com.zybnet.abc.controller.SubjectController;
 import com.zybnet.abc.model.Grade;
 import com.zybnet.abc.model.Homework;
 import com.zybnet.abc.model.MessageBus;
+import com.zybnet.abc.model.MessageBus.Action;
 import com.zybnet.abc.model.Slot;
 import com.zybnet.abc.model.Subject;
 import com.zybnet.abc.model.Subscriber;
@@ -137,15 +138,17 @@ public class SlotDetailView extends LinearLayout {
 	
 	@Override
 	public void onAttachedToWindow() {
-		MessageBus.subscribe(Slot.class, subscriber);
+		MessageBus.subscribe(Slot.class, slotSubscriber);
+		MessageBus.subscribe(Subject.class, subjectSubscriber);
 	}
 	
 	@Override
 	public void onDetachedFromWindow() {
-		MessageBus.unsuscribe(Slot.class, subscriber);
+		MessageBus.unsuscribe(Slot.class, slotSubscriber);
+		MessageBus.unsuscribe(Subject.class, subjectSubscriber);
 	}
 	
-	private Subscriber<Slot> subscriber = new Subscriber<Slot>() {
+	private Subscriber<Slot> slotSubscriber = new Subscriber<Slot>() {
 		
 		@Override
 		public void onMessage(final Slot other, MessageBus.Action action) {
@@ -159,6 +162,19 @@ public class SlotDetailView extends LinearLayout {
 				}
 			});
 		}
+	};
+	
+	private Subscriber<Subject> subjectSubscriber = new Subscriber<Subject>() {
+
+		@Override
+		public void onMessage(Subject message, Action action) {
+			if (!message._id.equals(slot.subject_id))
+				return;
+			
+			slot.subject_id = message._id;
+			fillView(slot);
+		}
+		
 	};
 	
 	private class SingleStringDelegate extends EditView.Delegate {
@@ -209,7 +225,8 @@ public class SlotDetailView extends LinearLayout {
 		view.setTag(slot);
 		view.setOnClickListener(itemListener);
 		
-		ViewGroup subject = setText(R.id.subject, slot.subject_name);
+		Subject subj = abc.db().fill(Subject.class, slot.subject_id);
+		ViewGroup subject = setText(R.id.subject, (subj.name != null) ? subj.name : getContext().getString(R.string.edit));
 		subject.setOnClickListener(indexListener);
 		
 		View homework = findViewById(R.id.homework);
@@ -235,7 +252,7 @@ public class SlotDetailView extends LinearLayout {
 			Slot dst = new Slot(slot);
 			dst.subject_id = subject._id;
 			dst.display_text = subject.name_short;
-			dst.subject_name = subject.name;
+			dst.subject_id = subject._id;
 			dst.place = subject.default_place;
 			dst.teacher_id = subject.default_teacher_id;
 			dst.save(abc.db());

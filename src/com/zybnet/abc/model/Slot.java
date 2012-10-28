@@ -17,6 +17,4 @@ public class Slot extends Model {
 	public Long subject_id, teacher_id;
 	public Time start, end;
 	public String place, display_text;
-	@Extern
-	public String subject_name;
 }
