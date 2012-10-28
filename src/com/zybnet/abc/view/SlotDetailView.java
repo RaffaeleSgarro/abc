@@ -344,6 +344,7 @@ public class SlotDetailView extends LinearLayout {
 
 		@Override
 		public void onItemPicked(Teacher teacher) {
+			flipper.back();
 			slot.teacher_id = teacher._id;
 			slot.save(abc.db());
 			fillView(slot);
