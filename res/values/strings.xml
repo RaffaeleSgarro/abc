@@ -36,4 +36,8 @@
     <string name="edit_grade">Edit Grade</string>
     <string name="score">Score</string>
     <string name="date">Date</string>
+    <string name="edit_teacher">Edit Teacher</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="notes">Notes</string>
 </resources>

@@ -15,6 +15,7 @@ import com.zybnet.abc.activity.AbbecedarioActivity;
 import com.zybnet.abc.controller.GradeController;
 import com.zybnet.abc.controller.HomeworkController;
 import com.zybnet.abc.controller.SubjectController;
+import com.zybnet.abc.controller.TeacherController;
 import com.zybnet.abc.model.Grade;
 import com.zybnet.abc.model.Homework;
 import com.zybnet.abc.model.MessageBus;
@@ -22,6 +23,7 @@ import com.zybnet.abc.model.MessageBus.Action;
 import com.zybnet.abc.model.Slot;
 import com.zybnet.abc.model.Subject;
 import com.zybnet.abc.model.Subscriber;
+import com.zybnet.abc.model.Teacher;
 import com.zybnet.abc.utils.U;
 import com.zybnet.abc.view.EditView.Delegate;
 import com.zybnet.abc.view.NavigateBackView.Item;
@@ -140,12 +142,14 @@ public class SlotDetailView extends LinearLayout {
 	public void onAttachedToWindow() {
 		MessageBus.subscribe(Slot.class, slotSubscriber);
 		MessageBus.subscribe(Subject.class, subjectSubscriber);
+		MessageBus.subscribe(Teacher.class, teacherSubscriber);
 	}
 	
 	@Override
 	public void onDetachedFromWindow() {
 		MessageBus.unsuscribe(Slot.class, slotSubscriber);
 		MessageBus.unsuscribe(Subject.class, subjectSubscriber);
+		MessageBus.unsuscribe(Teacher.class, teacherSubscriber);
 	}
 	
 	private Subscriber<Slot> slotSubscriber = new Subscriber<Slot>() {
@@ -172,6 +176,19 @@ public class SlotDetailView extends LinearLayout {
 				return;
 			
 			slot.subject_id = message._id;
+			fillView(slot);
+		}
+		
+	};
+	
+	private Subscriber<Teacher> teacherSubscriber = new Subscriber<Teacher>() {
+
+		@Override
+		public void onMessage(Teacher teacher, Action action) {
+			if (!teacher._id.equals(slot.teacher_id))
+				return;
+			
+			slot.teacher_id = teacher._id;
 			fillView(slot);
 		}
 		
@@ -212,8 +229,9 @@ public class SlotDetailView extends LinearLayout {
 		view.setOnClickListener(itemListener);
 		view.setTag(slot);
 		
-		// TODO
-		setText(R.id.teacher, "TODO JOIN");
+		Teacher teacher = abc.db().fill(Teacher.class, slot.teacher_id);
+		view = setText(R.id.teacher, teacher.name);
+		view.setOnClickListener(indexListener);
 		
 		view = setText(R.id.time,
 				(slot.start == null || slot.end == null) ?
@@ -225,9 +243,9 @@ public class SlotDetailView extends LinearLayout {
 		view.setTag(slot);
 		view.setOnClickListener(itemListener);
 		
-		Subject subj = abc.db().fill(Subject.class, slot.subject_id);
-		ViewGroup subject = setText(R.id.subject, (subj.name != null) ? subj.name : getContext().getString(R.string.edit));
-		subject.setOnClickListener(indexListener);
+		Subject subject = abc.db().fill(Subject.class, slot.subject_id);
+		view = setText(R.id.subject, subject.name);
+		view.setOnClickListener(indexListener);
 		
 		View homework = findViewById(R.id.homework);
 		View grades = findViewById(R.id.grades);
@@ -261,6 +279,7 @@ public class SlotDetailView extends LinearLayout {
 	};
 	
 	private OnClickListener indexListener = new OnClickListener() {
+		
 		public void onClick(final View view) {
 			int viewId = view.getId();
 			
@@ -272,8 +291,9 @@ public class SlotDetailView extends LinearLayout {
 			if (viewId == R.id.subject) {
 				title = "Subjects";
 				SubjectController c = new SubjectController(abc, abc.db());
-				index = new IndexView<Subject>(abc, Subject.class, c);
-				((IndexView<Subject>)index).setOnItemPickedListener(pickedListener);
+				IndexView<Subject> i = new IndexView<Subject>(abc, Subject.class, c);
+				i.setOnItemPickedListener(pickedListener);
+				index = i;
 			} else if (viewId == R.id.homework) {
 				title = "Homework";
 				HomeworkController c = new HomeworkController(abc, abc.db(), slot.subject_id);
@@ -282,6 +302,12 @@ public class SlotDetailView extends LinearLayout {
 				title = "Grades";
 				GradeController c = new GradeController(abc, abc.db(), slot.subject_id);
 				index = new IndexView<Grade>(abc, Grade.class, c);
+			} else if (viewId == R.id.teacher) {
+				title = "Teacher";
+				TeacherController c = new TeacherController(abc, abc.db());
+				IndexView<Teacher> i = new IndexView<Teacher>(abc, Teacher.class, c);
+				i.setOnItemPickedListener(teacherPickedListener);
+				index = i;
 			} else {
 				throw new IllegalArgumentException();
 			}
@@ -314,4 +340,13 @@ public class SlotDetailView extends LinearLayout {
 	
 	private AbbecedarioActivity abc;
 	
+	private IndexView.OnItemPickedListener<Teacher> teacherPickedListener = new IndexView.OnItemPickedListener<Teacher>() {
+
+		@Override
+		public void onItemPicked(Teacher teacher) {
+			slot.teacher_id = teacher._id;
+			slot.save(abc.db());
+			fillView(slot);
+		}
+	};
 }

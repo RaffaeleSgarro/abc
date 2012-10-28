@@ -175,6 +175,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				null, null, null, null, null);
 	}
 	
+	public Cursor getTeachers() {
+		return getReadableDatabase().query("teacher",
+				new String[] {"_id", "name", "email", "phone", "notes"},
+				null, null, null, null, null);
+	}
+	
 	// Selection contains a single element with the subject id
 	public Cursor getHomework(long subject) {
 		return getReadableDatabase().query("homework",
