@@ -242,7 +242,8 @@ public class IndexView<T extends Model> extends LinearLayout implements Subscrib
 		
 		@Override
 		public void delete(EditView view) {
-			// TODO model.delete();
+			flipper.back();
+			model.delete(dh);
 		}
 	}
 
