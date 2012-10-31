@@ -24,14 +24,15 @@
             android:text="@string/index_help"
             android:textAppearance="?android:attr/textAppearanceSmall" />
         
-        <Button 
+        <ImageButton
+            style="@style/ActionBarButton"
             android:id="@+id/add_new"
+            android:src="@drawable/ic_new"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/title"
-            android:layout_alignBottom="@+id/subtitle"
-            android:text="@string/add_new" />
+            android:layout_alignBottom="@+id/subtitle" />
     </RelativeLayout>
 
     <ListView
