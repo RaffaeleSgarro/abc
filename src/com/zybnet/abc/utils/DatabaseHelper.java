@@ -178,7 +178,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public Cursor getTeachers() {
 		return getReadableDatabase().query("teacher",
 				new String[] {"_id", "name", "email", "phone", "notes"},
-				null, null, null, null, null);
+				null, null, null, null, "name");
 	}
 	
 	// Selection contains a single element with the subject id
@@ -186,7 +186,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return getReadableDatabase().query("homework",
 				new String[] {"_id", "description", "due"},
 				"subject_id = ?", new String[] {Long.toString(subject)},
-				null, null, null);
+				null, null, "due DESC");
 	}
 	
 	// Selection contains a single element with the subject id
@@ -194,7 +194,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return getReadableDatabase().query("grade",
 				new String[] {"_id", "date", "description", "score"},
 				"subject_id = ?", new String[] {Long.toString(subject)},
-				null, null, null);
+				null, null, "date DESC");
 	}
 	
 	/*
