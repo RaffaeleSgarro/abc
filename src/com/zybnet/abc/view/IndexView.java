@@ -188,13 +188,11 @@ public class IndexView<T extends Model> extends LinearLayout implements Subscrib
 					);
 				}
 				
-				if (value == null)
-					continue;
-				
 				if (type.equals(String.class)) {
 					textView.setText((String) value);
 				} else if (type.equals(java.sql.Date.class)) {
-					((DateEditText) textView).setDate((java.sql.Date) value);
+					java.sql.Date date = value != null ? (java.sql.Date) value : new java.sql.Date(System.currentTimeMillis());
+					((DateEditText) textView).setDate(date);
 				} else {
 					throw new IllegalArgumentException(type.getCanonicalName());
 				}
