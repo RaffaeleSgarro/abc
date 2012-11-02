@@ -1,5 +1,9 @@
 package com.zybnet.abc.model;
 
 public class Teacher extends Model {
-	public String name, email, phone, notes;
+	
+	@NotNull
+	public String  name;
+	
+	public String email, phone, notes;
 }

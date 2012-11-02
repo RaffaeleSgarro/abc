@@ -39,6 +39,18 @@
         style="@style/SmallHeader"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:text="@string/default_teacher" />
+
+    <EditText
+        android:id="@+id/teacher"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="none" />
+    
+    <com.zybnet.abc.view.AllCapsTextView
+        style="@style/SmallHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:text="@string/default_place" />
 
     <EditText

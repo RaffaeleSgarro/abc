@@ -40,4 +40,6 @@
     <string name="email">Email</string>
     <string name="phone">Phone</string>
     <string name="notes">Notes</string>
+    <string name="default_teacher">Default teacher</string>
+    <string name="required">Required</string>
 </resources>

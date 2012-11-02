@@ -22,6 +22,7 @@ import com.zybnet.abc.activity.AbbecedarioActivity;
 import com.zybnet.abc.model.MessageBus;
 import com.zybnet.abc.model.MessageBus.Action;
 import com.zybnet.abc.model.Model;
+import com.zybnet.abc.model.NotNull;
 import com.zybnet.abc.model.Subscriber;
 import com.zybnet.abc.utils.DatabaseHelper;
 import com.zybnet.abc.utils.IndexController;
@@ -190,6 +191,11 @@ public class IndexView<T extends Model> extends LinearLayout implements Subscrib
 				
 				if (type.equals(String.class)) {
 					textView.setText((String) value);
+					
+					if (field.isAnnotationPresent(NotNull.class)) {
+						textView.setHint(R.string.required);
+					}
+					
 				} else if (type.equals(java.sql.Date.class)) {
 					java.sql.Date date = value != null ? (java.sql.Date) value : new java.sql.Date(System.currentTimeMillis());
 					((DateEditText) textView).setDate(date);
@@ -203,13 +209,21 @@ public class IndexView<T extends Model> extends LinearLayout implements Subscrib
 		@Override
 		public void save(EditView view) {
 			for (Map.Entry<Field, TextView> entry : bindings.entrySet()) {
-				CharSequence seq = entry.getValue().getText();
+				TextView textView = entry.getValue();
+				CharSequence seq = textView.getText();
+				Field field = entry.getKey();
 				
 				// Don't change empty fields
-				if (seq.length() < 1)
-					continue;
+				if (seq.length() < 1) {
+					if (field.isAnnotationPresent(NotNull.class)) {
+						textView.requestFocus();
+						return;
+					} else {
+						continue;
+					}
+				}
+					
 				
-				Field field = entry.getKey();
 				Class<?> type = field.getType();
 				Object value;
 				
