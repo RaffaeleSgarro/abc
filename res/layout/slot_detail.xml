@@ -152,6 +152,26 @@
                     android:text="@string/grades"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
+            
+            <LinearLayout
+                android:id="@+id/clear"
+                style="@style/PaddedTopBottom"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <com.zybnet.abc.view.AllCapsTextView
+                    style="@style/SmallHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clear" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reset_slot"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

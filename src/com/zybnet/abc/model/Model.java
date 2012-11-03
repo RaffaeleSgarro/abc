@@ -14,7 +14,6 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.zybnet.abc.utils.DatabaseHelper;
-import com.zybnet.abc.utils.L;
 import com.zybnet.abc.utils.U;
 
 
@@ -59,9 +58,6 @@ public class Model {
 		
 		MessageBus.Action action;
 		
-		L.og(dump());
-		
-		//TODO does it really works?
 		if (exists(db)) {
 			action = MessageBus.Action.UPDATE;
 			String selection = "_id = ?";
@@ -84,6 +80,10 @@ public class Model {
 	}
 	
 	public boolean exists(SQLiteDatabase db) {
+		// Little optimization to not even reading from the database
+		if (_id ==  null || _id < 1)
+			return false;
+		
 		String table = getClass().getSimpleName().toLowerCase();
 		long result = DatabaseUtils.longForQuery(db,
 				String.format("SELECT COUNT(_id) FROM %s WHERE _id = ?", table),
@@ -98,9 +98,11 @@ public class Model {
 				
 				Object value = field.get(this);
 				
-				if (value == null)
+				if (value == null) {
+					c.putNull(field.getName());
 					continue;
-				
+				}
+					
 				Class<?> type = field.getType();
 				
 				if (type.equals(java.sql.Date.class)) {

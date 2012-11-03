@@ -268,14 +268,19 @@ public class SlotDetailView extends LinearLayout {
 		View grades = findViewById(R.id.grades);
 		
 		if (slot.subject_id == null) {
-			homework.setVisibility(View.INVISIBLE);
-			grades.setVisibility(View.INVISIBLE);
+			homework.setVisibility(View.GONE);
+			grades.setVisibility(View.GONE);
 		} else {
 			homework.setVisibility(View.VISIBLE);
 			homework.setOnClickListener(indexListener);
 			
 			grades.setVisibility(View.VISIBLE);
 			grades.setOnClickListener(indexListener);
+		}
+		
+		if (slot.exists(abc.db().getReadableDatabase())) {
+			View clear = findViewById(R.id.clear);
+			clear.setOnClickListener(clearListener);
 		}
 		
 	}
@@ -365,6 +370,20 @@ public class SlotDetailView extends LinearLayout {
 			slot.teacher_id = teacher._id;
 			slot.save(abc.db());
 			fillView(slot);
+		}
+	};
+	
+	private OnClickListener clearListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			Slot dst = new Slot();
+			dst._id = slot._id;
+			dst.day = slot.day;
+			dst.ord = slot.ord;
+			
+			dst.save(abc.db());
+			fillView(dst);
 		}
 	};
 }
