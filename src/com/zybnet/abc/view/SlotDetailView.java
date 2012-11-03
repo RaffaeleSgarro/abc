@@ -172,10 +172,17 @@ public class SlotDetailView extends LinearLayout {
 
 		@Override
 		public void onMessage(Subject message, Action action) {
+			// This automatically filters out Action.CREATE
 			if (!message._id.equals(slot.subject_id))
 				return;
 			
-			slot.subject_id = message._id;
+			if (action == Action.DELETE) {
+				slot.subject_id = null;
+				slot.save(abc.db());
+			} else {
+				slot.subject_id = message._id;
+			}
+			
 			fillView(slot);
 		}
 		
