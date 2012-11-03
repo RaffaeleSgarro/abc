@@ -136,6 +136,16 @@ public class SlotDetailView extends LinearLayout {
 			dst.save(abc.db());
 			flipper.back();
 		}
+		
+		@Override
+		public void delete(EditView view) {
+			Slot dst = new Slot(slot);
+			dst.start = null;
+			dst.end = null;
+			
+			dst.save(abc.db());
+			flipper.back();
+		}
 	};
 	
 	@Override
