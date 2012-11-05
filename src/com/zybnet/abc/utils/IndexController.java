@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.support.v4.widget.CursorAdapter;
 
 import com.zybnet.abc.model.Model;
+import com.zybnet.abc.view.EditView;
 import com.zybnet.abc.view.IndexView;
 
 public abstract class IndexController<T extends Model> {
@@ -18,8 +19,10 @@ public abstract class IndexController<T extends Model> {
 		this.dh = dh;
 	}
 	
-	public void fixBeforeSave(T model) {}
+	public void fixBeforeSave(EditView view, T model) {}
 
+	public void fixAfterInflate(EditView view, T model) {}
+	
 	public void fillList(final IndexView<T> index) {
 		new SetCursor(index).execute();
 	}

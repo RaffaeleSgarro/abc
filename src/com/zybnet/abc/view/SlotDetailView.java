@@ -312,7 +312,7 @@ public class SlotDetailView extends LinearLayout {
 			// TODO don't use hardcoded strings
 			if (viewId == R.id.subject) {
 				title = "Subjects";
-				SubjectController c = new SubjectController(abc, abc.db());
+				SubjectController c = new SubjectController(abc, abc.db(), flipper);
 				IndexView<Subject> i = new IndexView<Subject>(abc, Subject.class, c);
 				i.setOnItemPickedListener(pickedListener);
 				index = i;

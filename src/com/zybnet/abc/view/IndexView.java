@@ -204,6 +204,7 @@ public class IndexView<T extends Model> extends LinearLayout implements Subscrib
 				}
 				
 			}
+			controller.fixAfterInflate(view, model);
 		}
 		
 		@Override
@@ -248,6 +249,7 @@ public class IndexView<T extends Model> extends LinearLayout implements Subscrib
 				}	
 			}
 			controller.fixBelongsTo(model);
+			controller.fixBeforeSave(view, model);
 			model.save(dh);
 			flipper.back();
 		}
