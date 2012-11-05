@@ -64,6 +64,8 @@ public class SubjectController extends IndexController<Subject> {
 					}
 				});
 				
+				index.setFlipper(flipper);
+				
 				NavigateBackView.Item item = new NavigateBackView.Item(ctx);
 				item.opener = view;
 				item.view = index;
