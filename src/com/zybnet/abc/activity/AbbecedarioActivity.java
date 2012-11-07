@@ -1,5 +1,7 @@
 package com.zybnet.abc.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.MeasureSpec;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
@@ -92,6 +95,12 @@ public class AbbecedarioActivity extends FragmentActivity {
 					}
 				})
     	);
+    	
+    	content.findViewById(R.id.help).setOnClickListener(new OnClickListener(){
+    		public void onClick(View view) {
+    			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://zybnet.com/abc/")));
+    		}
+    	});
     	
     	popup = new PopupWindow(content, content.getMeasuredWidth(), content.getMeasuredHeight(), true);
     	popup.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
