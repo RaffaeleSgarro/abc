@@ -4,8 +4,8 @@
     <string name="ok">OK</string>
     <string name="save">Save</string>
     <string name="back">Back</string>
-    <string name="subject">subject</string>
-    <string name="teacher">teacher</string>
+    <string name="subject">Subject</string>
+    <string name="teacher">Teacher</string>
     <string name="start_end_time">start and end time</string>
     <string name="place">place</string>
     <string name="homework">Homework</string>

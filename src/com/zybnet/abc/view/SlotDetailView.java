@@ -309,23 +309,22 @@ public class SlotDetailView extends LinearLayout {
 			
 			String title;
 			
-			// TODO don't use hardcoded strings
 			if (viewId == R.id.subject) {
-				title = "Subjects";
+				title = getContext().getString(R.string.subject);
 				SubjectController c = new SubjectController(abc, abc.db(), flipper);
 				IndexView<Subject> i = new IndexView<Subject>(abc, Subject.class, c);
 				i.setOnItemPickedListener(pickedListener);
 				index = i;
 			} else if (viewId == R.id.homework) {
-				title = "Homework";
+				title = getContext().getString(R.string.homework);
 				HomeworkController c = new HomeworkController(abc, abc.db(), slot.subject_id);
 				index = new IndexView<Homework>(abc, Homework.class, c);
 			} else if (viewId == R.id.grades) {
-				title = "Grades";
+				title = getContext().getString(R.string.grades);
 				GradeController c = new GradeController(abc, abc.db(), slot.subject_id);
 				index = new IndexView<Grade>(abc, Grade.class, c);
 			} else if (viewId == R.id.teacher) {
-				title = "Teacher";
+				title = getContext().getString(R.string.teacher);
 				TeacherController c = new TeacherController(abc, abc.db());
 				IndexView<Teacher> i = new IndexView<Teacher>(abc, Teacher.class, c);
 				i.setOnItemPickedListener(teacherPickedListener);

@@ -16,7 +16,6 @@ import com.zybnet.abc.fragment.BaseFragment;
 import com.zybnet.abc.fragment.CompactFragment;
 import com.zybnet.abc.fragment.ExtendedFragment;
 import com.zybnet.abc.utils.DatabaseHelper;
-import com.zybnet.abc.utils.FixturesDatabaseHelper;
 import com.zybnet.abc.utils.L;
 import com.zybnet.abc.view.NavigateBackView;
 import com.zybnet.abc.view.TableView;
@@ -46,7 +45,7 @@ public class AbbecedarioActivity extends FragmentActivity {
         TableView table = new TableView(this);
 		getActiveFragment().addTable(table);
         
-        dbHelper = new FixturesDatabaseHelper(this);
+        dbHelper = new DatabaseHelper(this);
     }
     
     @Override
