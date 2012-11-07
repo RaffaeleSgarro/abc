@@ -17,7 +17,7 @@
     <application
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.NoTitleBar" >
+        android:theme="@style/AbcTheme" >
         <activity
             android:name=".activity.AbbecedarioActivity"
             android:label="@string/app_name" >
