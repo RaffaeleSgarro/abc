@@ -16,7 +16,7 @@
     <string name="slots_per_day">"Ore al giorno"</string>
     <string name="settings">"Impostazioni"</string>
     <string name="help">"Aiuto"</string>
-    <string name="index_help">"Tocca per selezionare. Tocca e tieni premuto per modificare"</string>
+    <string name="index_help">"Tocca e tieni premuto per modificare"</string>
     <string name="edit_displayed">"Modifica il testo visualizzato"</string>
     <string name="add_new">"Aggiungi nuovo"</string>
     <string name="start_time">"Ora d'inizio"</string>
