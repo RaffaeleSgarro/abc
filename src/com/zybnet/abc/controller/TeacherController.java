@@ -19,8 +19,8 @@ public class TeacherController extends IndexController<Teacher> {
 	@Override
 	protected CursorAdapter getAdapter(Cursor cursor) {
 		return new SimpleCursorAdapter(ctx, R.layout.teacher_item, cursor,
-				new String[] {"name", "email", "phone", "notes"},
-				new int[] { R.id.text, R.id.email, R.id.phone, R.id.notes}, 0);
+				new String[] {"name"},
+				new int[] { R.id.text}, 0);
 	}
 
 	@Override

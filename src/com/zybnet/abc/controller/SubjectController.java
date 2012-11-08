@@ -51,6 +51,7 @@ public class SubjectController extends IndexController<Subject> {
 			public void onClick(View v) {
 				
 				IndexView<Teacher> index = new IndexView<Teacher>((AbbecedarioActivity) ctx, Teacher.class, new TeacherController(ctx, dh));
+				index.setTitle(ctx.getString(R.string.teacher));
 				index.setOnItemPickedListener(new OnItemPickedListener<Teacher>() {
 
 					@Override
