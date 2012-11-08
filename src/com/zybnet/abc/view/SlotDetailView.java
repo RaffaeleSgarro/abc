@@ -98,6 +98,14 @@ public class SlotDetailView extends LinearLayout {
 			dst.save(abc.db());
 			flipper.back();
 		}
+		
+		@Override
+		public void delete(EditView view) {
+			Slot dst = new Slot(slot);
+			dst.display_text = null;
+			dst.save(abc.db());
+			flipper.back();
+		}
 	};
 	
 	private SingleStringDelegate placeDelegate = new SingleStringDelegate(){
@@ -106,6 +114,14 @@ public class SlotDetailView extends LinearLayout {
 		public void save(EditView view) {
 			Slot dst = new Slot(slot);
 			dst.place = ((TextView) view.findViewById(R.id.content)).getText().toString();
+			dst.save(abc.db());
+			flipper.back();
+		}
+		
+		@Override
+		public void delete(EditView view) {
+			Slot dst = new Slot(slot);
+			dst.place = null;
 			dst.save(abc.db());
 			flipper.back();
 		}
