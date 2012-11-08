@@ -1,5 +1,7 @@
 package com.zybnet.abc.controller;
 
+import java.text.DateFormat;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
@@ -20,7 +22,7 @@ public class HomeworkController extends IndexController<Homework> {
 
 	@Override
 	protected CursorAdapter getAdapter(Cursor cursor) {
-		return new TitleDescriptionAdapter(ctx, cursor, "due", "description");
+		return new HomeworkAdapter(ctx, cursor);
 	}
 
 	@Override
@@ -31,6 +33,20 @@ public class HomeworkController extends IndexController<Homework> {
 	@Override
 	public void fixBelongsTo(Homework homework) {
 		homework.subject_id = subject;
+	}
+	
+	private static class HomeworkAdapter extends TitleDescriptionAdapter {
+
+		public HomeworkAdapter(Context context, Cursor c) {
+			super(context, c, "due", "description");
+		}
+
+		@Override
+		protected String getTitle(Cursor cursor) {
+			java.sql.Date due = DatabaseHelper._date(cursor, "due");
+			return DateFormat.getDateInstance().format(due);
+		} 
+		
 	}
 
 }

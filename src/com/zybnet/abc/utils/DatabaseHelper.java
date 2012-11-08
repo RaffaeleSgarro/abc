@@ -135,7 +135,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return (id == 0) ? null: id;
 	}
 	
-	public java.sql.Date _date(Cursor c, String column) {
+	public static java.sql.Date _date(Cursor c, String column) {
 		Date date = dateFromFormat(c, column, U.SQL_DATE_FORMAT);
 		
 		if (date == null)
@@ -145,7 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	
 	// May return null
-	private java.util.Date dateFromFormat(Cursor c, String column, String format) {
+	private static java.util.Date dateFromFormat(Cursor c, String column, String format) {
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		String str = c.getString(c.getColumnIndex(column));
 		
@@ -160,7 +160,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public Time _time(Cursor c, String column) {
+	public static Time _time(Cursor c, String column) {
 		Date date = dateFromFormat(c, column, U.SQL_TIME_FORMAT);
 		
 		if (date == null)
