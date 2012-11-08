@@ -43,9 +43,6 @@ public class SubjectController extends IndexController<Subject> {
 	public void fixAfterInflate(final EditView view, final Subject subject) {
 		final TextView tv = (TextView) view.findViewById(R.id.teacher);
 		
-		tv.setFocusable(false);
-		tv.setFocusableInTouchMode(false);
-		
 		Teacher teacher = dh.fill(Teacher.class, subject.default_teacher_id);
 		tv.setText(teacher.name);
 		tv.setOnClickListener(new OnClickListener() {
