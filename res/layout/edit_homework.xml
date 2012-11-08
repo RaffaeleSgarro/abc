@@ -19,8 +19,7 @@
 
     <EditText
         android:id="@+id/description"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        style="@style/InputField"
         android:inputType="textCapSentences" />
 
     <com.zybnet.abc.view.AllCapsTextView
@@ -31,8 +30,7 @@
     
     <com.zybnet.abc.view.DateEditText
         android:id="@+id/due"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        style="@style/InputField"
         android:inputType="date" />
 
 </LinearLayout>

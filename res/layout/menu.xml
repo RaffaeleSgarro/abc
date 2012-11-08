@@ -9,15 +9,13 @@
         android:layout_height="wrap_content"
         android:text="@string/settings"
         style="@style/MenuItem" />
-    <include layout="@layout/separator" />
     <TextView
         android:id="@+id/reset"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/reset"
         style="@style/MenuItem" />
-	<include layout="@layout/separator" />
-    <TextView
+	<TextView
         android:id="@+id/help"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

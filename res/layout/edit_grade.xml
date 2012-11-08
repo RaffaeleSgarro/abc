@@ -18,9 +18,8 @@
 
     <EditText
         android:id="@+id/score"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text" />
+        style="@style/InputField"
+        android:inputType="textCapCharacters" />
     
     <com.zybnet.abc.view.AllCapsTextView
         style="@style/SmallHeader"
@@ -30,8 +29,7 @@
     
     <com.zybnet.abc.view.DateEditText
         android:id="@+id/date"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        style="@style/InputField" />
     
     <com.zybnet.abc.view.AllCapsTextView
         style="@style/SmallHeader"
@@ -41,8 +39,7 @@
     
     <EditText
         android:id="@+id/description"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        style="@style/InputField"
         android:inputType="textCapSentences" />
 
 </LinearLayout>

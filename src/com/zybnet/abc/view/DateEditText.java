@@ -8,11 +8,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.zybnet.abc.R;
 
-public class DateEditText extends EditText {
+public class DateEditText extends TextView {
 	
 	private java.sql.Date date;
 	private HistoryViewFlipper flipper;
@@ -40,7 +40,8 @@ public class DateEditText extends EditText {
 	
 	public void setup(HistoryViewFlipper flipper) {
 		this.flipper = flipper;
-		setFocusable(false);
+		setFocusable(true);
+		setFocusableInTouchMode(true);
 		setOnClickListener(click);
 	}
 	

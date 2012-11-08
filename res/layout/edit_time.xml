@@ -13,8 +13,7 @@
     
     <com.zybnet.abc.view.TimeEditText
         android:id="@+id/start"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        style="@style/InputField" />
 
     <com.zybnet.abc.view.AllCapsTextView
         style="@style/SmallHeader"
@@ -24,7 +23,6 @@
     
     <com.zybnet.abc.view.TimeEditText
         android:id="@+id/end"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        style="@style/InputField" />
 
 </LinearLayout>

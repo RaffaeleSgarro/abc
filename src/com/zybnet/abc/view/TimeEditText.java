@@ -7,12 +7,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.zybnet.abc.R;
 
-public class TimeEditText extends EditText {
+public class TimeEditText extends TextView {
 
 	public TimeEditText(Context context) {
 		super(context);
@@ -45,7 +45,8 @@ public class TimeEditText extends EditText {
 	
 	public void setup(HistoryViewFlipper flipper) {
 		this.flipper = flipper;
-		setFocusable(false);
+		setFocusable(true);
+		setFocusableInTouchMode(true);
 		setOnClickListener(click);
 	}
 	
